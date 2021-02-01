@@ -1,0 +1,7 @@
+cd ../public/wwwu/*usr*
+
+nano file
+
+cd /var/www/html
+ node server.js
+ npm start

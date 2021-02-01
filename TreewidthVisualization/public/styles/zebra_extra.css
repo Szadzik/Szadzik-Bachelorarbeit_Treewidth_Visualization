@@ -1,0 +1,60 @@
+.ZebraDialog,
+.ZebraDialog_Body,
+.ZebraDialog_Buttons a,
+.ZebraDialog_Title {
+    margin: 0;
+    padding: 0;
+    text-align: left
+}
+
+.ZebraDialog {
+    background: #e7edef;
+    -moz-box-shadow: 0 0 10px #000000;
+    -webkit-box-shadow: 0 0 10px #000000;
+    box-shadow: 0 0 10px #000000;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    border: 7px solid #13252f
+}
+
+.ZebraDialog:before {
+    border: 6px solid black;
+    border-radius: 10px;
+}
+
+.ZebraDialog_Body {
+    background: #e7edef;
+}
+
+.ZebraDialog_Buttons {
+    border: none;
+    padding: 10px 15px;
+}
+
+.ZebraDialog_Title,
+.ZebraDialog_NoTitle,
+.ZebraDialog .ZebraDialog_Title {
+    border: none;
+}
+
+.ZebraDialog_Icon .ZebraDialog_Body {
+    background-repeat: no-repeat;
+    background-position: 25px 20px;
+    padding-left: 124px;
+    min-height: 64px
+}
+
+.ZebraDialogBackdrop {
+    background: #666;
+    height: 100%;
+    z-index: 1000;
+    width: 100%
+}
+
+.ZebraDialog_NoScroll {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100%
+}

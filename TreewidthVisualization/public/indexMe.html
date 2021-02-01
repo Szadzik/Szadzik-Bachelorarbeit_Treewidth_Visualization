@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<meta charset="utf-8" />
+
+<head>
+    <title id="title">Treewidth Visualization</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- <link rel="stylesheet" href="styles/style.css">-->
+    <link rel="stylesheet" href="styles/w3.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/zebra_dialog@latest/dist/css/flat/zebra_dialog.min.css">
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/zebra_dialog@latest/dist/css/default/zebra_dialog.min.css"> -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/zebra_dialog@3.0.5/dist/zebra_dialog.min.js "></script>
+
+    <script src="javaScript/exLibrary/require.js "></script>
+
+    <script>
+        if (window.File && window.FileReader && window.FileList && window.Blob) {
+            // Great success! All the File APIs are supported.
+        } else {
+            alertErr('The File APIs are not fully supported in this browser. </br> Try an another browser or look for a newer version.');
+        }
+
+        $(document).ready(function() {
+            //hideBothSpinner(); 
+            //$('.spinner-border').hide();
+        });
+    </script>
+
+</head>
+
+<body style="background-color: yellow;  font-family: sans-serif, Arial, Lucida Sans; overflow-x: hidden;
+ overflow-y:hidden; min-height:100%; min-width:100%;top:0px;  display:block;
+
+ ">
+
+    <header class="  .w3-hide-small" style="  width: 100%; display:block; padding:10px 30px 10px 50px; background-color: rgb(52, 58, 64)!important; color:white; ;
+   white-space: nowrap; overflow: unset; height:55px; top:0px; ">
+        <a href="#" style=" font-size: 20px !important;  padding-bottom:10px; display:inline-block; 
+            font-weight: bold !important;   border: 2px solid green;  white-space: nowrap; ">Treewidth Visualizer </a>
+
+        <a href="#" style=" font-size: 20px !important;  white-space: nowrap; display:inline-block;
+            font-weight: bold !important; float:right; border: 2px solid white;">Licenses
+        </a>
+
+    </header>
+    <div style="display: inline-block; width: 100%;  height:94%; overflow:unset; position: absolute; ">
+        <div id="sidebar" style="   
+    width: 300px;
+    background-color: pink;
+    height: 100%;
+    position: relative;
+    display: block;
+    z-index: 1;
+    padding: 0px 20px 0px 20px;
+    overflow:auto;  
+    float: left;
+    border:2px solid darkcyan;
+    " class="w3-hide-small-cy">
+            <div style="height:42%; margin-top: 24px; border:2px solid white;">
+
+            </div>
+
+            <div style="height:42%; margin-top: 24px; border:2px solid black; ">
+
+            </div>
+        </div>
+        <!-- End sidebar-->
+
+
+        <div style="height:100%; position: relative; display: block; width: 100%; float:left">
+
+            <div class="" id="cy " style=" background-color:blueviolet; height: 40%;  width:100%; 
+        border: 2px solid orange; float:left;
+         display:block;" src="face-slim2.png">
+                gsgdgdsssssssssssssg sg
+            </div>
+            <div class=" " id="cy " style=" background-color:blue; height: 40%;  width:100%; 
+            border: 2px solid orange; float:left;
+             display:block;" src="face-slim2.png">
+            </div>
+
+
+        </div>
+
+    </div>
+
+</body>
+
+<script src="javaScript/import-converter/fileInput.js "></script>
+<script src="javaScript/SystemFunctions/alerts.js "></script>
+<script>
+    //dropdown
+    function accordionDropdown(id) {
+
+
+        var x = document.getElementById(id);
+        if (x.className.indexOf("w3-show ") == -1) { //on open
+            // x.classList.add("active ");
+            x.className += " w3-show ";
+            // x.previousElementSibling.style.backgroundColor = "#2196F3 ";
+            //  x.previousElementSibling.className =
+            //    x.previousElementSibling.className.replace("w3-dark-gray ", "w3-blue ");
+            //x.classList.remove('fa-caret-down');
+            // x.classList.add('fa-caret-up');
+            $(". " + id).removeClass('fa-caret-down').addClass('fa-caret-up');
+
+            x.previousElementSibling.style.textDecoration = "underline white ";
+
+        } else {
+            x.className = x.className.replace(" w3-show ", " "); //on close
+
+            //  x.previousElementSibling.className =
+            //    x.previousElementSibling.className.replace("w3-blue ", "w3-dark-gray ");
+            x.previousElementSibling.style.backgroundColor = " ";
+            // $(id).find('.fa-caret-up').removeClass('fa-caret-up').addClass('fa-caret-down');
+            $(". " + id).removeClass('fa-caret-up').addClass('fa-caret-down');
+            x.previousElementSibling.style.textDecoration = "none ";
+            // x.classList.add("inactive ");
+
+        }
+    }
+</script>
+</body>
+
+</html>
