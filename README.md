@@ -1,0 +1,1 @@
+# Szadzik-Bachelorarbeit_Treewidth_Visualization
