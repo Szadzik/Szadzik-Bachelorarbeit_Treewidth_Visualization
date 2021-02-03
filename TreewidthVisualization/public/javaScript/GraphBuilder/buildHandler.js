@@ -1,11 +1,10 @@
 var layout; //the currently layout which is set
-var prevLayout; //the previous layout which was set
-var prevGraphLayout;
-var prevGraphLayoutName;
+var prevLayout; //the previous layout which was set for the tree
+var prevGraphLayout; //the previous layout which was set for the graph
+var prevGraphLayoutName = "";//the previous layout that was build for the graph
 var prevTreeLayoutName = ""; //the previous layout that was build for the tree
-var numberOfBags;
+var numberOfBags; //total number of bags from the tree
 var bagIds = new Array(); //array that contains all bagIds
-
 
 /**
  * Calls all functions that are needed to create the Tree.
@@ -19,14 +18,17 @@ function handleTreeCreation(lines) {
     setBagDependencies(lines); 
     resizeConstructNodes();
     //calculateDegrees(); //degree properties
-    //mapAngles(); //coordinate positions  
+
     setAutoMove(); //move options for mouse
-    if (prevTreeLayoutName == "") { //set on truein setlayout
+
+    //TODO get by layout option
+    if (prevTreeLayoutName === "") { //set on truein setlayout
         handleTreeLayout('circle');
     } else { //TODO take the previous layout if it got changed
         handleTreeLayout(prevTreeLayoutName);
     }
 
+    setSidebarProperties();
     console.log("out of handleCreation")
 
 }
@@ -41,43 +43,47 @@ function handleGraphCreation(lines) {
     let result = setGraph(lines);
     if(result === -1) //TODO
         return;
-    setGraphLayout('circle'); //customCise
+
+    if (prevGraphLayoutName === "") { //set on truein setlayout
+        setGraphLayout('circle');
+    } else { //TODO take the previous layout if it got changed
+        setGraphLayout(prevGraphLayoutName);
+    }
+    
    
-    setGraphProperties();
     console.log("finished handleGraphCreation")
 }
 
 
-function calculateDegrees() {
-    //TOD Omax,min
-    let cC = calculateConstructDegress();
-    let cT = calculateTreeDegress();
-    let cG = calculateGraphDegrees();
-
-    console.log("min Construct ", cC[0].id, " max ", cC[degrees.length - 1].id);
-    console.log("min tree ", cT[0].id, " max ", cT[degrees.length - 1].id);
-    console.log("min graph ", cG[0].id, " max ", cG[degrees.length - 1].id);
-}
-
-function calculateConstructDegress() {
-    var degrees = cr.nodes('.construct').map(function(ele) {
+/**
+ * Caluclate and sort a list of degrees from bags(construct graph).
+ * @returns sorted list of degrees from bags
+ */
+var calculateConstructDegress = function () {
+    let degrees = cr.nodes('.construct').map(function(ele) {
         return { id: ele.data('id'), degree: ele.degree(), text: ele.data('displayedText') };
     });
-
     return sortDegrees(degrees);
 }
 
-function calculateTreeDegress() {
-    var degrees = cr.nodes('.tree').map(function(ele) {
+/**
+ * Caluclate and sort a list of degrees from tree nodes.
+ * @returns sorted list of degrees from nodes
+ */
+var calculateTreeDegress = function() {
+    let degrees = cr.nodes('.tree').map(function(ele) {
         return { id: ele.data('id'), degree: ele.degree(), text: ele.data('displayedText') };
     });
-
     return sortDegrees(degrees);
 }
 
-function calculateGraphDegrees() {
+/**
+ * Caluclate and sort a list of degrees from graph vertices.
+ * @returns sorted list of degrees from vertices
+ */
+var calculateGraphDegrees = function(){
     console.log("cy", cy.nodes())
-    var degrees = cy.nodes().map(function(ele) {
+    let degrees = cy.nodes().map(function(ele) {
         return { id: ele.data('id'), degree: ele.degree(), text: ele.data('displayedText') };
     });
     console.log("degrees sinf davor ", degrees)
@@ -87,17 +93,30 @@ function calculateGraphDegrees() {
 }
 
 /**
- * Sort nodes by grad. Last index = highest grad, first index = smallest grad.
- * @param {*} degrees 
- * @returns
+ * Sort a list of degrees. Last index = highest grad, first index = smallest grad.
+ * @param {Number[]} degrees 
+ * @returns sorted degrees
  */
 function sortDegrees(degrees) {
-    degrees.sort(function(a, b) {
+    let tmp = degrees.sort(function(a, b) {
         return a.degree - b.degree;
     });
-    return degrees[degrees.length - 1].id; //get node of highest degree
+    return tmp; 
 }
 
+function maxDegreeOf(sortedDegrees){
+    console.log("alle degress sortiert ", sortedDegrees)
+    return sortDegrees[sortDegrees.length-1];
+}
+
+function minDegreeOf(sortedDegrees){
+    console.log("alle degress sortiert ", sortedDegrees)
+    return sortDegrees[0];
+}
+
+/**
+ * Remove the tree 
+ */
 function removeTree() {
     console.log("in remove all");
     try {
@@ -112,32 +131,45 @@ function removeTree() {
     }
 }
 
+/**
+ * Remove the graph
+ */
 function removeGraph() {
     console.log("in remove all Graph");
     cy.elements().remove();
 }
 
 
-
+/**
+ * Print all tree nodes in the console
+ */
 function printTreeNodes() {
     cr.nodes().forEach(n => {
         console.log("node: ", n.data('displayedText'));
     });
 }
 
+/**
+ * Print all tree edges in the console
+ */
 function printTreeEdges() {
     cr.nodes().forEach(n => {
         console.log("edge: ", n.data('displayedText'));
     });
 }
 
-
+/**
+ * Print all graph vertices in console
+ */
 function printGraphNodes() {
     cy.nodes().forEach(n => {
         console.log("vertice: ", n.data('displayedText'));
     });
 }
 
+/**
+ * Print all graph edges in console
+ */
 function printGraphEdges() {
     cy.edges().forEach(n => {
         console.log("edge: ", n.data('displayedText'));

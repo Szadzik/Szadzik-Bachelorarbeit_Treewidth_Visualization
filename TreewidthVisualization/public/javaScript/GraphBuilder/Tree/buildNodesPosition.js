@@ -5,26 +5,19 @@
  * Although the construct graph represent the construct on that represent the bags on which is builded.
  */
 
-/** @type {Number} */
-var radius;
-
-/** @type {Number} */
-var startRadius = 25;
-
-/** @type {Number} */
-var startNumber = 3;
-
-/** @type {Number} */
-var radiusOffset = 15;
+var radius; //the radius from the center cirle in which to draw nodes
+var startRadius = 25; // the start radius in which the first nodes are placed
+var startNumber = 3; // first drawing circle starts with 3 nodes
+var radiusOffset = 15; //offset for all radius after startradius to calculate in the body dimension of a node.
 
 
 var mapBagInformation = new Map(); //map with key = bagId, that contains the number of containing elements and the gap jumps on circle position.
 var startX = 0;
 var startY = 0;
 var countTotal;
-var elesOnCircle;
-var circleNumber;
-var restNodes;
+var elesOnCircle; //how much nodes are alowed in the current circle umreference
+var circleNumber; //current number of the attended circle
+var restNodes; //number of nodes which has not yet been drawn 
 var countElesOnCircle;
 var countFinishedBags;
 
@@ -78,13 +71,8 @@ function calucatePostionCircle(bag) {
     }
 
 
-    console.log("x i ", coordinates.x, " y i ", coordinates.y);
+    //console.log("x i ", coordinates.x, " y i ", coordinates.y);
     return coordinates
-        /*{
-            //coordinates
-            x: coordinates[0],
-            y: coordinates[1]
-        };*/
 }
 
 /**

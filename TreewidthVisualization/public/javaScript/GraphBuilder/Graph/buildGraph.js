@@ -1,37 +1,33 @@
-var nrNodes;
-var nrEdges;
-var setNodes
+var nrVertices; //number of vertices in graph
+var nrEdges; //number of edges in graph
+var setNodes; //contains the vertices by their displayed text
 
+/**
+ * Drwas the graph in cy-window by the information from @lines .
+ * @param {String[]} lines lines from .gr file.
+ * @returns -1 on error
+ */
 function setGraph(lines) {
-    console.log("in set graph")
+    console.log("in set graph wit lines ",lines)
     for (var lineNumber = 0; lineNumber < lines.length; lineNumber++) {
         let line = lines[lineNumber].split(/\s+/);
 
-        if (!Array.isArray(line)) {
-            throw new Error("This is not a array");
-        }
-
-        if (line == null || line.length < 1) { //TODO test
-            console.log("line is empty in first try");
-            continue;
-        }
-      //  console.log("graph line ",line)
         try {
             switch (line[0]) {
-                case '': //TODO remove?
-                    console.log("line is empty");
+                case '': 
+                    console.log('line ', lineNumber, ' is empty');
                     break;
                 case 'c': //comments
                     break;
                 case 'p':
-                    console.log("line ",line)
-                    console.log("number nodes: ", line[2], " number edges ", line[3])
-                    nrNodes = line[2];
+                    //console.log("number nodes: ", line[2], " number edges ", line[3])
+                    nrVertices = line[2];
                     nrEdges = line[3];
-                    console.log("nummerNodes ", nrNodes, " nummerEdges ", nrEdges);
                     break;
                 default: //make nodes and edges
-            
+                    //console.log("in default to set graph varaibles with line ",line)
+                    console.log("type default param ", typeof(line[0]))
+
                     if (line.length < 2) { // <= because of empty last index
                         let message = 'Line has only one vertice. Cannot create a loop edge on a vertice in line:' + lineNumber;
                         throw new Error(message);
@@ -40,16 +36,30 @@ function setGraph(lines) {
                     setNode(line[1]);
                     setEdge(line[0], line[1]);
             }
+       
         } catch (err) {
             removeGraph(); //TODO remove all created elements that got created before the error //maybe too much for big graphs?
             alertErr(err.message);
             return -1;
         }
     }
+        if(nrVertices != cy.nodes().length){
+            cy.nodes().forEach(e => console.log("node in cy is ", e))
+            alertErr("File is defect. Number of vertices is not right.");
+            return -1;
+        }else if(nrEdges != cy.edges().length){
+            alertErr("File is defect. Number of edges is not right.");
+            return -1;
+        }
     //console.log("graph node length is ", cy.nodes().length, " length edges ", cy.edges().length)
 }
 
 
+/**
+ * If the collection cy has not already the input node,
+ * then add this node.
+ * @param {Number} node 
+ */
 function setNode(node) {
   
     //console.log("getby id ", node, " is ", cy.nodes(`[displayedText = "${node}"]`).data("displayedText"), " und mit id ", cy.nodes(`[id = "${node}"]`).data("displayedText"),)
@@ -69,28 +79,15 @@ function setNode(node) {
     }
 }
 
-function tolist(temp) {
 
-
-    if (!setNodes.includes(temp[0])) {
-        setNodes.push(temp[0]);
-    }
-    if (!setNodes.includes(temp[1])) {
-        setNodes.push(temp[1]);
-    }
-
-    let values = map.get(temp[0]);
-    if (values === undefined) {
-        //let z = new Array(temp[1]);
-        map.set(temp[0], temp[1]);
-    } else if (!values.includes(temp[1])) {
-        console.log("in includes");
-        let z = values + temp[1];
-        map.set(temp[0], z);
-
-    }
-}
-
+/**
+ * Creates an edge between source and target.
+ * If already an edge between target and source exist,
+ * no edge will be created.
+ * @param {Number} node1 Source
+ * @param {Number} node2 Target
+ * @returns return if no edge was created
+ */
 function setEdge(node1, node2) { //TODO check sourc target and back with td too
     let doubleEdgeId = "e: "+node2 + " "+ node1;
 
@@ -110,20 +107,30 @@ function setEdge(node1, node2) { //TODO check sourc target and back with td too
     });
 }
 
+/**
+ * Set the graph layout by @layout .
+ * @param {String} layout layout name
+ */
 function setGraphLayout(layout) {
-    if (prevGraphLayout) {
-        prevGraphLayout.stop();
-    };
+   
+    cy.startBatch();
+        if (prevGraphLayout) {
+            prevGraphLayout.stop();
+        };
 
-    let newLayout = cy.makeLayout(layouts[layout]);
-    console.log("new layout ", layouts[layout]);
+        prevGraphLayoutName = layout;//name
 
-    prevGraphLayout = newLayout;
+        let newLayout = cy.makeLayout(layouts[layout]);
+        console.log("new layout from graph ", layouts[layout]);
 
-    newLayout.run().promiseOn('layoutstop');
+        prevGraphLayout = newLayout;//layout
+        
 
+        newLayout.run().promiseOn('layoutstop');
 
-    setTimeout(function() {
-        newLayout.stop();
-    }, 100);
+/*
+        setTimeout(function() {
+            newLayout.stop();
+        }, 100);*/
+    cy.endBatch();
 }

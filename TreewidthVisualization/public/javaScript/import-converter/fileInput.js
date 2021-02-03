@@ -23,22 +23,19 @@ class FileInput {
                 $('#output')[0].value = file.name;
                 console.log("===", this.getFileExtension(file) === 'gr', " == ", console.log("extensionis ", this.getFileExtension(file)) == "gr")
 
-                this.checkOneFile(file);
+                this.#checkOneFile(file);
                 if (this.getFileExtension(file) === 'txt') {
                     //TODO
                 }
-                this.handleServerCommunication(files[0], this.setAlgorithmChoice());
+                this.#handleServerCommunication(files[0], this.#setAlgorithmChoice());
                 //loadOneGraphFromFile();
 
             } 
             else {
-                console.log("in two files")
+                
                 $('#output')[0].value = files[0].name + ", " + files[1].name;
-
-                console.log("DAVOR: this files ", this.files)
-                console.log("DAVOR files ", files)
-                this.checkTwoFiles(files);
-                this.loadTwoGraphsFromFiles(evt);
+                this.#checkTwoFiles(files);
+                this.#loadTwoGraphsFromFiles(evt);
             } 
         } catch (err) {
             alertErr(err.message);
@@ -55,7 +52,7 @@ class FileInput {
      * @param {String} choice tw_exact_terminal, tw_heuristic_terminal 
      *                  (tw_exact/heuristic_file is comming to maybe)
      */
-    static handleServerCommunication(file, choice) {
+    static #handleServerCommunication(file, choice) {
 
         console.log("in my function");
         console.log("choice is ", choice);
@@ -88,8 +85,8 @@ class FileInput {
      * 
      * @param {File[]} files Some files
      */
-    static checkTwoFiles(files) {
-
+    static #checkTwoFiles(files) {
+        console.log("in check the two files")
         let boolGr = this.getFileExtension(files[0]) === 'gr' || this.getFileExtension(files[1]) === 'gr';
         let boolTd = this.getFileExtension(files[0]) === 'td' || this.getFileExtension(files[1]) === 'td';
 
@@ -108,7 +105,7 @@ class FileInput {
      * If not then a error will occur.
      * @param {File} file File
      */
-    static checkOneFile(file) {
+    static #checkOneFile(file) {
         const validExtensions = ['txt', 'gr', 'dgf'];
         let boolValid = validExtensions.includes(this.getFileExtension(file));
         console.log("file extension is ", this.getFileExtension(file))
@@ -123,7 +120,7 @@ class FileInput {
      * Draws the graph and tree from the files of the input event.
      * @param {Event} evt Upload event from user that contains two files
      */
-    static loadTwoGraphsFromFiles(evt) {
+    static #loadTwoGraphsFromFiles(evt) {
         let files = evt.target.files;
         console.log('in load twoGraphs from Files');
 
@@ -157,7 +154,7 @@ class FileInput {
      * if the toggle is set on exact, else '/tw_heuristic_terminal'.
      * This is called, if one file was uploaded.
      */
-    static setAlgorithmChoice() {
+    static #setAlgorithmChoice() {
         let isExact = $('#exact-toggle').hasClass('active') ? true : false;
 
         if (isExact) {

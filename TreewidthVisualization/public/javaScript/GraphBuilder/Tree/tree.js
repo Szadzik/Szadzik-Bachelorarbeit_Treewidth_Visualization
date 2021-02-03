@@ -1,13 +1,14 @@
 const defaultTree = [
-    { "group": "nodes", data: { id: 'c', displayedText: 'c' } },
-    { "group": "nodes", data: { id: 'd', displayedText: "d" } },
+    { "group": "nodes", data: { id: 'c', displayedText: 'c' },classes: ['tree']  },
+    { "group": "nodes", data: { id: 'd', displayedText: "d" }, classes: ['tree'] },
     {
         "group": "edges",
         "data": {
             id: 'cd',
             source: 'c',
             target: 'd',
-        },
+        }, 
+        classes: ['tree']
     }
 ];
 

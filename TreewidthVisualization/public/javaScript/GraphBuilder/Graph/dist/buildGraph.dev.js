@@ -1,6 +1,6 @@
 "use strict";
 
-var nrNodes;
+var nrVertices;
 var nrEdges;
 var setNodes;
 
@@ -35,9 +35,8 @@ function setGraph(lines) {
         case 'p':
           console.log("line ", line);
           console.log("number nodes: ", line[2], " number edges ", line[3]);
-          nrNodes = line[2];
+          nrVertices = line[2];
           nrEdges = line[3];
-          console.log("nummerNodes ", nrNodes, " nummerEdges ", nrEdges);
           break;
 
         default:

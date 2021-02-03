@@ -42,8 +42,6 @@ function setConstructNode(bagId, totalNumber) {
         data: { id: bagId, size: sumDivisibilityRadius(totalNumber), displayedText: bagId },
         classes: 'construct'
     });
-    //TODO resize
-
 }
 
 /**
@@ -129,6 +127,9 @@ function getNodePoistion(bagId) {
 }
 
 
+////////////////////////////////////////////////////////////// 
+// TODO 
+///////////////////////////////////////////////////
 function getDegrees() {
     cr.nodes('.construct').forEach(n => {
         let d = n.degree();

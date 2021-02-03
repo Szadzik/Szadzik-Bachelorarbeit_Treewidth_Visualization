@@ -1,4 +1,5 @@
 var treewidth = 0;
+
 function setColorNodes(line) {
     let numberOfbag = line[1];
     bagIds.push(numberOfbag);
@@ -46,12 +47,12 @@ function searchEdgeConnections(line) {
  *                               which is need to color the edges like the nodes
  */
 function setColorEdge(source, target, displayedText) {
-    console.log("farbe ", getColor(displayedText))
+   // console.log("farbe ", getColor(displayedText))
     cr.add({
         group: 'edges',
         classes: ['tree', 'bag', 'color'],
         data: {
-            id: 'colorE:' + source + " " + target + ":" + displayedText,
+            id: 'colorE:' + source + " " + target , //+ ":" + displayedText
             source: source,
             target: target,
             color: getColor(displayedText),
@@ -62,7 +63,7 @@ function setColorEdge(source, target, displayedText) {
 
 
 function setBagDependencies(lines) {
-    console.log("build dependecie tree")
+   
     for (var lineNumber = 0; lineNumber < lines.length; lineNumber++) {
         let line = lines[lineNumber].split(/\s+/);
 
@@ -80,7 +81,7 @@ function setBagDependencies(lines) {
                    // console.log(" BAGS INSGESAMT ", numberOfBags)
                     break;
                 case 'b':
-                     console.log("in b ", lineNumber)
+                     //console.log("in b ", lineNumber)
                     if (line.length <= 2) { // <= because of empty last index
                         let message = 'Tried to define a bag,but this is not a bag on textline: ' +
                             "lineNumber" + '.' + '</br>' + 'Be sure to follow the bag format: ' +

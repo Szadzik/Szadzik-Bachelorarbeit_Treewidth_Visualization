@@ -35,7 +35,7 @@ function alertErrBr(message) {
  * @param {string} message 
  */
 function alertWarning(message) {
-    console.log("ERROR ",message);
+    console.err("ALERT ERROR ",message);
     new $.Zebra_Dialog(
         message, {
             type: "warning",
