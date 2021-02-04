@@ -44,7 +44,7 @@ app.listen(port, () => console.log(`Listening on port ${port}...`));
  * The handle of uploadFiles who start a pace algorithm with tw-exact 
  *  and send the result to shell.
  */
-app.post('/uploadFiles', (req, res) => {
+app.post('/tw_exact_terminal', (req, res) => {
 
     console.log("req.file ", req.file);
     console.log("req.path ", req.files.uploaded_input.path);
@@ -71,6 +71,34 @@ app.post('/uploadFiles', (req, res) => {
     }
 
 });
+
+app.post('/tw_heuristic_terminal', (req, res) => {
+
+    console.log("req.file ", req.file);
+    console.log("req.path ", req.files.uploaded_input.path);
+
+    try {
+        console.log("in post for tw_heursitic_terminal");
+        let file = req.files.uploaded_input.path;
+        tw.tw_heuristic_terminal(file).then(response => {
+                console.log("Response from tw recieved. Continue with sending.");
+                res.send(response);
+            })
+            .then(() => {
+                console.log("Finished sending, start file deleting.");
+                fs.unlink(file, (err) => {
+                    if (err) {
+                        console.error(err);
+                        return;
+                    }
+                });
+                console.log("End tw_heuristic_terminal.");
+            })
+    } catch (err) {
+        res.send(400);
+    }
+
+});
 /**
  * var field = document.getElementById("chicken");
 field.id = "horse";  // using element properties
@@ -81,7 +109,7 @@ field.setAttribute("name", "horse");  // using .setAttribute() method
  * The handle of uploadFiles who start a pace algorithm with tw-exact 
  *  and then creates a .td file with the same name prefix.
  */
-app.post('/uploadFiles', (req, res) => {
+app.post('/tw_exact_file', (req, res) => {
 
     console.log("req.file ", req.file);
     console.log("req.path ", req.files.uploaded_input.path);
