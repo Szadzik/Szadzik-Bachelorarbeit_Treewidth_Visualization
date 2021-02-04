@@ -159,18 +159,18 @@ class FileInput {
                 reader.abort();
                 return;
             };
-            let extension =  this.getFileExtension(files[i])
+            //let extension =  this.getFileExtension(files[i])
 
             reader.onload = function(event) {
                 //text lines of the file
                 
-                if(extension === 'gr'){
+               // if(extension === 'gr'){
                     let textLines = event.target.result.split('\n');
                     console.log("was sind textlines")
                     handleGraphCreation(textLines);
-                }else{ //.td
+               // }else{ //.td
                     handleTreeCreation(treeString); 
-                }
+               // }
             };
             reader.readAsText(files[i]);
         
