@@ -152,28 +152,22 @@ class FileInput {
 
     static #loadGraphsAfterCommunication(treeString) {
         console.log('loadGraphsAfterCommunication');
-            let reader = new FileReader();
         
-            reader.onerror = function(event) {
-                alertErr('Failed to read file!\n\n' + reader.error);
-                reader.abort();
-                return;
-            };
             //let extension =  this.getFileExtension(files[i])
 
-            reader.onload = function(event) {
+            //reader.onload = function(event) {
                 //text lines of the file
                 
                // if(extension === 'gr'){
-                    let textLines = event.target.result.split('\n');
-                    console.log("was sind textlines")
-                    handleGraphCreation(textLines);
+      //              let textLines = event.target.result.split('\n');
+        //            console.log("was sind textlines")
+          //          handleGraphCreation(textLines);
                // }else{ //.td
                     handleTreeCreation(treeString); 
                // }
-            };
-            reader.readAsText(files[i]);
-        
+//            };
+    //        reader.readAsText(files[i]);
+  //      
     }
 
     /**
