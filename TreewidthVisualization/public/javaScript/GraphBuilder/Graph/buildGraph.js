@@ -29,6 +29,7 @@ function setGraph(lines) {
                     console.log("type default param ", typeof(line[0]))
 
                     if (line.length < 2) { // <= because of empty last index
+                        console.log("line length is ", line, " before loop edge")
                         let message = 'Line has only one vertice. Cannot create a loop edge on a vertice in line:' + lineNumber;
                         throw new Error(message);
                     }
