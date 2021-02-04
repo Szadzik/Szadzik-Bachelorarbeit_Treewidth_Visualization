@@ -68,7 +68,8 @@ class FileInput {
             // .then(console.log("gesendet und for json response"))
             .then(response => response.text()) //json = files, text=string
             .then(body => {
-                console.log(body)
+                console.log(body);
+                this.#loadGraphsAfterCommunication(body);
             })
 
         .catch(error => {
@@ -122,7 +123,7 @@ class FileInput {
      */
     static #loadTwoGraphsFromFiles(evt) {
         let files = evt.target.files;
-        console.log('in load twoGraphs from Files');
+        //console.log('in load twoGraphs from Files');
 
         for (let i = 0; i < files.length; i++) {
 
@@ -147,6 +148,32 @@ class FileInput {
             };
             reader.readAsText(files[i]);
         }
+    }
+
+    static #loadGraphsAfterCommunication(treeString) {
+        console.log('loadGraphsAfterCommunication');
+            let reader = new FileReader();
+        
+            reader.onerror = function(event) {
+                alertErr('Failed to read file!\n\n' + reader.error);
+                reader.abort();
+                return;
+            };
+            let extension =  this.getFileExtension(files[i])
+
+            reader.onload = function(event) {
+                //text lines of the file
+                
+                if(extension === 'gr'){
+                    let textLines = event.target.result.split('\n');
+                    console.log("was sind textlines")
+                    handleGraphCreation(textLines);
+                }else{ //.td
+                    handleTreeCreation(treeString); 
+                }
+            };
+            reader.readAsText(files[i]);
+        
     }
 
     /**
