@@ -16,7 +16,7 @@ async function tw_exact_terminal(filePath) {
     const execProm = util.promisify(exec);
 
     try {
-        let command = 'cd paceAlgorithms/PACE2017-TrackA/ && ./tw-exact < ' + filePath,
+        let command = 'cd paceAlgorithm/PACE2017-TrackA/ && ./tw-exact < ' + filePath,
             options = { encoding: 'utf8' },
             child = await execProm(command, options);
 
@@ -44,7 +44,7 @@ async function tw_exact_file(filePath) {
     try {
         let resultPath = file.substring(0, file.lastIndexOf('.')) + '.td';
 
-        let command = 'cd paceAlgorithms/PACE2017-TrackA/ && ./tw-exact < ' + filePath + ' > ' + resultPath,
+        let command = 'cd paceAlgorithm/PACE2017-TrackA/ && ./tw-exact < ' + filePath + ' > ' + resultPath,
             options = { encoding: 'utf8' },
             child = await execProm(command, options);
 

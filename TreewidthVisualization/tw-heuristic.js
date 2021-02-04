@@ -14,7 +14,7 @@ async function tw_heursitic_terminal(filePath) {
     const execProm = util.promisify(exec);
 
     try {
-        let command = 'cd paceAlgorithms/PACE2017-TrackA/ && ./tw-heuristic < ' + filePath,
+        let command = 'cd paceAlgorithm/PACE2017-TrackA/ && ./tw-heuristic < ' + filePath,
             options = { encoding: 'utf8' },
             child = await execProm(command, options);
 
@@ -53,7 +53,7 @@ async function tw_heursitic_file(filePath) {
 
     try {
 
-        let command = 'cd paceAlgorithms/PACE2017-TrackA/ && ./tw-heuristic < ' + filePath,
+        let command = 'cd paceAlgorithm/PACE2017-TrackA/ && ./tw-heuristic < ' + filePath,
             options = { encoding: 'utf8' },
             child = await execProm(command, options);
 
