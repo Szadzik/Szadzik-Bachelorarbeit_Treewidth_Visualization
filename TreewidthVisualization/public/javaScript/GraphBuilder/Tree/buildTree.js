@@ -63,10 +63,18 @@ function setColorEdge(source, target, displayedText) {
 
 
 function setBagDependencies(lines) {
-   
-    for (var lineNumber = 0; lineNumber < lines.length; lineNumber++) {
-        let line = lines[lineNumber].split(/\s+/);
-
+	console.log("alle recieved lines are ", lines )
+	console.log("lines to string ?" ,lines.toString());
+	console.log("type of", typeof(lines.toString), " normal ", typeof(lines)); 
+	console.log("first element normal: ", lines[0], " lines with string ", lines[0]);
+	console.log("line length ", lines.length, " und string length ", lines.toString().length);
+    //for (var lineNumber = 0; lineNumber < lines.length; lineNumber++) {
+//        let line = lines[lineNumber].split(/\s+/);
+	let line = lines.split('\n');
+	console.log("was ist line ", line, " und length of luine ", line.length )
+	console.log("line einal eckig ", line[0])
+	console.log("line zwei eckig ", line[0][0]);
+    for (var lineNumber = 0; lineNumber < line.length; lineNumber++){
         try {
             console.log("line is ", line)
             switch (line[0]) {
@@ -106,7 +114,7 @@ function setBagDependencies(lines) {
             removeTree(); //TODO remove all created elements that got created before the error //maybe too much for big graphs?
             alertErr(err.message);
         }
-    }
+    } //TODO chang e
     console.log("was ist cr ", cr.nodes().length)
 }
 
