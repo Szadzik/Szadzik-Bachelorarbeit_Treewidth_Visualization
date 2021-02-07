@@ -54,7 +54,7 @@ class FileInput {
      * @param {String} choice tw_exact_terminal, tw_heuristic_terminal 
      *                  (tw_exact/heuristic_file is comming to maybe)
      */
-    get handleServerCommunication(file, choice) {
+static  handleServerCommunication(file, choice) {
 
         console.log("in my function");
         console.log("choice is ", choice);
