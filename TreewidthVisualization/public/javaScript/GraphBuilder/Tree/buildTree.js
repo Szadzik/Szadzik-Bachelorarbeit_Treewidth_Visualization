@@ -4,7 +4,7 @@ function setColorNodes(line) {
     let numberOfbag = line[1];
     bagIds.push(numberOfbag);
     let vertices = line.slice(2, line.length - 1);
-
+    console.log("vertices of bag are ", vertices);
     vertices.forEach(v => {
         cr.add({
             group: 'nodes',
@@ -68,20 +68,16 @@ function setColorEdge(source, target, displayedText) {
  *              false = tree string from two uploaded files
  */
 function setBagDependencies(lines, isFromServer) {
-//    let lineArray = isFromServer ? lines.split('\n') : lines;
    	console.log("is server true? ", isFromServer); 
-	 console.log("was ist line in dep: ", lines);
+	console.log("was ist line in dep: ", lines);
+
 	if(isFromServer)
 		lines = lines.split(/\r?\n/);
+
     for (var lineNumber = 0; lineNumber < lines.length; lineNumber++) {
-        let line;
-//	if(lines.length === 0 || lines === '')
-//		continue;        
-//        if(isFromServer)
-  //          line = lines[lineNumber];
-    //    else 
-            line = lines[lineNumber].split(/\s+/);
-	console.log("line 0 is #", line[0]+ "#", " und 2 #"+line[1]+"#")		
+
+        let line = lines[lineNumber].split(/\s+/);
+
         try {
             console.log("line is ", line)
             switch (line[0]) {
@@ -105,8 +101,8 @@ function setBagDependencies(lines, isFromServer) {
                             'a <span style=color:green> list of nodes</span> (can be empty) of the  <span style=color:blue> bag </span> b. '
                         throw new Error(message);
                     }
-                    setConstructNode(line[1], line.length - 3);
-                    setColorNodes(line, lineNumber);
+                    setConstructNode(line[1], line.length - 3); //set bag with id and his number of nodes
+                    setColorNodes(line, lineNumber); 
                     break;
                 default: //make edges
                     if (line.length < 2) { // <= because of empty last index
@@ -124,64 +120,6 @@ function setBagDependencies(lines, isFromServer) {
     }
     console.log("was ist cr ", cr.nodes().length)
 }
-
-
-function setBagDependenciesFromServer(lines) {
-	console.log("alle recieved lines are ", lines )
-	console.log("first element normal: ", lines[0]);
-	console.log("line length ", lines.length);
-    //for (var lineNumber = 0; lineNumber < lines.length; lineNumber++) {
-//        let line = lines[lineNumber].split(/\s+/);
-	let lineArray = lines.split('\n'); //lines = line.split('\n')
-	console.log("was ist line ", lineArray, " und length of luine ", lineArray.length )
-    lines = line.split('\n');
-    console.log("was ist lineLine ", line, " und length of luine ", line.length )
-
-    for (var lineNumber = 0; lineNumber < lineArray.length; lineNumber++){
-        let line = lineArray[lineNumber] ;
-        try {
-            console.log("line is ", line)
-            switch (line[0]) {
-                case '':
-                    //console.log("line is empty");
-                    break;
-                case 'c':
-                    break;
-                case 's':
-                    numberOfBags = line[2]; //maybe remove?
-                    treewidth = line[3];  //TODO maybe-1??
-                    console.log(" BAGS INSGESAMT ", numberOfBags)
-                    break;
-                case 'b':
-                     console.log("in b ", lineNumber)
-                    if (line.length <= 2) { // <= because of empty last index
-                        let message = 'Tried to define a bag,but this is not a bag on textline: ' +
-                            "lineNumber" + '.' + '</br>' + 'Be sure to follow the bag format: ' +
-                            '"<b><span style=color:blue> b </span> <span style=color:red> n </span> <span style=color:green> k" </span> </b>' +
-                            ', where n is <span style=color:red> the bag number </span> and <span style=color:green> k </span> ' +
-                            'a <span style=color:green> list of nodes</span> (can be empty) of the  <span style=color:blue> bag </span> b. '
-                        throw new Error(message);
-                    }
-                    setConstructNode(line[1], line.length - 3);
-                    setColorNodes(line, lineNumber);
-                    break;
-                default: //make edges
-                    if (line.length < 2) { // <= because of empty last index
-                        let message = 'Build Tree: Cannot create a loop edge on a node in line:' + lineNumber+ '. "\n" line code is '+line;
-                        throw new Error(message);
-                    }
-                    //console.log("sorce ", line[0], " target ", line[1])
-                    setConstructEdges(line[0], line[1]);
-                    searchEdgeConnections(line);
-            }
-        } catch (err) {
-            removeTree(); //TODO remove all created elements that got created before the error //maybe too much for big graphs?
-            alertErr(err.message);
-        }
-    } //TODO chang e
-    console.log("was ist cr ", cr.nodes().length)
-}
-
 
 
 /**

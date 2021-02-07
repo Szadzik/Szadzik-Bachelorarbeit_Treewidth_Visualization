@@ -213,7 +213,7 @@ let layouts = {
         }*/
         positions: function(node) { //or make collection?
             if (node.hasClass('bag')) {
-                console.log("node has class bag and his text is ", node.data('displayedText'))
+            //    console.log("node has class bag and his text is ", node.data('displayedText'))
                 return calucatePostionCircle(node.data('bag'))
             }
         }

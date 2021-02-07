@@ -213,10 +213,10 @@ function calucatePostionCircle(bag) {
     var r = mapDistance.get(bag);
     var x = startX + radius * Math.cos(p * r);
     var y = startY + radius * Math.sin(p * r);
-    console.log("p is: ", p, " r is: ", r, " x is: ", x, " y is: ", y);
-    console.log("map le davor ", mapLength.get(bag))
+   // console.log("p is: ", p, " r is: ", r, " x is: ", x, " y is: ", y);
+    //console.log("map le davor ", mapLength.get(bag))
     mapLength.set(bag, mapLength.get(bag) - 1);
-    console.log("map le danach ", mapLength.get(bag))
+   //console.log("map le danach ", mapLength.get(bag))
 
     if (prevX > 130 && startX < 130) {
         startY = (startY + 130) % 600;
