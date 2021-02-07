@@ -1,3 +1,4 @@
+
 class FileInput {
     constructor() {}
 
@@ -60,7 +61,7 @@ class FileInput {
         let formData = new FormData();
         formData.append('uploaded_input', file);
 
-        fetch(choice, {
+        let result = fetch(choice, {
                 method: 'POST',
                 body: formData
             })
@@ -69,13 +70,14 @@ class FileInput {
             .then(response => response.text()) //json = files, text=string
             .then(body => {
                 console.log(body);
-                this.#loadGraphsAfterCommunication(body);
+                return body;
+               // this.#loadGraphsAfterCommunication(body);
             })
 
         .catch(error => {
             console.error(error)
         })
-        console.log("has fetched");
+        console.log("after fetched");
         //https://www.theserverside.com/blog/Coffee-Talk-Java-News-Stories-and-Opinions/Ajax-JavaScript-file-upload-example#:~:text=Ajax%20file%20uploads&text=A%20JavaScript%20method%20must%20be,file%20upload%20was%20successful%3B%20and
         //https://attacomsian.com/blog/uploading-files-nodejs-express
     }
