@@ -10,12 +10,12 @@ var bagIds = new Array(); //array that contains all bagIds
  * Calls all functions that are needed to create the Tree.
  * @param {array} lines Lines of file
  */
-function handleTreeCreation(lines) {
+function handleTreeCreation(lines, isFromServer) {
     console.log("in handleTree");
     removeBubble(); //faster build on remove. Each frame caluclate the bubbles this cost too much time.
     removeTree(); 
 
-    setBagDependencies(lines, false); 
+    setBagDependencies(lines, isFromServer); 
     resizeConstructNodes();
     //calculateDegrees(); //degree properties
 

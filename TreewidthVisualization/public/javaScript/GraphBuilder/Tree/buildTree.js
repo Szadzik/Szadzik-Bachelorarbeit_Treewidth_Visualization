@@ -68,17 +68,20 @@ function setColorEdge(source, target, displayedText) {
  *              false = tree string from two uploaded files
  */
 function setBagDependencies(lines, isFromServer) {
-    if(isFromServer)
-        lines = line.split('\n');
-
+//    let lineArray = isFromServer ? lines.split('\n') : lines;
+   	console.log("is server true? ", isFromServer); 
+	 console.log("was ist line in dep: ", lines);
+	if(isFromServer)
+		lines = lines.split(/\r?\n/);
     for (var lineNumber = 0; lineNumber < lines.length; lineNumber++) {
         let line;
-        
-        if(isFromServer)
-            line = line[lineNumber];
-        else 
+//	if(lines.length === 0 || lines === '')
+//		continue;        
+//        if(isFromServer)
+  //          line = lines[lineNumber];
+    //    else 
             line = lines[lineNumber].split(/\s+/);
-
+	console.log("line 0 is #", line[0]+ "#", " und 2 #"+line[1]+"#")		
         try {
             console.log("line is ", line)
             switch (line[0]) {
