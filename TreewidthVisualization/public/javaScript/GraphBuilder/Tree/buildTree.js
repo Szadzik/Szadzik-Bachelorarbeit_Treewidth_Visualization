@@ -94,8 +94,8 @@ function setBagDependencies(lines) {
                     setColorNodes(line, lineNumber);
                     break;
                 default: //make edges
-                    if (line.length <= 2) { // <= because of empty last index
-                        let message = 'Cannot create a loop edge on a node in line:' + lineNumber;
+                    if (line.length < 2) { // <= because of empty last index
+                        let message = 'Build Tree: Cannot create a loop edge on a node in line:' + lineNumber+ '. \n line code is '+line;
                         throw new Error(message);
                     }
                     //console.log("sorce ", line[0], " target ", line[1])

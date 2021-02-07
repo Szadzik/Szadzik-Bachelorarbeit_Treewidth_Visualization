@@ -133,7 +133,7 @@ function getNodePoistion(bagId) {
 function getDegrees() {
     cr.nodes('.construct').forEach(n => {
         let d = n.degree();
-        console.log("knoten ", n.data('displayedText'), " of construct has degree ", d)
+       // console.log("knoten ", n.data('displayedText'), " of construct has degree ", d)
     })
 };
 
@@ -141,12 +141,12 @@ function maxDegree() {
     let d = cr.nodes('.construct');
     console.log(' sizedD ', d.length)
     d.sort(function(a, b) {
-        console.log("degre ohne ", a.degree)
+       // console.log("degre ohne ", a.degree)
         return a.degree() - b.degree();
     })
 
     d.nodes().forEach(i => console.log(" degree of max ", i.data('displayedText')))
-    console.log("last node is ", d[d.length - 1].data('displayedText'), " und ohen data ", d[d.length - 1].displayedText)
+  //  console.log("last node is ", d[d.length - 1].data('displayedText'), " und ohen data ", d[d.length - 1].displayedText)
 }
 
 function getMaxDegreeNode() {
@@ -159,5 +159,5 @@ function getMaxDegreeNode() {
         return a.degree - b.degree;
     });
     nodeMaxGrad = degrees[degrees.length - 1].id; //get node of highest degree
-    console.log("last id node ", degrees[degrees.length - 1].id, " and text ", degrees[degrees.length - 1].text, );
+ //   console.log("last id node ", degrees[degrees.length - 1].id, " and text ", degrees[degrees.length - 1].text, );
 }
