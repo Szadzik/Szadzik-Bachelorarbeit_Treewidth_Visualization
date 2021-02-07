@@ -28,7 +28,8 @@ class FileInput {
                 if (this.getFileExtension(file) === 'txt') {
                     //TODO
                 }
-                this.#handleServerCommunication(files[0], this.#setAlgorithmChoice());
+                let b = this.handleServerCommunication(files[0], this.#setAlgorithmChoice());
+                console.log("was ist b: ",b)
                 //loadOneGraphFromFile();
 
             } 
@@ -53,7 +54,7 @@ class FileInput {
      * @param {String} choice tw_exact_terminal, tw_heuristic_terminal 
      *                  (tw_exact/heuristic_file is comming to maybe)
      */
-    static #handleServerCommunication(file, choice) {
+    get handleServerCommunication(file, choice) {
 
         console.log("in my function");
         console.log("choice is ", choice);
