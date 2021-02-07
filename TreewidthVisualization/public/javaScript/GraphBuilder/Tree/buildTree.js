@@ -68,7 +68,7 @@ function setBagDependencies(lines) {
         let line = lines[lineNumber].split(/\s+/);
 
         try {
-          //  console.log("line is ", line)
+            console.log("line is ", line)
             switch (line[0]) {
                 case '':
                     //console.log("line is empty");
@@ -78,10 +78,10 @@ function setBagDependencies(lines) {
                 case 's':
                     numberOfBags = line[2]; //maybe remove?
                     treewidth = line[3];  //TODO maybe-1??
-                   // console.log(" BAGS INSGESAMT ", numberOfBags)
+                    console.log(" BAGS INSGESAMT ", numberOfBags)
                     break;
                 case 'b':
-                     //console.log("in b ", lineNumber)
+                     console.log("in b ", lineNumber)
                     if (line.length <= 2) { // <= because of empty last index
                         let message = 'Tried to define a bag,but this is not a bag on textline: ' +
                             "lineNumber" + '.' + '</br>' + 'Be sure to follow the bag format: ' +
@@ -95,7 +95,7 @@ function setBagDependencies(lines) {
                     break;
                 default: //make edges
                     if (line.length < 2) { // <= because of empty last index
-                        let message = 'Build Tree: Cannot create a loop edge on a node in line:' + lineNumber+ '. \n line code is '+line;
+                        let message = 'Build Tree: Cannot create a loop edge on a node in line:' + lineNumber+ '. "\n" line code is '+line;
                         throw new Error(message);
                     }
                     //console.log("sorce ", line[0], " target ", line[1])
