@@ -73,6 +73,7 @@ static #handleServerCommunication(file, choice) {
                 console.log(body);
                 
                 this.#loadGraphsAfterCommunication(body);
+
             })
 
         .catch(error => {
@@ -166,7 +167,7 @@ static #handleServerCommunication(file, choice) {
         //            console.log("was sind textlines")
           //          handleGraphCreation(textLines);
                // }else{ //.td
-                    handleTreeCreation(treeString); 
+                    handleTreeCreation(treeString, true); 
                // }
 //            };
     //        reader.readAsText(files[i]);

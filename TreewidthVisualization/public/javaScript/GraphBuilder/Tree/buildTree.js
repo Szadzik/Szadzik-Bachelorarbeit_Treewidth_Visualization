@@ -61,20 +61,81 @@ function setColorEdge(source, target, displayedText) {
     });
 }
 
+/**
+ * Creates the tree by creating nodes and edges.
+ * @param {String[]} lines A string that defines the tree by .td format.
+ * @param {Boolean} isFromServer true = tree string from server, 
+ *              false = tree string from two uploaded files
+ */
+function setBagDependencies(lines, isFromServer) {
+    if(isFromServer)
+        lines = line.split('\n');
 
-function setBagDependencies(lines) {
+    for (var lineNumber = 0; lineNumber < lines.length; lineNumber++) {
+        let line;
+        
+        if(isFromServer)
+            line = line[lineNumber];
+        else 
+            line = lines[lineNumber].split(/\s+/);
+
+        try {
+            console.log("line is ", line)
+            switch (line[0]) {
+                case '':
+                    //console.log("line is empty");
+                    break;
+                case 'c':
+                    break;
+                case 's':
+                    numberOfBags = line[2]; //maybe remove?
+                    treewidth = line[3];  //TODO maybe-1??
+                    console.log(" BAGS INSGESAMT ", numberOfBags)
+                    break;
+                case 'b':
+                     console.log("in b ", lineNumber)
+                    if (line.length <= 2) { // <= because of empty last index
+                        let message = 'Tried to define a bag,but this is not a bag on textline: ' +
+                            "lineNumber" + '.' + '</br>' + 'Be sure to follow the bag format: ' +
+                            '"<b><span style=color:blue> b </span> <span style=color:red> n </span> <span style=color:green> k" </span> </b>' +
+                            ', where n is <span style=color:red> the bag number </span> and <span style=color:green> k </span> ' +
+                            'a <span style=color:green> list of nodes</span> (can be empty) of the  <span style=color:blue> bag </span> b. '
+                        throw new Error(message);
+                    }
+                    setConstructNode(line[1], line.length - 3);
+                    setColorNodes(line, lineNumber);
+                    break;
+                default: //make edges
+                    if (line.length < 2) { // <= because of empty last index
+                        let message = 'Build Tree: Cannot create a loop edge on a node in line:' + lineNumber+ '. "\n" line code is '+line;
+                        throw new Error(message);
+                    }
+                    //console.log("sorce ", line[0], " target ", line[1])
+                    setConstructEdges(line[0], line[1]);
+                    searchEdgeConnections(line);
+            }
+        } catch (err) {
+            removeTree(); //TODO remove all created elements that got created before the error //maybe too much for big graphs?
+            alertErr(err.message);
+        }
+    }
+    console.log("was ist cr ", cr.nodes().length)
+}
+
+
+function setBagDependenciesFromServer(lines) {
 	console.log("alle recieved lines are ", lines )
-	console.log("lines to string ?" ,lines.toString());
-	console.log("type of", typeof(lines.toString), " normal ", typeof(lines)); 
-	console.log("first element normal: ", lines[0], " lines with string ", lines[0]);
-	console.log("line length ", lines.length, " und string length ", lines.toString().length);
+	console.log("first element normal: ", lines[0]);
+	console.log("line length ", lines.length);
     //for (var lineNumber = 0; lineNumber < lines.length; lineNumber++) {
 //        let line = lines[lineNumber].split(/\s+/);
-	let line = lines.split('\n');
-	console.log("was ist line ", line, " und length of luine ", line.length )
-	console.log("line einal eckig ", line[0])
-	console.log("line zwei eckig ", line[0][0]);
-    for (var lineNumber = 0; lineNumber < line.length; lineNumber++){
+	let lineArray = lines.split('\n'); //lines = line.split('\n')
+	console.log("was ist line ", lineArray, " und length of luine ", lineArray.length )
+    lines = line.split('\n');
+    console.log("was ist lineLine ", line, " und length of luine ", line.length )
+
+    for (var lineNumber = 0; lineNumber < lineArray.length; lineNumber++){
+        let line = lineArray[lineNumber] ;
         try {
             console.log("line is ", line)
             switch (line[0]) {

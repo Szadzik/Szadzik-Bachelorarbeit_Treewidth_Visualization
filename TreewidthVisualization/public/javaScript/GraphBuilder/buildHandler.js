@@ -15,7 +15,7 @@ function handleTreeCreation(lines) {
     removeBubble(); //faster build on remove. Each frame caluclate the bubbles this cost too much time.
     removeTree(); 
 
-    setBagDependencies(lines); 
+    setBagDependencies(lines, false); 
     resizeConstructNodes();
     //calculateDegrees(); //degree properties
 
