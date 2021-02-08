@@ -13,14 +13,14 @@ class FileInput {
         let files = evt.target.files; 
         if (files.length === 0)
             return;
-
+        let file = files[0];
         try {
             if (files.length > 2){
                 throw new Error('Please don´t select more then two  files.'); 
             }else if (files.length === 1) {
                 console.log("in one files")
 
-                let file = files[0];
+                //let file = files[0];
                 $('#output')[0].value = file.name;
                 console.log("===", this.getFileExtension(file) === 'gr', " == ", console.log("extensionis ", this.getFileExtension(file)) == "gr")
 
@@ -28,9 +28,9 @@ class FileInput {
                 if (this.getFileExtension(file) === 'txt') {
                     //TODO
                 }
-                let t =this.#handleServerCommunication(files[0], this.#setAlgorithmChoice());
-                console.log("wann kommt ergebnis von fetch ",t)
-                //console.log("was ist b: ",b)
+		console.log("übergebende file is ",file);
+                this.#handleServerCommunication( this.#setAlgorithmChoice(), evt);
+		//console.log("was ist b: ",b)
                 //loadOneGraphFromFile();
 
             } 
@@ -38,7 +38,7 @@ class FileInput {
                 
                 $('#output')[0].value = files[0].name + ", " + files[1].name;
                 this.#checkTwoFiles(files);
-                this.#loadTwoGraphsFromFiles(evt);
+                this.#loadGraphsFromFiles(evt);
             } 
         } catch (err) {
             alertErr(err.message);
@@ -55,11 +55,11 @@ class FileInput {
      * @param {String} choice tw_exact_terminal, tw_heuristic_terminal 
      *                  (tw_exact/heuristic_file is comming to maybe)
      */
-static #handleServerCommunication(file, choice) {
-
+static #handleServerCommunication(choice, evt) {
+	let file = evt.target.files[0];
         console.log("in my function");
         console.log("choice is ", choice);
-
+	console.log("erhaltene file is ", file)
         let formData = new FormData();
         formData.append('uploaded_input', file);
 
@@ -72,9 +72,8 @@ static #handleServerCommunication(file, choice) {
             .then(response => response.text()) //json = files, text=string
             .then(body => {
                 console.log(body);
-                
+                this.#loadGraphsFromFiles(evt);
                 this.#loadGraphsAfterCommunication(body);
-                return body;
             })
 
         .catch(error => {
@@ -126,7 +125,7 @@ static #handleServerCommunication(file, choice) {
      * Draws the graph and tree from the files of the input event.
      * @param {Event} evt Upload event from user that contains two files
      */
-    static #loadTwoGraphsFromFiles(evt) {
+    static #loadGraphsFromFiles(evt) {
         let files = evt.target.files;
         //console.log('in load twoGraphs from Files');
 
@@ -145,10 +144,11 @@ static #handleServerCommunication(file, choice) {
                 //text lines of the file
                 let textLines = event.target.result.split('\n');
                
-                if(extension === 'gr'){
-                    handleGraphCreation(textLines);
+                if(extension !== 'gr'){
+		   console.log("ungleich gr, so td")
+                    handleTreeCreation(textLines);
                 }else{ //.td
-                    handleTreeCreation(textLines); 
+                    handleGraphCreation(textLines); 
                 }
             };
             reader.readAsText(files[i]);
@@ -168,7 +168,7 @@ static #handleServerCommunication(file, choice) {
         //            console.log("was sind textlines")
           //          handleGraphCreation(textLines);
                // }else{ //.td
-                  //  handleGraphCreation()//lines
+//                    handleGraphCreation(); //lines
                     handleTreeCreation(treeString, true); 
                // }
 //            };
