@@ -3,7 +3,10 @@ var treewidth = 0;
 function setColorNodes(line) {
     let numberOfbag = line[1];
     bagIds.push(numberOfbag);
-    let vertices = line.slice(2, line.length - 1);
+    console.log("last element ", line[line.length], " index of empty ", line.indexOf(""));
+//    let vertices = line.slice(2, line.length - 1);
+    let vertices =  line.indexOf('')=== -1 ? line.slice(2, line.length) :line.slice(2, line.length-1);
+   console.log("result vertice is ",vertices);
     console.log("vertices of bag are ", vertices);
     vertices.forEach(v => {
         cr.add({
@@ -16,9 +19,6 @@ function setColorNodes(line) {
 }
 
 function searchEdgeConnections(line) {
-    if (line.length < 2) {
-        throw new Error('Tried to create an edge but there are not enough parameters: ', lineNumber);
-    }
     let source = line[0];
     let target = line[1];
 
@@ -101,15 +101,17 @@ function setBagDependencies(lines, isFromServer) {
                             'a <span style=color:green> list of nodes</span> (can be empty) of the  <span style=color:blue> bag </span> b. '
                         throw new Error(message);
                     }
-                    setConstructNode(line[1], line.length - 3); //set bag with id and his number of nodes
-                    setColorNodes(line, lineNumber); 
+		    let size = isFromServer ? line.length -2 : line.length-3;
+                    setConstructNode(line[1], size); //set bag with id and his number of nodes
+                    setColorNodes(line, lineNumber);
+			console.log("size of ", size); 
                     break;
                 default: //make edges
-                    if (line.length < 2) { // <= because of empty last index
+                    if (line.length < 2 && isFromServer || line.length < 3 && !isFromServer) { // <= because of empty last index
                         let message = 'Build Tree: Cannot create a loop edge on a node in line:' + lineNumber+ '. "\n" line code is '+line;
                         throw new Error(message);
                     }
-                    //console.log("sorce ", line[0], " target ", line[1])
+                    //console.log("source ", line[0], " target ", line[1])
                     setConstructEdges(line[0], line[1]);
                     searchEdgeConnections(line);
             }

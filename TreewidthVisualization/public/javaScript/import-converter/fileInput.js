@@ -29,7 +29,7 @@ class FileInput {
                     //TODO
                 }
                 this.#handleServerCommunication(files[0], this.#setAlgorithmChoice());
-                console.log("was ist b: ",b)
+                //console.log("was ist b: ",b)
                 //loadOneGraphFromFile();
 
             } 
