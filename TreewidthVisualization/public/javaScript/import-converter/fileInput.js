@@ -28,7 +28,8 @@ class FileInput {
                 if (this.getFileExtension(file) === 'txt') {
                     //TODO
                 }
-                this.#handleServerCommunication(files[0], this.#setAlgorithmChoice());
+                let t =this.#handleServerCommunication(files[0], this.#setAlgorithmChoice());
+                console.log("wann kommt ergebnis von fetch ",t)
                 //console.log("was ist b: ",b)
                 //loadOneGraphFromFile();
 
@@ -62,7 +63,7 @@ static #handleServerCommunication(file, choice) {
         let formData = new FormData();
         formData.append('uploaded_input', file);
 
-        let result = fetch(choice, {
+        return fetch(choice, {
                 method: 'POST',
                 body: formData
             })
@@ -73,7 +74,7 @@ static #handleServerCommunication(file, choice) {
                 console.log(body);
                 
                 this.#loadGraphsAfterCommunication(body);
-
+                return body;
             })
 
         .catch(error => {
@@ -167,6 +168,7 @@ static #handleServerCommunication(file, choice) {
         //            console.log("was sind textlines")
           //          handleGraphCreation(textLines);
                // }else{ //.td
+                  //  handleGraphCreation()//lines
                     handleTreeCreation(treeString, true); 
                // }
 //            };
