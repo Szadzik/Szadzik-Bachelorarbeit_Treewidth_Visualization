@@ -90,6 +90,7 @@
                 setSidebarProperties();
             }catch(err){}
             
+      
         });
     </script>
 
@@ -119,7 +120,7 @@
         <div id="sidebar-info" class=" w3-sidebar w3-bar-block w3-dark-gray w3-hide-small">
 
             <form id="uploadFiles" action="/tw_exact_terminal" method="POST" enctype="multipart/form-data" class="shadow-dark-gray w3-margin-top" >
-                <input type="file" id="files" name="uploaded_input" onchange="FileInput.handleFileInput(event)" style="display: none; " accept=".gr,.txt,.td,.dgf " multiple />
+                <input type="file" id="files" name="uploaded_input"  style="display: none; " accept=".gr,.txt,.td,.dgf " multiple />
     
                 <label for="files"  style="cursor: pointer; color:white;float: left; padding:2px; border-radius: 5px; font-size: 1em !important;" class="line-tb">
                 <i class=" fa fa-upload " style="color:white ; font-size: 20px; width: 1.3em; " ></i>
@@ -160,11 +161,11 @@
                 <form class = "w3-dropdown-click">
                     Layout:
                     <select id="layout-cy" class="w3-round" onchange="CytoscapeButtons.changeGraphLayout()">
-                        <option value="circle">Circle </option>
+                        <option selected="selected" value="circle">Circle </option>
                         <option value="cise">Cise</option>
                         <option value="cola">Cola</option>
                         <option value="colaS">ColaS</option>
-                        <option selected="selected"  value="coseBilkent">CoseBilkent</option>
+                        <option value="coseBilkent">CoseBilkent</option>
                         <option value="coseBilkentDraft">CoseBilkentDraft</option>
                         <option value="coseBilkentProof">CoseBilkentProof</option>
                         <option value="coseE">CoseE</option>
@@ -237,11 +238,11 @@
                 <form class = "w3-dropdown-click">
                     Layout:
                     <select id="layout-cr" class="w3-round" onchange="CytoscapeButtons.changeTreeLayout()">
-                        <option value="circle">Circle </option>
+                        <option selected="selected" value="circle">Circle </option>
                         <option value="cise">Cise</option>
                         <option value="cola">Cola</option>
                         <option value="colaS">ColaS</option>
-                        <option selected="selected"  value="coseBilkent">CoseBilkent</option>
+                        <option value="coseBilkent">CoseBilkent</option>
                         <option value="coseBilkentDraft">CoseBilkentDraft</option>
                         <option value="coseBilkentProof">CoseBilkentProof</option>
                         <option value="coseE">CoseE</option>
@@ -397,23 +398,7 @@
                     onclick="CytoscapeButtons.resetView('cr')"
                    ></i>
                 </span>
-                <!-- 
-                <span style=" position: absolute; right:0;  bottom: 2.5em; margin-right: 5px" >
-                    <i id="display-bt"class="fa fa-refresh button-ico w3-blue cytoscape-icon" 
-                    data-wenk="Refresh Layout" data-wenk-pos="left" onclick="CytoscapeButtons.fullResetTreeLayout()"
-                   ></i>
-                </span>
-                -->
-
-                <!-- 
-                <span class="button-ico" style=" position: absolute; right:0;  bottom: 0em; margin-right: 15px; padding: 0; " >
-                   <span> Simple </span>   
-                    <i id="display-bt"class=" fa  fa-chevron-left" style="color:black;  cursor: pointer;"></i>
-                    <span id="display-bt"class=" w3-blue cytoscape-icon" data-wenk="Click to change Bubbleset: [None, Simple, High]" data-wenk-pos="left"
-                      style="display: absolute;" >
-                        B
-                    </span>
-                </span>-->
+       
                 <span class="button-ico" style=" position: absolute; right:0;  bottom: 2.5em; margin-right: 15px; padding: 0;" >
                     <span id="recastOptions" style="display: none;" >
                         <button class="w3-button w3-round w3-blue" onclick="CytoscapeButtons.simpleNodeResetTreeLayout()">
@@ -471,12 +456,12 @@
     <script type="text/javascript" src="javaScript/graphFunctions/tapFunctions.js"></script>
 
 
-    <script type="text/javascript" src="javaScript/import-converter/fileInput.js"></script>
     <script type="text/javascript" src="javaScript/graphFunctions/groupMove.js"></script>
     <script type="text/javascript" src="javaScript/SystemFunctions/alerts.js"></script>
     <script type="text/javascript" src="javaScript/SystemFunctions/accordionDropdown.js"></script>
     <script type="text/javascript" src="javaScript/SystemFunctions/search.js"></script>
     <script type="text/javaScript" src="javaScript/SystemFunctions/cytoscapeButtons.js"></script> 
+    <script type="text/javaScript" src="javaScript/import-converter/fileInput copy.js"></script>
 </body>
 
 </html>

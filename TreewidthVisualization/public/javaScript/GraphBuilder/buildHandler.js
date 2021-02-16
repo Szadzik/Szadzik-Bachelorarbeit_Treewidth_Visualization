@@ -27,12 +27,19 @@ function handleTreeCreation(lines, isFromServer) {
   
     setAutoMove(); //move options for mouse
 
+    /*
     //TODO get by layout option
     if (prevTreeLayoutName === "") { //set on truein setlayout
-        handleTreeLayout('circle');
+      //  handleTreeLayout('circle');
+      let selectedLayout = $('#layout-cr')[0].value;
+      console.log("selected layout ",selectedLayout)
+      handleTreeLayout(selectedLayout);
     } else { //TODO take the previous layout if it got changed
-        handleTreeLayout(prevTreeLayoutName);
-    }
+        handleTreeLayout(prevTreeLayoutName); //TODO remove
+    }*/
+
+    let selectedLayout = $('#layout-cr')[0].value;
+    handleTreeLayout(selectedLayout);
 
     console.log("out of handleCreation")
     onSetCheck();
@@ -53,7 +60,7 @@ function onSetCheck(){
 
 /**
  * Calls are functions that are needed to create the Graph.
- * @param {array} lines Lines of file
+ * @param {Array} lines Lines of file
  */
 function handleGraphCreation(lines) {
     removeGraph();
@@ -65,12 +72,19 @@ function handleGraphCreation(lines) {
     let result = setGraph(lines);
     if(result === -1) //TODO
         return;
-
+/*
     if (prevGraphLayoutName === "") { //set on truein setlayout
-        setGraphLayout('circle');
+        let selectedLayout = $('#layout-cy')[0].value;
+        console.log("selected layout ",selectedLayout)
+        setGraphLayout(selectedLayout);
+        //setGraphLayout('circle');
     } else { //TODO take the previous layout if it got changed
         setGraphLayout(prevGraphLayoutName);
-    }
+    }*/
+
+    let selectedLayout = $('#layout-cy')[0].value;
+    setGraphLayout(selectedLayout);
+
     onSetCheck();
     console.log("finished handleGraphCreation")
     return true;
