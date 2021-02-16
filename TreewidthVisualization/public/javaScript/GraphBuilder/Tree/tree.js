@@ -44,7 +44,7 @@ const treeStyle = [{
             'background-color': 'pink',
             'z-compound-depth': 'bottom',
             'label': '',
-            //   'background-opacity': 1 //TODO
+            //'background-opacity':0
         }
     },
 
@@ -111,15 +111,15 @@ const treeStyle = [{
         }
     },
 
-    /** If this element is nor part of the same value/displayed Text of the selected node, 
+    /** If this element is nor part of the same displayedText of the selected node, 
      * then he will displayed in non-trivial grey with light opacity  
      * (adds class on tap) */
     {
         selector: '.notTarget',
         style: {
             'background-color': 'grey',
-            'line-color': 'grey',
-            'opacity': 20, //background oppacity?
+          //  'line-color': 'grey',
+          //  'opacity': 20, //background oppacity?
 
             'background-opacity': 0.5,
             'opacity': 0.5,

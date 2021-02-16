@@ -1,4 +1,3 @@
-
 class FileInput {
     constructor() {}
 
@@ -15,9 +14,12 @@ class FileInput {
             return;
         let file = files[0];
         try {
-            if (files.length > 2){
+            if (files.length > 2)
                 throw new Error('Please don´t select more then two  files.'); 
-            }else if (files.length === 1) {
+            spinner = loadSpin();
+            console.log("after load dialog");
+
+            if (files.length === 1) {
                 console.log("in one files")
 
                 //let file = files[0];
@@ -28,23 +30,30 @@ class FileInput {
                 if (this.getFileExtension(file) === 'txt') {
                     //TODO
                 }
-		console.log("übergebende file is ",file);
                 this.#handleServerCommunication( this.#setAlgorithmChoice(), evt);
-		//console.log("was ist b: ",b)
-                //loadOneGraphFromFile();
-
+                
             } 
             else {
-                
                 $('#output')[0].value = files[0].name + ", " + files[1].name;
                 this.#checkTwoFiles(files);
                 this.#loadGraphsFromFiles(evt);
             } 
         } catch (err) {
+           
+            console.log("zebra dialog to dleete, ", $('.Zebra_Dialog'))
+            spinner.close();
+          //  removeLoadScreen();
             alertErr(err.message);
         }
-        setSidebarProperties();
     }
+
+/*
+    static reloadStaticProperties(){
+         $("#G-accordion2").accordion("destroy").load(link).accordion();
+         $("#T-accordion2").accordion("destroy").load(link).accordion();
+    }*/
+
+
 
     /**
      * The communicator between the server and user/client.
@@ -57,13 +66,13 @@ class FileInput {
      */
 static #handleServerCommunication(choice, evt) {
 	let file = evt.target.files[0];
-        console.log("in my function");
-        console.log("choice is ", choice);
-	console.log("erhaltene file is ", file)
+
+        treeAlgoClock = new CLock();
         let formData = new FormData();
         formData.append('uploaded_input', file);
 
-        return fetch(choice, {
+      //  $('body,html').css('overflow','hidden');
+        fetch(choice, {
                 method: 'POST',
                 body: formData
             })
@@ -73,10 +82,13 @@ static #handleServerCommunication(choice, evt) {
             .then(body => {
                 console.log(body);
                 this.#loadGraphsFromFiles(evt);
-                this.#loadGraphsAfterCommunication(body);
+                handleTreeCreation(body, true);
+                console.log("after loading graph");
+                return;
             })
 
         .catch(error => {
+            spinner.close();
             console.error(error)
         })
         console.log("after fetched");
@@ -145,14 +157,20 @@ static #handleServerCommunication(choice, evt) {
                 let textLines = event.target.result.split('\n');
                
                 if(extension !== 'gr'){
-		   console.log("ungleich gr, so td")
                     handleTreeCreation(textLines);
+                    
                 }else{ //.td
                     handleGraphCreation(textLines); 
                 }
             };
             reader.readAsText(files[i]);
-        }
+        } 
+    }
+
+    async test(textLines){
+        return new Promise((resolve, reject)=>{
+            handleGraphCreation(resolve,textLines); 
+        })
     }
 
     static #loadGraphsAfterCommunication(treeString) {

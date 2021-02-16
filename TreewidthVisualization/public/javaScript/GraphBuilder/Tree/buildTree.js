@@ -126,13 +126,13 @@ function setBagDependencies(lines, isFromServer) {
 
 /**
  * Set the layout from @layout input.
- * @param {string} layout name of the laoyut from file layoutTable
+ * @param {String} layout name of the laoyut from file layoutTable
  */
 function handleTreeLayout(layout) {
 
     setTreeLayout(layout);
     
-    if (layout != 'preset') {
+    if (layout !== 'preset') {
         cr.ready(function() {
             cr.stop();
             mapAngles();
@@ -141,15 +141,19 @@ function handleTreeLayout(layout) {
             cr.endBatch();
 
         });
-    } else {
-        cr.ready(function() {
-            cr.stop();
+    }else if(layout === 'preset'){
+        if($('#bubbleOptions')[0].children[1].value === 'active')
             drawConstructBubble();
-            printDiffTime();
-        })
-    }
+        else if($('#bubbleOptions')[0].children[2].value === 'active')
+            drawFullBubble();
+        // child 0,none, does not need a query
+    } 
 }
 
+/**
+ * Set a layout by his string name
+ * @param {String} layout name of the laoyut from file layoutTable
+ */
 function setTreeLayout(layout) {
     if (prevLayout) {
         prevLayout.stop();
@@ -171,3 +175,4 @@ function setTreeLayout(layout) {
         newLayout.stop();
     }, 100);
 }
+

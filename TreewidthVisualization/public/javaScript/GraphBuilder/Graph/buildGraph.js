@@ -73,7 +73,8 @@ function setNode(node) {
             group: "nodes",
             data: {
                 id: node,
-                displayedText: node
+                displayedText: node,
+                color: getColor(node)
             },
             classes: ['graph']
         });
@@ -135,3 +136,4 @@ function setGraphLayout(layout) {
         }, 100);*/
     cy.endBatch();
 }
+

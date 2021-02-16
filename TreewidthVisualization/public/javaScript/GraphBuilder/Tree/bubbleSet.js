@@ -32,16 +32,17 @@ function drawBubbles() {
 }
 
 /**
- * Draw the bubble on all nodes and edges
+ * Draw the bubble from he tree only on all nodes 
+ * and edges. This makes the layout simple.
  */
-function drawBubbleFull() {
+function drawFullBubble() {
     cr.ready(() => {
 
-        const bb = cr.bubbleSets();
+        bb = cr.bubbleSets();
 
         console.log("BB ", bb.getPaths())
 
-        bbPath = bb.addPath(cr.nodes(), cr.edges(), null, {
+        path = bb.addPath(cr.nodes(), cr.edges(), null, {
             style: {
                 //   fill: 'rgba(255, 0, 0, 0)',
                 stroke: "red",
@@ -49,12 +50,15 @@ function drawBubbleFull() {
             }
         });
         console.log("BB after ", bb.getPaths())
-        console.log(bbPath)
+        console.log("path ", path)
     });
 
 }
 
-
+/**
+ * Draw the bubble from he tree only on the construct nodes 
+ * and edges. This makes the layout simple.
+ */
 function drawConstructBubble() {
 
     bb = cr.bubbleSets();
@@ -71,14 +75,6 @@ function drawConstructBubble() {
 
 
 }
-
-function getBB() {
-    // let n = cr.nodes('.construct')[0]; //take first node
-    //n.map(d => d.scratch("_bb"))
-    let n = cr.scratch('_bb');
-    console.log("was ist cratch of n ", n)
-}
-
 
 /**
  * Remove the bubble from the construct graph

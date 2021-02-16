@@ -6,6 +6,10 @@ var prevTreeLayoutName = ""; //the previous layout that was build for the tree
 var numberOfBags; //total number of bags from the tree
 var bagIds = new Array(); //array that contains all bagIds
 
+var treeClock;
+var treeAlgoClock;
+var graphClock;
+var onSet = 0; //if = 2 then stat setSidebarProperties
 /**
  * Calls all functions that are needed to create the Tree.
  * @param {array} lines Lines of file
@@ -15,10 +19,12 @@ function handleTreeCreation(lines, isFromServer) {
     removeBubble(); //faster build on remove. Each frame caluclate the bubbles this cost too much time.
     removeTree(); 
 
+    treeClock = new CLock();
+//    console.log("get time ", treeClock.getTime, " und normal time ", treeClock.time);
+
     setBagDependencies(lines, isFromServer); 
     resizeConstructNodes();
-    //calculateDegrees(); //degree properties
-
+  
     setAutoMove(); //move options for mouse
 
     //TODO get by layout option
@@ -28,9 +34,21 @@ function handleTreeCreation(lines, isFromServer) {
         handleTreeLayout(prevTreeLayoutName);
     }
 
-    setSidebarProperties();
     console.log("out of handleCreation")
+    onSetCheck();
+    
+}
 
+/**
+ * Check if both graphs are ready to load sidebar
+ */
+function onSetCheck(){
+    onSet++;
+    if(onSet % 2 === 0){
+        onSet = 0;
+        setSidebarProperties();
+        spinner.close();
+    }
 }
 
 /**
@@ -39,6 +57,10 @@ function handleTreeCreation(lines, isFromServer) {
  */
 function handleGraphCreation(lines) {
     removeGraph();
+
+    graphClock = new CLock();
+    console.log("get time   und normal time ", graphClock.time);
+
     console.log("in handleTGraph");
     let result = setGraph(lines);
     if(result === -1) //TODO
@@ -49,9 +71,9 @@ function handleGraphCreation(lines) {
     } else { //TODO take the previous layout if it got changed
         setGraphLayout(prevGraphLayoutName);
     }
-    
-   
+    onSetCheck();
     console.log("finished handleGraphCreation")
+    return true;
 }
 
 
@@ -59,7 +81,7 @@ function handleGraphCreation(lines) {
  * Caluclate and sort a list of degrees from bags(construct graph).
  * @returns sorted list of degrees from bags
  */
-var calculateConstructDegress = function () {
+    function calculateConstructDegress () {
     let degrees = cr.nodes('.construct').map(function(ele) {
         return { id: ele.data('id'), degree: ele.degree(), text: ele.data('displayedText') };
     });
@@ -70,10 +92,11 @@ var calculateConstructDegress = function () {
  * Caluclate and sort a list of degrees from tree nodes.
  * @returns sorted list of degrees from nodes
  */
-var calculateTreeDegress = function() {
+    function calculateTreeDegress() {
     let degrees = cr.nodes('.tree').map(function(ele) {
         return { id: ele.data('id'), degree: ele.degree(), text: ele.data('displayedText') };
     });
+    console.log("was sind degrees ", degrees)
     return sortDegrees(degrees);
 }
 
@@ -81,7 +104,7 @@ var calculateTreeDegress = function() {
  * Caluclate and sort a list of degrees from graph vertices.
  * @returns sorted list of degrees from vertices
  */
-var calculateGraphDegrees = function(){
+    function calculateGraphDegrees(){
     console.log("cy", cy.nodes())
     let degrees = cy.nodes().map(function(ele) {
         return { id: ele.data('id'), degree: ele.degree(), text: ele.data('displayedText') };
@@ -104,15 +127,6 @@ function sortDegrees(degrees) {
     return tmp; 
 }
 
-function maxDegreeOf(sortedDegrees){
-    console.log("alle degress sortiert ", sortedDegrees)
-    return sortDegrees[sortDegrees.length-1];
-}
-
-function minDegreeOf(sortedDegrees){
-    console.log("alle degress sortiert ", sortedDegrees)
-    return sortDegrees[0];
-}
 
 /**
  * Remove the tree 
@@ -126,7 +140,7 @@ function removeTree() {
         console.log("catch ", err.message)
         console.log("was is noch an elementen vorhanden ", cr.elements().length, " nodes ", cr.nodes().length, " und ed ", cr.edges().length)
         if (cr.elements().length > 0) {
-            removeAllTree();
+            removeTree();
         }
     }
 }

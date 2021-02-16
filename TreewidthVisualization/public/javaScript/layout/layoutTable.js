@@ -218,18 +218,4 @@ let layouts = {
             }
         }
     },
-    preset2: {
-        name: 'preset'
-    },
-    spread: {
-        name: 'spread'
-    },
-    spreadWithBreadth: {
-        name: 'spread',
-        prelayout: {
-            name: 'breadthfirst',
-            roots: '#' + nodeMaxGrad,
-            animate: false
-        }
-    },
 };

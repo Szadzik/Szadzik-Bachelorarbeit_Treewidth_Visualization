@@ -10,7 +10,6 @@ function setSidebarProperties() {
     setBagTable();
     setTreeProperties();
     setTreeLegend();
-    
 }
 
 /**
@@ -22,6 +21,28 @@ function emptyDynamicSidebar(){
     $('#T-accordion1').empty();
 }
 
+function loadScreen(){
+    let div = document.createElement('div');
+    div.style.cssText = 'background-color: rgba(.68, .72, .74, 0.75); z-index: 1001; '
+                +'width:100%; height:100%;  pointer-events: none; position:absolute; '
+                +' color:white; display:flex; '
+                +'align-items: center; justify-content: center;'
+                //#44484a; /#666 opacity:0.75; /rgba(.68, .72, .74, 0.75)
+    let h = document.createElement('h4');
+    h.innerHTML = 'Loading...'
+    h.classList.add('w3-dark-gray')
+    h.classList.add('w3-round')
+    h.style.cssText = 'width:150px; height:30px; padding: 0 10px 0 10px; text-align:center';
+
+    div.appendChild(h);
+    div.setAttribute("id", "spinLock");
+   $('body').append(div)
+}
+
+function removeLoadScreen() {
+    console.log("in remove loadscreen")
+    $('#spinLock').remove();
+}
 /**
  * Disable and Enable the contents from
  * an accordion action by his id.
@@ -60,14 +81,23 @@ function accordionDropdown(id) {
  * build time, algorithm time] from the graph.
  */
 function setTreeProperties() {
-
+    let degree = calculateTreeDegress();
+    let minDeg = degree[0];
+    let maxDeg = degree[degree.length-1];
     let rows = $('#treeProperties')[0].rows;
     rows[1].cells[1].innerHTML = treewidth;
     rows[2].cells[1].innerHTML = numberOfBags;
     rows[3].cells[1].innerHTML = nrVertices; //number vertice
     rows[4].cells[1].innerHTML = nrEdges; //number edges
-    rows[5].cells[1].innerHTML = "TODO"; //maxDegreeOf( calculateTreeDegress)
-    rows[6].cells[1].innerHTML = "TODO";
+    rows[5].cells[1].innerHTML = 'Degree: '+ maxDeg.degree + ' </br> Node: '+maxDeg.text +'</br> Id: '+ maxDeg.id;
+    rows[6].cells[1].innerHTML = 'Degree: '+ minDeg.degree + ' </br> Node: '+minDeg.text +'</br> Id: '+ minDeg.id;
+    rows[7].cells[1].innerHTML = treeClock.getTime;
+    if(treeAlgoClock === undefined)
+      //  rows[8].style.display = 'none'
+        rows[8].setAttribute('hidden', true)
+    else 
+        rows[8].setAttribute('hidden', false)
+       // rows[8].style.display = 'table-cell'
 }
 
 /**
@@ -76,12 +106,17 @@ function setTreeProperties() {
  * build time, algorithm time] from the graph.
  */
 function setGraphProperties() {
+    let degree = calculateGraphDegrees();
+    let minDeg = degree[0];
+    let maxDeg = degree[degree.length-1];
  
     let rows = $('#graphProperties')[0].rows;
     rows[1].cells[1].innerHTML = cy.nodes().length; //number vertice
     rows[2].cells[1].innerHTML = cy.edges().length; //number edges
-    rows[3].cells[1].innerHTML = "TODO";
-    rows[4].cells[1].innerHTML = "TODO";
+    rows[3].cells[1].innerHTML = 'Degree: '+ maxDeg.degree + ' </br> Node: '+maxDeg.text +'</br> Id: '+ maxDeg.id;
+    rows[4].cells[1].innerHTML = 'Degree: '+ minDeg.degree + ' </br> Node: '+minDeg.text +'</br> Id: '+ minDeg.id;
+    rows[5].cells[1].innerHTML = graphClock.getTime;
+    
 }
 
 /**
@@ -92,8 +127,6 @@ function setTreeLegend() {
     console.log("in tree layout");
     createTableTree(true, 'List of Nodes');
     createTableTree(false, 'List of Edges');
-    //createTable(true, 'List of Nodes', true);
-    //createTable(false, 'List of Edges', true);
 }
 
 /**
@@ -102,8 +135,6 @@ function setTreeLegend() {
 function setGraphLegend() {
     createTableGraph(true, 'List of Vertices');
     createTableGraph(false, 'List of Edges');
-    //createTable(true, 'List of Vertices', false);
-    //createTable(false, 'List of Edges', false);
 }
 
 /**
@@ -231,47 +262,6 @@ function createTableTree(isNode, message) {
  
     section.appendChild(table);
 }
-
-/*
-function createTable(isNode, message, isTree) {
-    let legend = isTree ? $('#T-accordion1')[0] : $('#G-accordion1')[0];
-    let cytoscape = isTree ? cr : cy;
-    let title = document.createElement('p');
-    let table = document.createElement('table');
-    let tr = document.createElement('tr');
-    let th = document.createElement('th');
-    let th2 = document.createElement('th');
-
-    title.innerHTML = message;
-    table.classList.add('w3-table');
-    table.style.marginBottom = "25px";
-    table.style.tableLayout ="fixed";
-
-    th.innerHTML = 'Color';
-    th2.innerHTML = 'Id';
-    tr.style.borderBottom = '1px solid white';
-
-    legend.appendChild(title);
-    tr.appendChild(th);
-    tr.appendChild(th2);
-    table.appendChild(tr);
-
-    if (isNode) {
-        let list = cytoscape.nodes().map(n => n.data('id'));
-        sortByNumbers(list).forEach(node => {
-            createInnerTable(table, node, true); 
-        });
-    } else { //isEdge
-        let list = cytoscape.edges().map(n => n.data('id'));
-        console.log("list of edges ", list)
-        sortByNumbers(list).forEach(edge => {
-            createInnerTable(table, edge, false); 
-        });
-    }
-
-    legend.appendChild(table);
-}*/
-
 
 /**
  * Gets a table to fill which will be extended by node or edge information.

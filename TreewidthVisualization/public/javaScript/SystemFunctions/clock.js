@@ -1,51 +1,46 @@
-var time; //the date that will be set on run layout
-
-function initalTime() {
-    time = new Date();
-}
-
-
-function startClock() {
-    if (layout != 'preset') {
-        initalTime();
-
+/**
+ * Start a clock and recall the passed time since then 
+ * by calling @getTime
+ */
+class CLock{
+    
+    constructor(){
+        this.time = new Date();//the date that will be set on run layout
     }
-}
+   
+    /**
+     * Calculates the passed (run-)time since @initialTime and return a string
+     * of the elapsed hours, minutes, seconds and miliseconds time.
+     * @param {number} ms elapsed miliseconds since @initialTime
+     * @returns {string} elapsed time since @initialTime
+     */
+    diff_time(ms) {
+        let s = Math.floor(ms / 1000);
+        ms = ms % 1000;
 
+        let m = Math.floor(s / 60);
+        s = s % 60;
 
-/**
- * Calculates the passed (run-)time since @initialTime and return a string
- * of the elapsed hours, minutes, seconds and miliseconds time.
- * @param {number} ms elapsed miliseconds since @initialTime
- * @returns {string} elapsed time since @initialTime
- */
-function diff_time(ms) {
-    let s = Math.floor(ms / 1000);
-    ms = ms % 1000;
+        let h = Math.floor(m / 60);
+        m = m % 60;
 
-    let m = Math.floor(s / 60);
-    s = s % 60;
+        return "Hours: " + h + "</br>Minutes: " + m + "</br>Seconds: " + s + "</br>Miliseconds: " + ms
+    }
 
-    let h = Math.floor(m / 60);
-    m = m % 60;
+    /**
+     *  Returns the time since the setted time.
+     */
+    get getTime(){
+        let timeNow = Date.now();
+        let ms = timeNow - this.time
+        return this.diff_time(ms)
+    }
 
-    return "hours: " + h + " minutes: " + m + " seconds: " + s + " miliseconds: " + ms
-}
+    /**
+     * Returns the start time of this clock.
+     */
+    get setTime(){
+        return this.time;
+    }
 
-/**
- * Print the time that has passed since @initialTime
- */
-function printDiffTime() {
-    let timeNow = Date.now();
-    let ms = timeNow - time
-
-    console.log(diff_time(ms))
-
-}
-
-/**
- * Print the set date of @initialTime
- */
-function printDate() {
-    console.log("full date is: ", time);
 }

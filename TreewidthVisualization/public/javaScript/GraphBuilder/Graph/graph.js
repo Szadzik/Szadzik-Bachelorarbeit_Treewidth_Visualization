@@ -3,13 +3,18 @@ const graphStyle = [{
     selector: 'node',
     style: {
         'shape': 'ellipse',
-        'background-color': '#f1f1f1',
         'label': 'data(id)',
         'text-wrap': 'wrap',
         'text-halign': 'center',
         'text-valign': 'center',
         'text-wrap': 'wrap',
-        'color': 'black',
+        'color': 'white',
+        'background-color': 'data(color)', //'background-color': '#f1f1f1',
+        'border-style': 'solid', //TODO maybe standard?
+        'border-width': 0.5,
+        'border-color': 'black',
+        'text-outline-color': 'black',
+        'text-outline-width': 1
     }
 },
 
@@ -31,6 +36,21 @@ const graphStyle = [{
         }
     },
 
+    /** If this element is nor part of the same displayedText of the selected vertice, 
+     * then he will displayed in non-trivial grey with light opacity  
+     * (adds class on tap) */
+    {
+        selector: '.notTarget',
+        style: {
+            'background-color': 'white',
+            'background-opacity': 0.5, 
+        }
+    }, {
+        selector: 'edge.notTarget',
+        style: {
+            'opacity': 0.5,
+        }
+    },
 ];
 
 const defaultGraph = [
