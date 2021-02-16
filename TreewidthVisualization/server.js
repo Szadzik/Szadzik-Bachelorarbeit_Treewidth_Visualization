@@ -29,7 +29,7 @@ const port = process.env.PORT || 3000;
 //send client his contents on request (on connection)
 app.get('/', function(req, res) {
     console.log({ method: req.method, url: req.url });
-    res.sendFile(__dirname + '/public/indexW3 copy 2.html'); // change the path to your index.html
+    res.sendFile(__dirname + '/public/index.html'); // change the path to your index.html
 });
 
 //make all datas usable from public folder 

@@ -8,9 +8,9 @@ class FileInput {
      * @param {Event} evt Upload file event
      * @returns On failure or end
      */
-    static handleFileInput(evt) {
-        console.log("incomming evt ",evt)
-        let files = evt.target.files; 
+    handleFileInput(evt) {
+        console.log("in file input ", evt)
+        let files = evt[0].files; 
         if (files.length === 0)
             return;
         let file = files[0];
@@ -27,33 +27,25 @@ class FileInput {
                 $('#output')[0].value = file.name;
                 console.log("===", this.getFileExtension(file) === 'gr', " == ", console.log("extensionis ", this.getFileExtension(file)) == "gr")
 
-                this.#checkOneFile(file);
+                this.checkOneFile(file);
                 if (this.getFileExtension(file) === 'txt') {
                     //TODO
                 }
-                this.#handleServerCommunication( this.#setAlgorithmChoice(), evt);
+                this.handleServerCommunication( this.setAlgorithmChoice(), evt);
                 
             } 
             else {
                 $('#output')[0].value = files[0].name + ", " + files[1].name;
-                this.#checkTwoFiles(files);
-                this.#loadGraphsFromFiles(evt);
+                this.checkTwoFiles(files);
+                this.loadGraphsFromFiles(evt);
             } 
         } catch (err) {
            
             console.log("zebra dialog to dleete, ", $('.Zebra_Dialog'))
             spinner.close();
-          //  removeLoadScreen();
             alertErr(err.message);
         }
     }
-
-/*
-    static reloadStaticProperties(){
-         $("#G-accordion2").accordion("destroy").load(link).accordion();
-         $("#T-accordion2").accordion("destroy").load(link).accordion();
-    }*/
-
 
 
     /**
@@ -65,24 +57,21 @@ class FileInput {
      * @param {String} choice tw_exact_terminal, tw_heuristic_terminal 
      *                  (tw_exact/heuristic_file is comming to maybe)
      */
-static #handleServerCommunication(choice, evt) {
-	let file = evt.target.files[0];
+    handleServerCommunication(choice, evt) {
+	    let file = evt[0].files[0];
 
         treeAlgoClock = new CLock();
         let formData = new FormData();
         formData.append('uploaded_input', file);
 
-      //  $('body,html').css('overflow','hidden');
         fetch(choice, {
                 method: 'POST',
                 body: formData
             })
-            // .then(res => console.log("res ", res))
-            // .then(console.log("gesendet und for json response"))
             .then(response => response.text()) //json = files, text=string
             .then(body => {
                 console.log(body);
-                this.#loadGraphsFromFiles(evt);
+                this.loadGraphsFromFiles(evt);
                 handleTreeCreation(body, true);
                 console.log("after loading graph");
                 return;
@@ -103,7 +92,7 @@ static #handleServerCommunication(choice, evt) {
      * 
      * @param {File[]} files Some files
      */
-    static #checkTwoFiles(files) {
+    checkTwoFiles(files) {
         console.log("in check the two files")
         let boolGr = this.getFileExtension(files[0]) === 'gr' || this.getFileExtension(files[1]) === 'gr';
         let boolTd = this.getFileExtension(files[0]) === 'td' || this.getFileExtension(files[1]) === 'td';
@@ -123,7 +112,7 @@ static #handleServerCommunication(choice, evt) {
      * If not then a error will occur.
      * @param {File} file File
      */
-    static #checkOneFile(file) {
+    checkOneFile(file) {
         const validExtensions = ['txt', 'gr', 'dgf'];
         let boolValid = validExtensions.includes(this.getFileExtension(file));
         console.log("file extension is ", this.getFileExtension(file))
@@ -138,10 +127,8 @@ static #handleServerCommunication(choice, evt) {
      * Draws the graph and tree from the files of the input event.
      * @param {Event} evt Upload event from user that contains two files
      */
-    static #loadGraphsFromFiles(evt) {
-        let files = evt.target.files;
-        //console.log('in load twoGraphs from Files');
-
+    loadGraphsFromFiles(evt) {
+        let files = evt[0].files;
         for (let i = 0; i < files.length; i++) {
 
             let reader = new FileReader();
@@ -174,7 +161,7 @@ static #handleServerCommunication(choice, evt) {
      * if the toggle is set on exact, else '/tw_heuristic_terminal'.
      * This is called, if one file was uploaded.
      */
-    static #setAlgorithmChoice() {
+    setAlgorithmChoice() {
         let isExact = $('#exact-toggle').hasClass('active') ? true : false;
 
         if (isExact) {
@@ -192,7 +179,7 @@ static #handleServerCommunication(choice, evt) {
      * @param {File} file File
      * @returns{string} name of file 
      */
-    static getFileName(file) {
+    getFileName(file) {
         let name = file.name.substring(0, file.name.lastIndexOf('.'));
         return name;
     }
@@ -202,7 +189,7 @@ static #handleServerCommunication(choice, evt) {
      * @param {File} file File
      * @returns {String} extension
      */
-    static getFileExtension(file) {
+    getFileExtension(file) {
         let extension = file.name.substring(file.name.lastIndexOf('.') + 1);
         return extension;
     }
@@ -211,4 +198,14 @@ static #handleServerCommunication(choice, evt) {
 document.addEventListener('DOMContentLoaded', function() {
     let $$ = selector => Array.from(document.querySelectorAll(selector));
     selector => document.querySelector(selector);
+
+    let fileInput = new FileInput();
+    $('#files').change(function(){
+        fileInput.handleFileInput($(this))
+    });
+
 });
+
+ 
+
+

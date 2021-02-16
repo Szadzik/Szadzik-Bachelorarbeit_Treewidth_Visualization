@@ -21,28 +21,6 @@ function emptyDynamicSidebar(){
     $('#T-accordion1').empty();
 }
 
-function loadScreen(){
-    let div = document.createElement('div');
-    div.style.cssText = 'background-color: rgba(.68, .72, .74, 0.75); z-index: 1001; '
-                +'width:100%; height:100%;  pointer-events: none; position:absolute; '
-                +' color:white; display:flex; '
-                +'align-items: center; justify-content: center;'
-                //#44484a; /#666 opacity:0.75; /rgba(.68, .72, .74, 0.75)
-    let h = document.createElement('h4');
-    h.innerHTML = 'Loading...'
-    h.classList.add('w3-dark-gray')
-    h.classList.add('w3-round')
-    h.style.cssText = 'width:150px; height:30px; padding: 0 10px 0 10px; text-align:center';
-
-    div.appendChild(h);
-    div.setAttribute("id", "spinLock");
-   $('body').append(div)
-}
-
-function removeLoadScreen() {
-    console.log("in remove loadscreen")
-    $('#spinLock').remove();
-}
 /**
  * Disable and Enable the contents from
  * an accordion action by his id.
@@ -61,8 +39,6 @@ function accordionDropdown(id) {
 
         dropDown.addClass('shadow-dark-gray')
       
-        //console.log("first child ", dropDown.firstChild)
-        //console.log("f children ", dropDown.children())
     } else {
         dropDown.removeClass('w3-show')
         dropDown.css('background-color', 'none');
