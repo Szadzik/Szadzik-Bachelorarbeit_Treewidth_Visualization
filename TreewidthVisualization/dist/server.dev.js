@@ -96,13 +96,7 @@ app.post('/tw_heuristic_terminal', function (req, res) {
   } catch (err) {
     res.send(400);
   }
-});
-/**
- * var field = document.getElementById("chicken");
-field.id = "horse";  // using element properties
-field.setAttribute("name", "horse");  // using .setAttribute() method
- */
-//TODO tw-exact-file
+}); //TODO tw-exact-file
 
 /**
  * The handle of uploadFiles who start a pace algorithm with tw-exact 

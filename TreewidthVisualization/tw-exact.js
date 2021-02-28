@@ -17,8 +17,8 @@ async function tw_exact_terminal(filePath) {
     const { exec } = require('child_process');
     const execProm = util.promisify(exec);
 
-    try {
-        let command = 'cd paceAlgorithm/PACE2017-TrackA/ && ./tw-exact < ' + filePath,
+    try {//rm *.log remove log files that occured on error
+        let command = 'cd paceAlgorithm/PACE2017-TrackA/ && sudo rm *.log &&./tw-exact < ' + filePath,
             options = { encoding: 'utf8' },
             child = await execProm(command, options);
 

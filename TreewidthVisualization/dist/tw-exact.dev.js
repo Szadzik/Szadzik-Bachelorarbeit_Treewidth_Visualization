@@ -24,7 +24,7 @@ function tw_exact_terminal(filePath) {
           _require = require('child_process'), exec = _require.exec;
           execProm = util.promisify(exec);
           _context.prev = 3;
-          command = 'cd paceAlgorithm/PACE2017-TrackA/ && ./tw-exact < ' + filePath;
+          command = 'cd paceAlgorithm/PACE2017-TrackA/ && sudo rm *.log &&./tw-exact < ' + filePath;
           options = {
             encoding: 'utf8'
           };
