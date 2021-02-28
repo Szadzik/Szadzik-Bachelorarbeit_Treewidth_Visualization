@@ -1,6 +1,5 @@
 "use strict";
 
-var nodeMaxGrad = "";
 var maxLayoutDuration = 1500;
 var layoutPadding = 50;
 
@@ -31,37 +30,67 @@ var calculateCachedCentrality = function calculateCachedCentrality() {
   }
 };
 
-function calculateNodeMaxGrad() {
-  //sort node on grad (in and out edges). Last = highest grad, first = smallest grad.
-  var degrees = cr.nodes().map(function (ele) {
-    return {
-      id: ele.data('id'),
-      degree: ele.degree(),
-      text: ele.data('displayedText')
-    };
+var clusterList = [];
+
+function makeClusters() {
+  //bagIds
+  var list = new Array();
+  bagIds.forEach(function (b) {
+    var l = new Array();
+    list.push(l);
   });
-  degrees.sort(function (a, b) {
-    return a.degree - b.degree;
+  cr.nodes('.tree').forEach(function (n) {
+    var index = bagIds.indexOf(n.data('bag')); // list[index].push(n.data('id'));
+
+    list[index].push(n.id());
   });
-  nodeMaxGrad = degrees[degrees.length - 1].id; //get node of highest degree
+  console.log("was ist arraylist ", list);
+  return list;
+} //let eulerSpace = 0;
+
+
+var eulerSpace = 0;
+
+function setEulerSpace() {
+  eulerSpace = cr.nodes('.construct')[0].data('size') / 10000000;
+  console.log("size euler", cr.nodes('.construct')[0].data('size'), " und reuchung ", eulerSpace);
 }
 
 var layouts = {
   breadthfirst: {
     name: 'breadthfirst',
-    roots: '#' + nodeMaxGrad,
+    roots: cr.nodes("[id = \"".concat(root, "\"]")),
     animate: false
   },
   cise: {
     name: 'cise',
-    clusters: function clusters(nodes) {
-      return cr.nodes('.construct');
-    }
+    clusters: function clusters(node) {
+      console.log("bag cise ", node.data('bag'));
+      var i = bagIds.indexOf(node.data('bag'));
+      console.log("ist i in ids of bag ", i);
+      return node.data('bag');
+    },
+    animate: false,
+    ready: function ready() {
+      console.log("cise is ready");
+    },
+    // on layoutready
+    stop: function stop() {
+      console.log("cise has stop");
+    } // on layoutstop
+
   },
   ciseBubble: {
     name: 'cise',
+    clusters: clusterList
+  },
+  ciseConstruct: {
+    name: 'cise',
     clusters: function clusters(node) {
-      return node.data('bag');
+      if (node.hasClass('construct')) {
+        console.log("node cise is construct with ", node.id());
+        return node.id();
+      }
     }
   },
   circle: {
@@ -81,7 +110,6 @@ var layouts = {
   },
   colaS: {
     name: 'cola',
-    fit: false,
     flow: 'tree'
   },
   cola: {
@@ -89,8 +117,6 @@ var layouts = {
     padding: layoutPadding,
     nodeSpacing: 12,
     edgeLengthVal: 45,
-    animate: true,
-    randomize: true,
     maxSimulationTime: maxLayoutDuration,
     boundingBox: {
       // to give cola more space to resolve initial overlaps
@@ -100,11 +126,7 @@ var layouts = {
       y2: 10000
     },
     edgeLength: function edgeLength(e) {
-      /*	let w = e.data('weight');
-        	if( w == null ){
-      	  w = 0.5;
-      	}*/
-      return 0.45;
+      return eulerSpace * 1000000 * 2;
     }
   },
   concentric: {
@@ -113,7 +135,7 @@ var layouts = {
       return node.degree();
     },
     levelWidth: function levelWidth(node) {
-      return '#' + nodeMaxGrad;
+      return '#' + root;
     },
     // equidistant: 'true',
     minNodeSpacing: 1
@@ -149,19 +171,6 @@ var layouts = {
     animate: 'false' //Just show the end result
 
   },
-  coseBilkentDraft: {
-    name: 'cose-bilkent',
-    animate: 'false',
-    //Just show the end result
-    quality: 'draft'
-  },
-  coseBilkentProof: {
-    name: 'cose-bilkent',
-    animate: 'false',
-    //Just show the end result
-    quality: 'proof' //numIter: 2
-
-  },
   coseE: {
     name: "cose",
     idealEdgeLength: 100,
@@ -178,10 +187,8 @@ var layouts = {
     numIter: 1000,
     initialTemp: 200,
     coolingFactor: 0.95,
-    minTemp: 1.0
-  },
-  customCise: {
-    name: 'cise'
+    minTemp: 1.0,
+    animate: false
   },
   dagre: {
     name: 'dagre',
@@ -190,13 +197,46 @@ var layouts = {
     ranker: function ranker(node) {
       return node.degree();
     }
+    /*ranker: function(node){
+        if(node.hasClass('bag')){}
+        else
+            return node.degree();
+    }*/
+
   },
+  //https://www.eclipse.org/elk/reference.html
   elk: {
     name: 'elk',
     animate: false
   },
+  elkMrTree: {
+    name: 'elk',
+    algorithm: 'mrtree'
+  },
+  elkDisco: {
+    name: 'elk',
+    algorithm: 'disco',
+    componentLayoutAlgorithm: 'stress',
+    type: 'UNDIRECTED'
+  },
+  elkForce: {
+    name: 'elk',
+    algorithm: 'force'
+  },
+  elkStress: {
+    name: 'elk',
+    algorithm: 'stress'
+  },
   euler: {
-    name: 'euler'
+    name: 'euler',
+    animate: false,
+    springCoeff: function springCoeff(edge) {
+      return 0.00008 - eulerSpace;
+    }
+  },
+  fcose: {
+    name: 'fcose',
+    animate: false
   },
   grid: {
     name: 'grid'
@@ -204,42 +244,29 @@ var layouts = {
   klay: {
     name: 'klay'
   },
-  normal: {
-    name: 'cose',
-    //infinite: true,
-    fit: false,
-    animate: false
+  klayAuto: {
+    name: 'klay',
+    algorithm: 'de.cau.css.kieler.klay.layered',
+    spacing: 10,
+    layoutHierarchy: true,
+    intCoordinates: true,
+    direction: 'DOWN',
+    edgeRouting: 'ORTHOGONAL'
   },
   random: {
     name: 'random'
   },
   preset: {
     name: 'preset',
-
-    /*
-    positions: function(node) {
-        return calucatePostionCircle(node.data('bag'))
-    }*/
     positions: function positions(node) {
       //or make collection?
+      console.log("PRESET LAYOUT"); //if(node.data('bag') !== undefined){
+
       if (node.hasClass('bag')) {
-        console.log("node has class bag and his text is ", node.data('displayedText'));
+        //fastet if check with class
+        //    console.log("node has class bag and his text is ", node.data('displayedText'))
         return calucatePostionCircle(node.data('bag'));
       }
-    }
-  },
-  preset2: {
-    name: 'preset'
-  },
-  spread: {
-    name: 'spread'
-  },
-  spreadWithBreadth: {
-    name: 'spread',
-    prelayout: {
-      name: 'breadthfirst',
-      roots: '#' + nodeMaxGrad,
-      animate: false
     }
   }
 };

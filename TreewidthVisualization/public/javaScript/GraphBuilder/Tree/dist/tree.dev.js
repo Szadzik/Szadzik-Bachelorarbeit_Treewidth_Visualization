@@ -4,31 +4,15 @@ var _style;
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-var defaultTree = [{
-  "group": "nodes",
-  data: {
-    id: 'c',
-    displayedText: 'c'
-  }
-}, {
-  "group": "nodes",
-  data: {
-    id: 'd',
-    displayedText: "d"
-  }
-}, {
-  "group": "edges",
-  "data": {
-    id: 'cd',
-    source: 'c',
-    target: 'd'
-  }
-}];
+/**
+ * @author Jeanette-Francine Szadzik <szadzik@uni-bremen.de>
+ * Creates the cytoscape <cr> tree and all the styles
+ * that were defined for it.
+ */
 var treeStyle = [{
   selector: 'node',
   style: (_style = {
     'shape': 'ellipse',
-    'background-color': '#f1f1f1',
     'label': 'data(id)',
     'text-wrap': 'wrap',
     'text-halign': 'center',
@@ -49,7 +33,7 @@ var treeStyle = [{
   style: {
     'background-color': 'pink',
     'z-compound-depth': 'bottom',
-    'label': '' //   'background-opacity': 1 //TODO
+    'label': '' //'background-opacity':0
 
   }
 },
@@ -67,6 +51,14 @@ var treeStyle = [{
     'border-width': 2,
     'border-color': 'black',
     'color': 'black'
+  }
+},
+/** Change the color of a selected node (on mouse click) */
+{
+  selector: 'edge:selected',
+  style: {
+    'width': 10,
+    'opacity': 1
   }
 },
 /**Default edge style of the ColorGraph/tree
@@ -94,34 +86,18 @@ var treeStyle = [{
     'border-color': 'black'
   }
 },
-/** Only show text with color and no node-shape (on toggle) */
-{
-  selector: 'node.styleLabel',
-  style: {
-    'background-opacity': 0,
-    'border-width': 0
-  }
-},
-/** Shows the node shape in color and the displayedText in non-color (on toggle) */
-{
-  selector: 'node.styleNode',
-  style: {
-    'background-opacity': 100,
-    'border-width': 0.5
-  }
-},
-/** If this element is nor part of the same value/displayed Text of the selected node, 
+/** If this element is nor part of the same displayedText of the selected node, 
  * then he will displayed in non-trivial grey with light opacity  
  * (adds class on tap) */
 {
   selector: '.notTarget',
-  style: _defineProperty({
+  style: {
     'background-color': 'grey',
-    'line-color': 'grey',
-    'opacity': 20,
-    //background oppacity?
-    'background-opacity': 0.5
-  }, "opacity", 0.5)
+    //  'line-color': 'grey',
+    //  'opacity': 20, //background oppacity?
+    'background-opacity': 0.5,
+    'opacity': 0.5
+  }
 }, {
   selector: 'edge.notTarget',
   style: {
@@ -130,22 +106,35 @@ var treeStyle = [{
 },
 /** Style of node with the highest connection grad of edges */
 {
-  selector: 'node.highestGrad',
+  selector: '.highestDegree',
   style: {
-    'background-color': 'red',
-    'border-color': 'red'
+    'background-color': 'blue',
+    'border-color': 'blue'
+  }
+},
+/** Style of node with the smallest connection grad of edges */
+{
+  selector: '.smallestDegree',
+  style: {
+    'background-color': 'yellow',
+    'border-color': 'yellow'
   }
 },
 /** Style of node from the biggest bag (adds class on selection) */
 {
-  selector: 'node.biggestBag',
+  selector: '.biggestBag',
   style: {
     'background-color': 'red',
     'border-color': 'red'
   }
+}, {
+  selector: '.smallestBag',
+  style: {
+    'background-color': 'orange',
+    'border-color': 'orange'
+  }
 }];
 var cr = window.cr = cytoscape({
   container: $('#cr'),
-  elements: defaultTree,
   style: treeStyle
 });

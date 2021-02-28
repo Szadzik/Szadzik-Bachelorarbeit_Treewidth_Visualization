@@ -1,4 +1,5 @@
 /**
+ * @author Jeanette-Francine Szadzik <szadzik@uni-bremen.de>
  * This code has the tap functions of the cr and cy window from cytoscape.
  * If a node of cy is selected, the node dependencies in cy will show up too.
  * The same for the different direction from cr to cy.
@@ -41,7 +42,8 @@ function resetShifts(){
  * If the node was selected with shift pressed, plurality nodes can be selected
  */
 cy.on('tap', 'node', function(evt) {
-    
+    if(checkArea(evt))
+            return
     let text = evt.target.data('displayedText');
     $('#badge-node').html(text);
     $('#badge-id').html(evt.target.id());
@@ -50,7 +52,6 @@ cy.on('tap', 'node', function(evt) {
         if(!startShiftCy){
             resetShifts();
             startShiftCy = true;
-            console.log("tap und shift gleichzeitig");
         }
       
         cy.startBatch();
@@ -84,6 +85,8 @@ cy.on('tap', 'node', function(evt) {
  * Reset the click functions from tree and graph. Set standard by clicking on the empty field.
  */
 cy.on('tap', function(evt) {
+    if(checkArea(evt))
+            return
     if (evt.target === cy) {
         falseShifts();
         cy.startBatch();
@@ -91,8 +94,13 @@ cy.on('tap', function(evt) {
         cy.endBatch();
 
         cr.startBatch();
-            cr.elements().toggleClass('notTarget', false); //is not target, so go behind/gray.
+            cr.elements().toggleClass('notTarget', false);
+            cr.nodes('.construct').toggleClass('highestDegree', false);
+            cr.nodes('.construct').toggleClass('biggestBag', false);
+            cr.nodes('.construct').toggleClass('smallestDegree', false);
+            cr.nodes('.construct').toggleClass('smallestBag', false);
         cr.endBatch();
+
     }
 });
 
@@ -105,6 +113,8 @@ cy.on('tap', function(evt) {
  * It will visual the bag and his nodes, rest content is grayscale.
  */
 cr.on('tap', 'node.construct', function(evt) {
+    if(checkArea(evt))
+            return
     $('#badge-node').html(evt.target.data('displayedText'));
     $('#badge-id').html(evt.target.id());
     let id = evt.target.id();
@@ -165,7 +175,8 @@ cr.on('tap', 'node.construct', function(evt) {
  * If the node was selected with shift pressed, plurality nodes can be selected
  */
 cr.on('tap', 'node.tree', function(evt) {
-
+    if(checkArea(evt))
+        return
     let text = evt.target.data('displayedText');
     $('#badge-node').html(text);
     $('#badge-id').html(evt.target.id());
@@ -210,11 +221,16 @@ cr.on('tap', 'node.tree', function(evt) {
  * Reset the click functions from tree and graph. Set standard by clicking on the empty field.
  */
 cr.on('tap', function(evt) {
+    if(checkArea(evt))
+            return
     if (evt.target === cr) {
        falseShifts();
         cr.startBatch();
             cr.elements().toggleClass('notTarget', false);
-            // cr.animate('queue', false);
+            cr.nodes('.construct').toggleClass('highestDegree', false);
+            cr.nodes('.construct').toggleClass('biggestBag', false);
+            cr.nodes('.construct').toggleClass('smallestDegree', false);
+            cr.nodes('.construct').toggleClass('smallestBag', false);
         cr.endBatch();
 
         cy.startBatch();
@@ -222,6 +238,7 @@ cr.on('tap', function(evt) {
         cy.endBatch();
 
         disableExtendingButtons(evt);
+        
     }
 })
 
@@ -229,12 +246,25 @@ cr.on('tap', function(evt) {
  * Disable the view of extending buttons 
  * if tree field (cr) is clicked on which is 
  * not a extending button from layout or bubble
+ * @param {Event} evt An event in cytoscape window
  */
 function disableExtendingButtons(evt){
     let e = evt.originalEvent.target.localName;
+
     if(e !=='button' && e !== 'span' && e!== 'i'){
         $('#bubbleOptions')[0].style.display = 'none'; //disable buttons from bubble
         $('#recastOptions')[0].style.display = 'none'; //disable buttons from recast
     }
  
+}
+
+/**
+ * Check if the selected are has a button
+ * @param {Event} evt An event in cytoscape window
+ * @returns true = is button/space/i area, else false
+ */
+function checkArea(evt){
+    let e = evt.originalEvent.target.localName;
+    if(e ==='button' || e === 'span' || e === 'i')
+        return true;
 }

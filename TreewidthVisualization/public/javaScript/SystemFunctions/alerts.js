@@ -1,8 +1,9 @@
-//https://www.sitepoint.com/14-jquery-modal-dialog-boxes/
-//no html hidden function, only call function
+/**
+ * @author Jeanette-Francine Szadzik <szadzik@uni-bremen.de>
+ * Defines modal dialogs for warinings, errors, information ...
+ */
 
-spinner =""; //The Zebra_Dialog element from loadSping()
-
+ spinner ='';
 /**
  * Empty gray body, that is blocking user interaction.
  * Text message of body = "Loading..." 

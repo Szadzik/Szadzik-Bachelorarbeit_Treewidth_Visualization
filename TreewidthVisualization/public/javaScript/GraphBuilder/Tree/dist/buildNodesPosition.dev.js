@@ -1,33 +1,35 @@
 "use strict";
 
 /**
+ * @author Jeanette-Francine Szadzik <szadzik@uni-bremen.de>
  * This file takes care of the node positions in the tree-bags.
  * It takes the start position from the bags and calculate the node position on this.
  * The start position and all important dependecies from the "construct graph" are set in @code{mapAngles}.
  * Although the construct graph represent the construct on that represent the bags on which is builded.
  */
+var radius; //the radius from the center cirle in which to draw nodes
 
-/** @type {Number} */
-var radius;
-/** @type {Number} */
+var startRadius = 25; // the start radius in which the first nodes are placed
 
-var startRadius = 25;
-/** @type {Number} */
+var startNumber = 3; // first drawing circle starts with 3 nodes
 
-var startNumber = 3;
-/** @type {Number} */
+var radiusOffset = 15; //offset for all radius after startradius to calculate in the body dimension of a node.
 
-var radiusOffset = 15;
-var mapBagInformation = new Map(); //map with key = bagId, that contains the number of containing elements and the gap jumps on circle position.
+var mapBagInformation = new Map(); //map with key = bagId, that contains the number of containing elements 
+//as well as remaining elements for calculatings and the gap jumps on circle position.
 
 var startX = 0;
 var startY = 0;
 var countTotal;
-var elesOnCircle;
-var circleNumber;
-var restNodes;
+var elesOnCircle; //how much nodes are alowed in the current circle umreference
+
+var circleNumber; //current number of the attended circle
+
+var restNodes; //number of nodes which has not yet been drawn 
+
 var countElesOnCircle;
 var countFinishedBags;
+var sortedTotalBagSize;
 /**
  * This function fill @mapBagInformation with all his important information of 
  * each bag(colorGraph) which are:
@@ -52,6 +54,30 @@ function mapAngles() {
   setPresets();
 }
 /**
+ * Return the sorted @mapBagInformation by totalNumber.
+ */
+
+
+function mapTotalNumberSize() {
+  var bagTotalSize = new Array();
+  var keys = mapBagInformation.keys();
+  var numbers = mapBagInformation.size;
+
+  while (numbers > 0) {
+    --numbers;
+    var key = keys.next().value;
+    bagTotalSize.push({
+      id: key,
+      size: mapBagInformation.get(key).totalNumber
+    });
+  }
+
+  bagTotalSize = bagTotalSize.sort(function (a, b) {
+    return a.size - b.size;
+  });
+  return bagTotalSize;
+}
+/**
  * Take a node of his bag to calculate his position with the function @determineNodePosition(bag). 
  * After this, update the @mapBagInformation and verify 
  * if a bag positioning has finished to reset the presets by @setPresets() 
@@ -74,13 +100,7 @@ function calucatePostionCircle(bag) {
     setPresets();
   }
 
-  console.log("x i ", coordinates.x, " y i ", coordinates.y);
   return coordinates;
-  /*{
-      //coordinates
-      x: coordinates[0],
-      y: coordinates[1]
-  };*/
 }
 /**
  * Set the start Attributes to position the next bag
@@ -104,11 +124,8 @@ function setPresets() {
 
 
 function determineNodePositions(bag) {
-  //console.log("in determine,was ist bag ", bag)
-  //console.log("was ist bagInfo ", mapBagInformation.get(bag))
   var totalNumber = mapBagInformation.get(bag).totalNumber;
-  var pos = mapBagInformation.get(bag).startPosition; //  console.log(" was ist bag ", bag, " und seine pos ", pos)
-
+  var pos = mapBagInformation.get(bag).startPosition;
   countTotal++;
   countElesOnCircle++;
   var indexTotal = mapBagInformation.get(bag).numberEle;
@@ -157,7 +174,8 @@ function calculateCoordinates(indexTotal, pos, totalNumber) {
   var gap = 360 / countGap; //calculate distance between nodes on the given circle index
 
   var radiantGap = indexTotal * gap * (Math.PI / 180);
-  var offset = circleNumber % 2 === 0 ? gap / 2 : 0;
+  var offset = circleNumber % 2 === 0 ? gap / 2 : 0; //change the circle rotation on value
+
   var x = pos.x + radius * Math.cos((radiantGap + offset) % 360);
   var y = pos.y + radius * Math.sin((radiantGap + offset) % 360);
   return {

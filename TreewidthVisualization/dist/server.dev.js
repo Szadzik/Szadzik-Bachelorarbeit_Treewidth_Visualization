@@ -1,7 +1,8 @@
 "use strict";
 
 /**
- * This file is the server on a (open-)vpn that handle the paceAlgorithm on upload.
+ * @author Jeanette-Francine Szadzik <szadzik@uni-bremen.de>
+ * This file is the server on a (open-)vpn that handle the pace algorithm on upload.
  * Beforehand, the uploaded data is handled on the client side and 
  * is only sending an upload file if it is ONE file of sepecific formats.
  * 
@@ -34,7 +35,7 @@ app.get('/', function (req, res) {
     method: req.method,
     url: req.url
   });
-  res.sendFile(__dirname + '/index.html'); // change the path to your index.html
+  res.sendFile(__dirname + '/public/index.html'); // change the path to your index.html
 }); //make all datas usable from public folder 
 
 app.use(express["static"](__dirname + '/public')); //start server
@@ -48,7 +49,7 @@ app.listen(port, function () {
  *  and send the result to shell.
  */
 
-app.post('/uploadFiles', function (req, res) {
+app.post('/tw_exact_terminal', function (req, res) {
   console.log("req.file ", req.file);
   console.log("req.path ", req.files.uploaded_input.path);
 
@@ -72,6 +73,30 @@ app.post('/uploadFiles', function (req, res) {
     res.send(400);
   }
 });
+app.post('/tw_heuristic_terminal', function (req, res) {
+  console.log("req.file ", req.file);
+  console.log("req.path ", req.files.uploaded_input.path);
+
+  try {
+    console.log("in post for tw_heursitic_terminal");
+    var file = req.files.uploaded_input.path;
+    tw.tw_heuristic_terminal(file).then(function (response) {
+      console.log("Response from tw recieved. Continue with sending.");
+      res.send(response);
+    }).then(function () {
+      console.log("Finished sending, start file deleting.");
+      fs.unlink(file, function (err) {
+        if (err) {
+          console.error(err);
+          return;
+        }
+      });
+      console.log("End tw_heuristic_terminal.");
+    });
+  } catch (err) {
+    res.send(400);
+  }
+});
 /**
  * var field = document.getElementById("chicken");
 field.id = "horse";  // using element properties
@@ -84,7 +109,7 @@ field.setAttribute("name", "horse");  // using .setAttribute() method
  *  and then creates a .td file with the same name prefix.
  */
 
-app.post('/uploadFiles', function (req, res) {
+app.post('/tw_exact_file', function (req, res) {
   console.log("req.file ", req.file);
   console.log("req.path ", req.files.uploaded_input.path);
 

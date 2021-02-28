@@ -1,3 +1,5 @@
+
+
 /* The container must be positioned relative: */
 .custom-select {
     position: relative;
@@ -39,7 +41,6 @@
     cursor: pointer;
   }
   
-  /* Style items (options): */
   .select-items {
     position: absolute;
     background-color: DodgerBlue;

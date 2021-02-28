@@ -1,3 +1,9 @@
+/** 
+ * @author Jeanette-Francine Szadzik <szadzik@uni-bremen.de>
+ * This file must bee in the main folder (/var/www/html)
+ * or the path of the functions needs to be changed.
+ * It will start the heuristic algorithm from PACE2017-TrackA
+ */
 const time = 4000; //waiting time
 
 /**

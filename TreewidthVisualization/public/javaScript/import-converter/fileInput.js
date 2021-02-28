@@ -1,3 +1,7 @@
+/**
+ * @author Jeanette-Francine Szadzik <szadzik@uni-bremen.de>
+ * This file handles the files input on upload and the server communication.
+ */
 class FileInput {
     constructor() {}
 
@@ -9,11 +13,15 @@ class FileInput {
      * @returns On failure or end
      */
     handleFileInput(evt) {
+        
         console.log("in file input ", evt)
         let files = evt[0].files; 
         if (files.length === 0)
             return;
         let file = files[0];
+
+        fileType = this.getFileExtension(file);
+        
         try {
             if (files.length > 2)
                 throw new Error('Please don´t select more then two  files.'); 
@@ -26,11 +34,8 @@ class FileInput {
                 //let file = files[0];
                 $('#output')[0].value = file.name;
                 console.log("===", this.getFileExtension(file) === 'gr', " == ", console.log("extensionis ", this.getFileExtension(file)) == "gr")
-
+               
                 this.checkOneFile(file);
-                if (this.getFileExtension(file) === 'txt') {
-                    //TODO
-                }
                 this.handleServerCommunication( this.setAlgorithmChoice(), evt);
                 
             } 
@@ -73,7 +78,6 @@ class FileInput {
                 console.log(body);
                 this.loadGraphsFromFiles(evt);
                 handleTreeCreation(body, true);
-                console.log("after loading graph");
                 return;
             })
 
@@ -82,8 +86,6 @@ class FileInput {
             console.error(error)
         })
         console.log("after fetched");
-        //https://www.theserverside.com/blog/Coffee-Talk-Java-News-Stories-and-Opinions/Ajax-JavaScript-file-upload-example#:~:text=Ajax%20file%20uploads&text=A%20JavaScript%20method%20must%20be,file%20upload%20was%20successful%3B%20and
-        //https://attacomsian.com/blog/uploading-files-nodejs-express
     }
 
     /**
@@ -108,17 +110,17 @@ class FileInput {
     }
 
     /**
-     * Check the given file has one of the types [txt, gr, dgf].
+     * Check the given file has one of the types [gr, dgf].
      * If not then a error will occur.
      * @param {File} file File
      */
     checkOneFile(file) {
-        const validExtensions = ['txt', 'gr', 'dgf'];
+        const validExtensions = ['gr', 'dgf'];
         let boolValid = validExtensions.includes(this.getFileExtension(file));
         console.log("file extension is ", this.getFileExtension(file))
         if (!boolValid) {
             let message = 'When you select one file, make sure that it is a ' +
-                '<span style=color:red> ' + '.txt, .dgf or .gr. ' + '</span>' + 'file';
+                '<span style=color:red> ' + '.dgf or .gr. ' + '</span>' + 'file';
             throw new Error(message);
         }
     }
@@ -195,6 +197,9 @@ class FileInput {
     }
 }
 
+/**
+ * Add a eventlistener to the input button.
+ */
 document.addEventListener('DOMContentLoaded', function() {
     let $$ = selector => Array.from(document.querySelectorAll(selector));
     selector => document.querySelector(selector);

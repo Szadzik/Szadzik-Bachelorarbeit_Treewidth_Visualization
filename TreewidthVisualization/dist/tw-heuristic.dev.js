@@ -1,5 +1,11 @@
 "use strict";
 
+/** 
+ * @author Jeanette-Francine Szadzik <szadzik@uni-bremen.de>
+ * This file must bee in the main folder (/var/www/html)
+ * or the path of the functions needs to be changed.
+ * It will start the heuristic algorithm from PACE2017-TrackA
+ */
 var time = 4000; //waiting time
 
 /**
@@ -22,7 +28,7 @@ function tw_heursitic_terminal(filePath) {
           _require = require('child_process'), exec = _require.exec;
           execProm = util.promisify(exec);
           _context.prev = 3;
-          command = 'cd paceAlgorithms/PACE2017-TrackA/ && ./tw-heuristic < ' + filePath;
+          command = 'cd paceAlgorithm/PACE2017-TrackA/ && ./tw-heuristic < ' + filePath;
           options = {
             encoding: 'utf8'
           };
@@ -81,7 +87,7 @@ function tw_heursitic_file(filePath) {
           _require2 = require('child_process'), exec = _require2.exec;
           execProm = util.promisify(exec);
           _context2.prev = 3;
-          command = 'cd paceAlgorithms/PACE2017-TrackA/ && ./tw-heuristic < ' + filePath;
+          command = 'cd paceAlgorithm/PACE2017-TrackA/ && ./tw-heuristic < ' + filePath;
           options = {
             encoding: 'utf8'
           };

@@ -1,5 +1,6 @@
 /**
- * This file is the server on a (open-)vpn that handle the paceAlgorithm on upload.
+ * @author Jeanette-Francine Szadzik <szadzik@uni-bremen.de>
+ * This file is the server on a (open-)vpn that handle the pace algorithm on upload.
  * Beforehand, the uploaded data is handled on the client side and 
  * is only sending an upload file if it is ONE file of sepecific formats.
  * 

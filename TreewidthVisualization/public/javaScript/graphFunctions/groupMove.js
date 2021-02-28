@@ -1,4 +1,5 @@
 /**
+ * @author Jeanette-Francine Szadzik <szadzik@uni-bremen.de>
  * Set the auto move rules for the bags (construct nodes).
  * If a bag gets moved by drag, all his containing nodes will be moved to.
  * @param {number} bagId id of bag (construct node)

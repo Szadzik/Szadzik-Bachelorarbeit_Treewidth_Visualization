@@ -1,8 +1,10 @@
 "use strict";
 
-/*
+/** 
+ * @author Jeanette-Francine Szadzik <szadzik@uni-bremen.de>
  * This file must bee in the main folder (/var/www/html)
  * or the path of the functions needs to be changed.
+ * It will start the exact algorithm from PACE2017-TrackA
  */
 
 /**
@@ -22,7 +24,7 @@ function tw_exact_terminal(filePath) {
           _require = require('child_process'), exec = _require.exec;
           execProm = util.promisify(exec);
           _context.prev = 3;
-          command = 'cd paceAlgorithms/PACE2017-TrackA/ && ./tw-exact < ' + filePath;
+          command = 'cd paceAlgorithm/PACE2017-TrackA/ && ./tw-exact < ' + filePath;
           options = {
             encoding: 'utf8'
           };
@@ -66,7 +68,7 @@ function tw_exact_file(filePath) {
           execProm = util.promisify(exec);
           _context2.prev = 3;
           resultPath = file.substring(0, file.lastIndexOf('.')) + '.td';
-          command = 'cd paceAlgorithms/PACE2017-TrackA/ && ./tw-exact < ' + filePath + ' > ' + resultPath;
+          command = 'cd paceAlgorithm/PACE2017-TrackA/ && ./tw-exact < ' + filePath + ' > ' + resultPath;
           options = {
             encoding: 'utf8'
           };

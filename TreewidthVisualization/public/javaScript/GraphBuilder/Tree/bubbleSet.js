@@ -1,6 +1,9 @@
-//TODO
-var path;
-var bb = cr.bubbleSets({ zIndex: -1 });
+/**
+ * @author Jeanette-Francine Szadzik <szadzik@uni-bremen.de>
+ * Create a bubble around the tree.
+ */
+var path; //path of bubblset
+var bb = cr.bubbleSets({ zIndex: -1 }); //Bubbleset
 
 function drawBubbles() {
 
@@ -63,15 +66,14 @@ function drawConstructBubble() {
 
     bb = cr.bubbleSets();
 
-    console.log("BB ", bb.getPaths())
+    //console.log("BB ", bb.getPaths())
 
     path = bb.addPath(cr.nodes('.construct'), cr.edges(), null, {
         style: {
             stroke: "red",
         }
     });
-    console.log("BB after ", bb.getPaths())
-    console.log("path ", path)
+    //console.log("BB after ", bb.getPaths())
 
 
 }
@@ -84,7 +86,9 @@ function removeBubble() {
     //  path.remove();
 }
 
-
+/**
+ * A different style for the bubbleset
+ */
 const bbStyle = {
     fillStyle: "steelblue"
 };

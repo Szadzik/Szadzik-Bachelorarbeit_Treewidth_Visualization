@@ -1,7 +1,122 @@
+/**
+ * @author Jeanette-Francine Szadzik <szadzik@uni-bremen.de>
+ * Creates buttons functions for the html buttons to interact with cytoscape.
+ */
 
-class CytoscapeButtons{ //pan fit ..
-    constructor() {}
+class CytoscapeButtons{ 
+    constructor() {          
+        this.treePropertiesNode;//contains nodes of maxDegree/minDegree/biggestBag
+    }
 
+    /**
+     * Set the properties maxDegree, minDegree and biggestbag 
+     * of the tree.
+     */
+    static setTreeBagProperties(){
+        this.treePropertiesNode = {maxDegree: '', minDegree: '', bigBag: '', minBag: ''};
+        //bigbag
+        let id = sortedTotalBagSize[sortedTotalBagSize.length-1].id;
+        cr.startBatch();
+            let bag = cr.nodes('.construct').filter(`[id = "${id}"]`);
+        cr.endBatch();
+        this.treePropertiesNode.bigBag = bag;
+
+        //minBag
+        id = sortedTotalBagSize[0].id;
+        cr.startBatch();
+            bag = cr.nodes('.construct').filter(`[id = "${id}"]`);
+        cr.endBatch();
+        this.treePropertiesNode.minBag = bag;
+
+        //maxDegree
+        id = bagDegrees[bagDegrees.length-1].id;
+        cr.startBatch();
+            let mD = cr.nodes('.construct').filter(`[id = "${id}"]`);
+        cr.endBatch();
+        this.treePropertiesNode.maxDegree = mD;
+
+        //minDegree
+        id = bagDegrees[0].id;
+        cr.startBatch();
+            mD = cr.nodes('.construct').filter(`[id = "${id}"]`);
+        cr.endBatch();
+        this.treePropertiesNode.minDegree = mD;
+    }
+
+    /**
+     * Change style of biggest Bag by his id.
+     */
+    static selectBiggestBag(){
+        let id = this.treePropertiesNode.bigBag.id();
+        let bag = this.treePropertiesNode.bigBag;
+
+        // avoid non-coloring if bags are the same
+        if(id === this.treePropertiesNode.minDegree.id())
+            bag.toggleClass('smallestDegree', false)
+        else if( id === this.treePropertiesNode.maxDegree.id())
+            bag.toggleClass('highestDegree', false);
+        else 
+            bag.toggleClass('smallestBag', false);
+
+        bag.toggleClass('biggestBag',true);
+    }
+
+    /**
+     * Change style of smallest Bag by his id.
+     */
+    static selectSmallestBag(){
+        let id = this.treePropertiesNode.minBag.id();
+        let bag = this.treePropertiesNode.minBag;
+
+         // avoid non-coloring if bags are the same
+        if(id === this.treePropertiesNode.minDegree.id())
+            bag.toggleClass('smallestDegree', false)
+        else if(id === this.treePropertiesNode.maxDegree.id())
+            bag.toggleClass('biggestBag',false);
+        else 
+            bag.toggleClass('highestDegree',false);
+
+        bag.toggleClass('smallestBag',true);
+    }
+
+    /**
+     * Change style of bag with max degree by his id.
+     */
+    static selectMaxDegreeConstruct(){
+        let id = this.treePropertiesNode.maxDegree.id();
+        let mD = this.treePropertiesNode.maxDegree;
+
+       // avoid non-coloring if bags are the same
+        if(id === this.treePropertiesNode.bigBag.id())
+            mD.toggleClass('biggestBag', false);
+        else if(id === this.treePropertiesNode.minDegree.id())
+            mD.toggleClass('smallestDegree', false);
+        else 
+            mD.toggleClass('smallestBag', false);
+        
+        mD.toggleClass('highestDegree', true);
+    }
+
+    /**
+     * Change style of bag with min degree by his id.
+     */
+    static selectMinDegreeConstruct(){
+        let id = this.treePropertiesNode.minDegree.id();
+        let mD = this.treePropertiesNode.minDegree;
+
+       // avoid non-coloring if bags are the same
+        if(id === this.treePropertiesNode.maxDegree.id())
+            mD.toggleClass('highestDegree', false);
+        else if(id === this.treePropertiesNode.bigBag.id())
+            mD.toggleClass('biggestBag', false);
+        else 
+            mD.toggleClass('smallestBag', false);
+
+        mD.toggleClass('smallestDegree', true);
+    }
+    
+    /////////////////////////////////////////////////////////
+    
     /**
      * Disable hide on the Tree(cr) or Graph(cy) window.
      * Remove the fullscreen of the previous only window and set to half.
@@ -53,6 +168,8 @@ class CytoscapeButtons{ //pan fit ..
         console.log("was ist cr ", $('#cr-eye-show'))
     }
  
+     /////////////////////////////////////////////////////////
+
     /**
      * Set the Url of the attribute 'action' from the upload button
      * which definies, which method is going to be addressed on the server,
@@ -85,6 +202,9 @@ class CytoscapeButtons{ //pan fit ..
             $('#heuristic-text')[0].style.color = "gray";
         }
     }
+
+     /////////////////////////////////////////////////////////
+     
     /**
      * Reset the view of the cytoscape window cy or cr
      * @param {cr:String, cy:String} cytoscape cr = tree window, cy = graph window
@@ -107,11 +227,12 @@ class CytoscapeButtons{ //pan fit ..
     ///////////////////////////////////////////////////
 
     /**
-     * Re-cast the last graph layout
+     * Re-cast the last graph layout.
+     * This is for cytoscape window buttons
      */
     static resetGraphLayout() {
-        console.log("in reset graph layout");
         setGraphLayout(prevGraphLayoutName);
+        setLayoutTimeGraph();
     }
 
     /**
@@ -125,6 +246,7 @@ class CytoscapeButtons{ //pan fit ..
     
         console.log("change layout of graph");
         setGraphLayout(layout);
+        setLayoutTimeGraph();
     }
 
     ////////////////////////////////////////////////////
@@ -150,21 +272,24 @@ class CytoscapeButtons{ //pan fit ..
     static simpleNodeResetTreeLayout() {
        removeBubble();
        mapAngles() ;
-       handleTreeLayout('preset');
+       handleTreeLayout('preset', true);
     }
 
     /**
      * Re-cast the last tree layout that was set.
+     * This is for cytoscape window buttons.
      */
     static fullResetTreeLayout() {
         removeBubble();
-        handleTreeLayout(prevTreeLayoutName);
+        handleTreeLayout(prevTreeLayoutName, false);
+        setlayoutTimeTree();
     }
 
     
      /**
      * Change the layout of the tree by the value of 
      * the selected layout section.
+     * Don´t recast if the layout is the same as before.
      */
     static changeTreeLayout(){
         
@@ -173,9 +298,10 @@ class CytoscapeButtons{ //pan fit ..
             return;
     
         removeBubble();
-        handleTreeLayout(layout);
+        handleTreeLayout(layout, false);
+        //sidebar update layout clock
+        setlayoutTimeTree();
     }
-
 
     /**
      * Changes the visibility on click to none or visible

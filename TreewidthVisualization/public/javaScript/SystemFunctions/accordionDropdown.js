@@ -1,4 +1,10 @@
 /**
+ * @author Jeanette-Francine Szadzik <szadzik@uni-bremen.de>
+ * Creates and manages the sidebar with the dynamic contents
+ * of the graph and tree information as well as properties.
+ */
+
+/**
  * Set all properties from graph and tree which
  * are displayed in the sidebar.
  */
@@ -19,12 +25,14 @@ function emptyDynamicSidebar(){
     $('#G-accordion1').empty();
     $('#T-accordion0').empty();
     $('#T-accordion1').empty();
+    Search.removeGraphSearch();
+    Search.removeTreeSearch();
 }
 
 /**
  * Disable and Enable the contents from
  * an accordion action by his id.
- * @param {Id} id 
+ * @param {Id} id id of html element
  */
 function accordionDropdown(id) {
 
@@ -32,7 +40,7 @@ function accordionDropdown(id) {
 
     if (!dropDown.hasClass("w3-show")) { //on open
         dropDown.addClass('w3-show');
-       // dropDown[0].className.replace('fa-caret-down', 'fa-caret-up');
+    
         dropDown.prev().css('text-decoration', 'underline white');
         dropDown.prev().css('background-color', '#6d7c8a');
         dropDown.css('padding-bottom', '30px');
@@ -42,8 +50,7 @@ function accordionDropdown(id) {
     } else {
         dropDown.removeClass('w3-show')
         dropDown.css('background-color', 'none');
-       // dropDown[0].classList.replace('fa-caret-up', 'fa-caret-down');
-
+       
         dropDown.prev().css('text-decoration', 'none');
         dropDown.prev().css('background-color', '');
         dropDown.css('background-color', '');
@@ -57,23 +64,72 @@ function accordionDropdown(id) {
  * build time, algorithm time] from the graph.
  */
 function setTreeProperties() {
-    let degree = calculateTreeDegress();
-    let minDeg = degree[0];
-    let maxDeg = degree[degree.length-1];
+    let minDeg = treeDegrees[0];
+    let maxDeg = treeDegrees[treeDegrees.length-1];
     let rows = $('#treeProperties')[0].rows;
+    let bigBagId = sortedTotalBagSize[sortedTotalBagSize.length -1].id;
+    let minBagId = sortedTotalBagSize[0].id;
+    cr.startBatch();
+        let bigBag = cr.nodes('.tree').filter(`[bag = "${bigBagId}"]`).map(n => n.data('displayedText'));
+        let minBag = cr.nodes('.tree').filter(`[bag = "${minBagId}"]`).map(n => n.data('displayedText'));
+    cr.endBatch();
+    bigBag = 'Id: '+ bigBagId + '</br> Nodes: ' + bigBag;
+    minBag = 'Id: '+ minBagId + '</br> Nodes:' + minBag;
+    let singleNodes = cr.nodes('.tree').filter(function(ele, i, eles){
+        return ele.neighborhood('node').length === 0; //return all nodes that have no neighboor
+    });
+  
+    rows[4].cells[0].innerHTML =  colorNodeIcon('red') + "  " + 'Biggest Bag';
+    rows[5].cells[0].innerHTML =  colorNodeIcon('orange') + "  " + 'Smallest Bag';
+    rows[6].cells[0].innerHTML =  colorNodeIcon('blue') + "  " + 'Max Degree Bag';
+    rows[7].cells[0].innerHTML =  colorNodeIcon('yellow') + "  " + 'Min Degree Bag';
+
     rows[1].cells[1].innerHTML = treewidth;
     rows[2].cells[1].innerHTML = numberOfBags;
     rows[3].cells[1].innerHTML = nrVertices; //number vertice
-    rows[4].cells[1].innerHTML = nrEdges; //number edges
-    rows[5].cells[1].innerHTML = 'Degree: '+ maxDeg.degree + ' </br> Node: '+maxDeg.text +'</br> Id: '+ maxDeg.id;
-    rows[6].cells[1].innerHTML = 'Degree: '+ minDeg.degree + ' </br> Node: '+minDeg.text +'</br> Id: '+ minDeg.id;
-    rows[7].cells[1].innerHTML = treeClock.getTime;
+    rows[4].cells[1].innerHTML = bigBag;
+    rows[5].cells[1].innerHTML = minBag;
+    rows[6].cells[1].innerHTML = 'Degree: '+ maxDeg.degree + ' </br> Node: '+maxDeg.text +'</br> Id: '+ maxDeg.id;
+    rows[7].cells[1].innerHTML = 'Degree: '+ minDeg.degree + ' </br> Node: '+minDeg.text +'</br> Id: '+ minDeg.id;
+    rows[8].cells[1].innerHTML ='';
+    rows[9].cells[1].innerHTML = treeClock;
+    rows[10].cells[1].innerHTML = treeLayoutClock;
     if(treeAlgoClock === undefined)
-      //  rows[8].style.display = 'none'
-        rows[8].setAttribute('hidden', true)
+        rows[11].setAttribute('hidden', true)
     else 
-        rows[8].setAttribute('hidden', false)
-       // rows[8].style.display = 'table-cell'
+        rows[11].setAttribute('hidden', false)
+    pTreeHTMLCell(rows[8].cells[1], singleNodes);
+}
+
+/**
+ * Set the layout time new in the tree properties.
+ * This should be used, if a layout is going to recast.
+ */
+function setlayoutTimeTree(){
+    let rows = $('#treeProperties')[0].rows;
+    rows[10].cells[1].innerHTML = treeLayoutClock;
+}
+
+/**
+ * Create p Elements that are clickable interactions
+ * to fit their element.
+ * @param {Cell} cell A html table cell.
+ * @param {Nodes} nodes List of nodes.
+ */
+function pTreeHTMLCell(cell, nodes){
+        let index = 0;
+        nodes.forEach(b => {
+            let displayText = b.data('displayedText');
+            ++index;
+            let p = document.createElement('p');
+            Search.pFitStyle(p);
+  
+            p.innerHTML = index === nodes.length ? displayText :displayText+ ", ";
+            p.addEventListener('click', function(){
+                Search.fit(b, true);
+            });
+            cell.appendChild(p);      
+        });
 }
 
 /**
@@ -82,25 +138,31 @@ function setTreeProperties() {
  * build time, algorithm time] from the graph.
  */
 function setGraphProperties() {
-    let degree = calculateGraphDegrees();
-    let minDeg = degree[0];
-    let maxDeg = degree[degree.length-1];
+    let minDeg = graphDegrees[0];
+    let maxDeg = graphDegrees[graphDegrees.length-1];
  
     let rows = $('#graphProperties')[0].rows;
     rows[1].cells[1].innerHTML = cy.nodes().length; //number vertice
     rows[2].cells[1].innerHTML = cy.edges().length; //number edges
     rows[3].cells[1].innerHTML = 'Degree: '+ maxDeg.degree + ' </br> Node: '+maxDeg.text +'</br> Id: '+ maxDeg.id;
     rows[4].cells[1].innerHTML = 'Degree: '+ minDeg.degree + ' </br> Node: '+minDeg.text +'</br> Id: '+ minDeg.id;
-    rows[5].cells[1].innerHTML = graphClock.getTime;
-    
+    rows[5].cells[1].innerHTML = graphClock;
+    rows[6].cells[1].innerHTML = graphLayoutClock;
+}
+
+/**
+ * Set the layout time new in the graph properties.
+ * This should be used, if a layout is going to recast.
+ */
+function setLayoutTimeGraph(){
+    let rows = $('#graphProperties')[0].rows;
+    rows[6].cells[1].innerHTML = graphLayoutClock;
 }
 
 /**
  * Creates dynamically the legend of nodes and egdes from the tree.
  */
 function setTreeLegend() {
-    
-    console.log("in tree layout");
     createTableTree(true, 'List of Nodes');
     createTableTree(false, 'List of Edges');
 }
@@ -122,9 +184,10 @@ var colorNodeIcon =  function(color){
     return  '<i class="fa  fa-paint-brush " aria-hidden="true" ' +
             'style=";color:' + color + ';font-size:15px;"></i>'
 }
+
 /**
  * Sort a array of numbers. Small = 0, High = last
- * @param {Array} list 
+ * @param {Number[]} list list of numbers
  * @returns sorted array
  */
 function sortByNumbers(list){
@@ -151,7 +214,6 @@ function sortTupleByNumber(list) {
  * @param {String} message title of table
  */
 function createTableGraph(isNode, message) {
-    console.log("in create table graph")
     let section = $('#G-accordion1')[0];
     let title = document.createElement('p');
     title.innerHTML = message;
@@ -213,7 +275,6 @@ function createTableBody(isTree){
  * @param {String} message title of table
  */
 function createTableTree(isNode, message) {
-    console.log("in create table graph")
     let section = $('#T-accordion1')[0];
     let title = document.createElement('p');
     title.innerHTML =  message;
@@ -252,12 +313,19 @@ function createInnerTable(table, element, needColor) {
 
     let color = needColor ? getColor(element) : 'gray';
     icon.innerHTML = colorNodeIcon(color);
-   
+    
     let text = document.createTextNode(element);
     id.appendChild(text);
     row.appendChild(icon);
     row.appendChild(id);
-
+    
+    if(needColor){ //add fit option with clickable
+        let ele = cy.$('#'+element);
+        row.addEventListener('click', function(){
+            Search.fit(ele, false);
+        });
+        row.classList.add('fit');
+    }
 
     table.appendChild(row);
 }
@@ -280,8 +348,15 @@ function createInnerNodeTreeTable(table, iD, displayedText) {
     let text = document.createTextNode(displayedText);
     displayT.appendChild(text);
     text = document.createTextNode(iD);
-    id.appendChild(text);
 
+    //add fit option with clickable
+    row.addEventListener('click', function(){
+        let n = cr.nodes(`[id= "${iD}"]`);
+        Search.fit(n, true);
+    });
+    row.classList.add("fit");
+
+    id.appendChild(text);
     row.appendChild(displayT);
     row.appendChild(id);
 
@@ -308,8 +383,6 @@ function setBagTable(){
     title.innerHTML = 'List of Bags';
     section.appendChild(title);
 
-    console.log("was ist bagIds ", bagIds);
-
     let headTable = document.createElement('th');
     headTable.innerHTML = 'Id';
     headTable.style.maxWidth = "30px";
@@ -324,7 +397,7 @@ function setBagTable(){
     table.appendChild(row);
 
     let bagIdsSorted = sortByNumbers(bagIds);
-    console.log("sorted bag is ", bagIdsSorted);
+
     bagIdsSorted.forEach(id =>{ //innerTable
         row = document.createElement('tr');
         bag = document.createElement('td');
@@ -334,19 +407,28 @@ function setBagTable(){
         let text = document.createTextNode(id);
         bag.appendChild(text);
 
+        cr.startBatch();
         let nodes = cr.nodes('.tree').filter(`[bag = "${id}"]`);
+        cr.endBatch();
         text = document.createTextNode(nodes.length);  
         size.appendChild(text);
-        console.log("was is tnodes ", nodes)
+
 
         let result = nodes.map(n=> n.data('displayedText') )
-        console.log("was ist result ", result)
         text = document.createTextNode(result);
         nodeElements.appendChild(text);
 
         row.appendChild(bag);
         row.appendChild(size);
         row.appendChild(nodeElements);
+
+         //add fit option with clickable
+        
+        row.addEventListener('click', function(){
+            Search.fit(cr.$('#'+id), true);
+        });
+        row.classList.add('fit');
+        
         table.appendChild(row);
     });
     section.appendChild(table);

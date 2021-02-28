@@ -1,4 +1,5 @@
 /* W3.CSS 4.15 December 2020 by Jan Egil and Borge Refsnes */
+/* Modified by @author Jeanette-Francine Szadzik <szadzik@uni-bremen.de>*/
 
 html {
     box-sizing: border-box
@@ -538,25 +539,17 @@ a {
     float: left;
 }
 
-
 /*
 Change style of direct div children
 */
-
 .w3-sidebar>div {
     height:41%;
     margin-top: 10%;
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
+    /*-ms-overflow-style: none; */ /* IE and Edge */
+   /* scrollbar-width: none; */ /* Firefox */
     overflow-y: auto;
+    overflow-x: hidden !important;
 }
-
-.w3-sidebar>div::-webkit-scrollbar  {
-    display: none;
-}
-
-
-
 
 .w3-bar-block .w3-dropdown-hover,
 .w3-bar-block .w3-dropdown-click {
@@ -2052,8 +2045,7 @@ form .w3-button {
 
 .nav-title {
     font-weight: bold !important;
-    margin-top: 1px;
-    margin-bottom: 2px;
+    margin: 0.2em 0 0.2em 0;
     padding-top: 4px;
     padding-left: 20px;
     font-size: 1.3em !important;
@@ -2090,30 +2082,40 @@ form .w3-button {
     margin-left: 10%;
 }
 
-form {
+span.example{
     display: flex !important;
-}
-
-form.example {
     padding: 20px 15px 0 20px;
     margin-left: auto;
     margin-right:auto;
     width: 300px;
- 
 }
 
-form.example button {
+span.example button{
     float: left;
     width: 45px;
     margin-left: 2%;
 }
 
-form.example::after {
+span.example::after {
     content: "";
     clear: both;
     display: table;
 }
 
+form {
+    display: flex !important;
+}
+
+.output{
+    font-style: italic;
+    text-align: center; 
+    font-size: 13px; 
+    width:40%;
+    position: relative; 
+    margin-left:5px;
+    margin-top:5px; 
+    border-radius: 5px; 
+}
 
 /*
 line is an empty class for line:after that 
@@ -2191,21 +2193,19 @@ i{
     color:white;
     font-size: 20px;
 }
+.fitBag,
+.fit{
+    cursor: pointer;
+}
 
-/*
-[class*=hint--]::after{
-    background-color: #555 !important;
-    border-left-color: blue;
-    border-top-color:blue ;
-    border-right-color: blue;
-    border-bottom-color:blue ;
-}*/
-/*
-[data-wenk]::after{
-  
-    background-image: linear-gradient(to right, #2196F3 0%, black 70%) !important;
-   
-}*/
+.fitBag:hover,
+.fit:hover{
+    background-color:#2196F3!important;
+}
+
+.fitBag:hover{
+    color: white !important;;
+}
 
 td{
     word-wrap: break-word !important;
@@ -2239,6 +2239,11 @@ select:focus {
 .cytoscape-maxHeight{
     height: 100%;
 }
+
+
+/**
+* Extras for imports
+*/
 
 .spin.ZebraDialog ,
 .spin .ZebraDialog_Title,

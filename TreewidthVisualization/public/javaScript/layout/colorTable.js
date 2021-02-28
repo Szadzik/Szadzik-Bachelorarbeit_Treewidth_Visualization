@@ -1,4 +1,7 @@
-//https://www.rapidtables.com/web/color/RGB_Color.html
+/**
+ * @author Jeanette-Francine Szadzik <szadzik@uni-bremen.de>
+ * Set color by index.
+ */
 var colors = [ //change to hsl?
     '#FF3333', //red
     '#9933FF', //purple

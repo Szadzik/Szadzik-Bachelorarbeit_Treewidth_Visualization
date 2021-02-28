@@ -1,49 +1,50 @@
-var layout; //the currently layout which is set
-var prevLayout; //the previous layout which was set for the tree
-var prevGraphLayout; //the previous layout which was set for the graph
+/**
+ * @author Jeanette-Francine Szadzik <szadzik@uni-bremen.de>
+ * This file handles the graph and tree creation by lines/Strings.
+ * It also manage the layout and clock properties of the graph and tree.
+ */
+var layout;                 //the currently layout which is set
+var prevLayout;             //the previous layout which was set for the tree
+var prevGraphLayout;        //the previous layout which was set for the graph
 var prevGraphLayoutName = "";//the previous layout that was build for the graph
 var prevTreeLayoutName = ""; //the previous layout that was build for the tree
-var numberOfBags; //total number of bags from the tree
-var bagIds = new Array(); //array that contains all bagIds
+var numberOfBags;           //total number of bags from the tree
+var bagIds = new Array();   //array that contains all bagIds
 
-var treeClock;
-var treeAlgoClock;
-var graphClock;
-var onSet = 0; //if = 2 then stat setSidebarProperties
+var treeClock;              //time how long cytoscape needs to build the tree
+var treeAlgoClock;          //time how long the server/pace-algoirthm needs to build the tree
+var graphClock;             //time how long cytoscape needs to build the graph
+var graphLayoutClock;       //time how long cytoscape needs to build the graph layout
+var treeLayoutClock;        //time how long cytoscape needs to build the tree layout
+
+var onSet = 0;              //if = 2 (both graphs are loaded) then stat setSidebarProperties
+var treeDegrees;            //degrees of nodes in tree
+var graphDegrees;           //degrees of nodes in graph
+var bagDegrees;             //degrees of bags in tree
+
+var fileType;
+
 /**
  * Calls all functions that are needed to create the Tree.
- * @param {array} lines Lines of file
+ * @param {Array} lines Lines of file
  */
 function handleTreeCreation(lines, isFromServer) {
-    console.log("in handleTree");
     removeBubble(); //faster build on remove. Each frame caluclate the bubbles this cost too much time.
     removeTree(); 
-
     treeClock = new CLock();
-//    console.log("get time ", treeClock.getTime, " und normal time ", treeClock.time);
-
+    treeLayout = new TreeLayouts();
     setBagDependencies(lines, isFromServer); 
     resizeConstructNodes();
-  
     setAutoMove(); //move options for mouse
+    treeClock = treeClock.getTime;
 
-    /*
-    //TODO get by layout option
-    if (prevTreeLayoutName === "") { //set on truein setlayout
-      //  handleTreeLayout('circle');
-      let selectedLayout = $('#layout-cr')[0].value;
-      console.log("selected layout ",selectedLayout)
-      handleTreeLayout(selectedLayout);
-    } else { //TODO take the previous layout if it got changed
-        handleTreeLayout(prevTreeLayoutName); //TODO remove
-    }*/
-
-    let selectedLayout = $('#layout-cr')[0].value;
-    handleTreeLayout(selectedLayout);
-
-    console.log("out of handleCreation")
-    onSetCheck();
+    treeLayout.setEulerSpace(); //option for euler layout
     
+    let selectedLayout = $('#layout-cr')[0].value;
+    handleTreeLayout(selectedLayout, false);
+   
+    sortedTotalBagSize = mapTotalNumberSize();
+    onSetCheck();
 }
 
 /**
@@ -52,11 +53,22 @@ function handleTreeCreation(lines, isFromServer) {
 function onSetCheck(){
     onSet++;
     if(onSet % 2 === 0){
+        cr.animate('queue', false);
         onSet = 0;
+        //take bag and tree degrees to handleTreeLayout() and 
+        //add treeLayout.constructByDegree() to recieve a 
+        //different build with maxDegree as first node in collection
+        //with some layouts
+        bagDegrees = calculateConstructDegress();
+        treeDegrees = calculateTreeDegress();
+        graphDegrees = calculateGraphDegrees();
+        
         setSidebarProperties();
+        CytoscapeButtons.setTreeBagProperties();
         spinner.close();
     }
 }
+
 
 /**
  * Calls are functions that are needed to create the Graph.
@@ -66,28 +78,16 @@ function handleGraphCreation(lines) {
     removeGraph();
 
     graphClock = new CLock();
-    console.log("get time   und normal time ", graphClock.time);
 
-    console.log("in handleTGraph");
     let result = setGraph(lines);
     if(result === -1) //TODO
         return;
-/*
-    if (prevGraphLayoutName === "") { //set on truein setlayout
-        let selectedLayout = $('#layout-cy')[0].value;
-        console.log("selected layout ",selectedLayout)
-        setGraphLayout(selectedLayout);
-        //setGraphLayout('circle');
-    } else { //TODO take the previous layout if it got changed
-        setGraphLayout(prevGraphLayoutName);
-    }*/
+    graphClock = graphClock.getTime;
 
     let selectedLayout = $('#layout-cy')[0].value;
+    graphLayout = new GraphLayouts();
     setGraphLayout(selectedLayout);
-
     onSetCheck();
-    console.log("finished handleGraphCreation")
-    return true;
 }
 
 
@@ -110,7 +110,6 @@ function handleGraphCreation(lines) {
     let degrees = cr.nodes('.tree').map(function(ele) {
         return { id: ele.data('id'), degree: ele.degree(), text: ele.data('displayedText') };
     });
-    console.log("was sind degrees ", degrees)
     return sortDegrees(degrees);
 }
 
@@ -119,13 +118,10 @@ function handleGraphCreation(lines) {
  * @returns sorted list of degrees from vertices
  */
     function calculateGraphDegrees(){
-    console.log("cy", cy.nodes())
     let degrees = cy.nodes().map(function(ele) {
         return { id: ele.data('id'), degree: ele.degree(), text: ele.data('displayedText') };
     });
-    console.log("degrees sinf davor ", degrees)
     degrees= sortDegrees(degrees);
-    console.log("degrees sinf ", degrees)
     return degrees;
 }
 
@@ -146,13 +142,10 @@ function sortDegrees(degrees) {
  * Remove the tree 
  */
 function removeTree() {
-    console.log("in remove all");
     try {
         cr.edges().remove();
         cr.nodes().remove();
     } catch (err) {
-        console.log("catch ", err.message)
-        console.log("was is noch an elementen vorhanden ", cr.elements().length, " nodes ", cr.nodes().length, " und ed ", cr.edges().length)
         if (cr.elements().length > 0) {
             removeTree();
         }
@@ -163,7 +156,6 @@ function removeTree() {
  * Remove the graph
  */
 function removeGraph() {
-    console.log("in remove all Graph");
     cy.elements().remove();
 }
 

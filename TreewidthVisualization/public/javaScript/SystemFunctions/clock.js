@@ -1,4 +1,5 @@
 /**
+ * @author Jeanette-Francine Szadzik <szadzik@uni-bremen.de>
  * Start a clock and recall the passed time since then 
  * by calling @getTime
  */
@@ -11,8 +12,8 @@ class CLock{
     /**
      * Calculates the passed (run-)time since @initialTime and return a string
      * of the elapsed hours, minutes, seconds and miliseconds time.
-     * @param {number} ms elapsed miliseconds since @initialTime
-     * @returns {string} elapsed time since @initialTime
+     * @param {Number} ms elapsed miliseconds since @initialTime
+     * @returns {String} elapsed time since @initialTime
      */
     diff_time(ms) {
         let s = Math.floor(ms / 1000);

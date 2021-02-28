@@ -1,22 +1,13 @@
-const defaultTree = [
-    { "group": "nodes", data: { id: 'c', displayedText: 'c' },classes: ['tree']  },
-    { "group": "nodes", data: { id: 'd', displayedText: "d" }, classes: ['tree'] },
-    {
-        "group": "edges",
-        "data": {
-            id: 'cd',
-            source: 'c',
-            target: 'd',
-        }, 
-        classes: ['tree']
-    }
-];
+/**
+ * @author Jeanette-Francine Szadzik <szadzik@uni-bremen.de>
+ * Creates the cytoscape <cr> tree and all the styles
+ * that were defined for it.
+ */
 
 const treeStyle = [{
         selector: 'node',
         style: {
             'shape': 'ellipse',
-            'background-color': '#f1f1f1',
             'label': 'data(id)',
             'text-wrap': 'wrap',
             'text-halign': 'center',
@@ -67,6 +58,15 @@ const treeStyle = [{
         }
     },
 
+    /** Change the color of a selected node (on mouse click) */
+    {
+        selector: 'edge:selected',
+        style: {
+            'width': 10,
+            'opacity':1,
+        }
+    },
+
     /**Default edge style of the ColorGraph/tree
      * Each edge has his custom color
      */
@@ -93,23 +93,6 @@ const treeStyle = [{
         }
     },
 
-    /** Only show text with color and no node-shape (on toggle) */
-    {
-        selector: 'node.styleLabel',
-        style: {
-            'background-opacity': 0,
-            'border-width': 0,
-        }
-    },
-
-    /** Shows the node shape in color and the displayedText in non-color (on toggle) */
-    {
-        selector: 'node.styleNode',
-        style: {
-            'background-opacity': 100,
-            'border-width': 0.5,
-        }
-    },
 
     /** If this element is nor part of the same displayedText of the selected node, 
      * then he will displayed in non-trivial grey with light opacity  
@@ -132,25 +115,40 @@ const treeStyle = [{
     },
     /** Style of node with the highest connection grad of edges */
     {
-        selector: 'node.highestGrad',
+        selector: '.highestDegree',
         style: {
-            'background-color': 'red',
-            'border-color': 'red'
+            'background-color': 'blue',
+            'border-color': 'blue'
+        }
+    },
+
+    /** Style of node with the smallest connection grad of edges */
+    {
+        selector: '.smallestDegree',
+        style: {
+            'background-color': 'yellow',
+            'border-color': 'yellow'
         }
     },
 
     /** Style of node from the biggest bag (adds class on selection) */
     {
-        selector: 'node.biggestBag',
+        selector: '.biggestBag',
         style: {
             'background-color': 'red',
             'border-color': 'red'
+        }
+    },
+    {
+        selector: '.smallestBag',
+        style: {
+            'background-color': 'orange',
+            'border-color': 'orange'
         }
     }
 ];
 
 const cr = window.cr = cytoscape({
     container: $('#cr'),
-    elements: defaultTree,
     style: treeStyle
 });
