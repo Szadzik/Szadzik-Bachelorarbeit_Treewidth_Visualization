@@ -64,7 +64,8 @@ class GraphLayouts{
             },
             colaTree: {
                 name: 'cola',
-                flow: 'tree'
+                flow: 'tree',
+                animate:false
             },
             cola: {
                 name: 'cola',
@@ -78,11 +79,13 @@ class GraphLayouts{
                     x2: 10000,
                     y2: 10000
                 },
+                animate:false
                
             },
             colaTree: {
                 name: 'cola',
                 flow: 'tree',
+                animate:false
                 
             },
 
@@ -154,15 +157,19 @@ class GraphLayouts{
                 padding: 30,
                 animate: false,
                 rankDir: 'BT',
+                animate:false
             },
             euler: {
-                name: 'euler'
+                name: 'euler',
+                animate:false
             },
             grid: {
-                name: 'grid'
+                name: 'grid',
+                animate:false
             },
             klay: {
-                name: 'klay'
+                name: 'klay',
+                animate:false
             },
             random: {
                 name: 'random'
