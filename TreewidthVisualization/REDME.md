@@ -15,6 +15,8 @@ and little changes on head spaces.
 ``` https://github.com/Szadzik/PACE2017-TrackA   ```  
 or use: ``` git clone https://github.com/Szadzik/PACE2017-TrackA.git  ``` 
 
+So following folder structure follows: paceAlgorithm/PACE2017-TrackA/tw-exact   
+
 This changes were for a middle class computer and can also work for you.
 Maybe or maybe not, you need to change the head space in the " tw-exact or tw-heuristic file in the PACE2017-TrackA ".
 
@@ -24,10 +26,10 @@ In contrast, if you want to use a different paceAlgorithm, you need to change th
 ## Manual start  
 ### 1. Start with Server 
 install Node.js with npm. 
-Go in directory  "/TreewidthVisualization" and start a terminal and run one time "node install".  
-To start the apllication run "npm start" in terminal.  
+Go in directory  "/TreewidthVisualization" and start a terminal and run one time "npm install".  
+To start the apllication run "npm start" in terminal. Then insert "localhost:3000" in a browser.  
 
-This variant and the online link support the upload of 2 files (.gr and .td) as well as one file upload of the format .dgf, .txt and .gr.
+This variant and the online link support the upload of 2 files (.gr and .td) as well as one file upload of the format .dgf and .gr.
 
 ### 2.Start without anything
 Go in directory "/TreewidthVisualization/public" and start index.html in a web-browser.
@@ -39,7 +41,7 @@ Pace2017-TrackA
 
 #### Modules:
 Node.js  
-Cytoscape.js    
+Cytoscape.js (and some extensions)
 Zebra-Dialog.js/css    
 wenk.css  
 w3.css  

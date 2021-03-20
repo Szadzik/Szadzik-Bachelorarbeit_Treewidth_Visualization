@@ -24,7 +24,10 @@ async function tw_exact_terminal(filePath) {
 
         return child.stdout;
     } catch (err) {
-        console.log("Child process, catch error: ", err);
+        console.err("Child process, catch error: ", err);
+        //only works for pace algorithm that use tw-exact as command
+        await execProm('pgrep -f tw-exact | xargs kill -SIGTERM'); 
+        await execProm('cd paceAlgorithm/PACE2017-TrackA/ && sudo rm *.log ');
     }
 
 }
@@ -51,7 +54,10 @@ async function tw_exact_file(filePath) {
             child = await execProm(command, options);
 
     } catch (err) {
-        console.log("Child process, catch error: ", err);
+        console.err("Child process, catch error: ", err);
+        //only works for pace algorithm that use tw-exact as command
+        await execProm('pgrep -f tw-exact | xargs kill -SIGTERM'); 
+        await execProm('cd paceAlgorithm/PACE2017-TrackA/ && sudo rm *.log ');
     }
 
 }

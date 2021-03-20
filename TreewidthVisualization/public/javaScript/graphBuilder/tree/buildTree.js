@@ -38,18 +38,16 @@
  function searchEdgeConnections(line) {
      let source = line[0];
      let target = line[1];
- 
      let collectSource = cr.nodes().filter(function(ele) { //all nodes of group source
-         return ele.data('bagContent') == source; //ele.bag?
+         return ele.data('bag') === source; //ele.bag?
      });
      let collectTarget = cr.nodes().filter(function(ele) { // nodes of group target
-         return ele.data('bagContent') == target;
+         return ele.data('bag') === target;
      });
- 
+
      collectSource.forEach(s => {
          collectTarget.forEach(t => {
-             if (s.data('displayedText') == t.data('displayedText')) {
- 
+             if (s.data('displayedText') === t.data('displayedText')) {
                  setColorEdge(s.data('id'), t.data('id'), s.data('displayedText'));
              }
          })

@@ -39,7 +39,7 @@
  
  //start server
  app.listen(port, () => console.log(`Listening on port ${port}...`));
- 
+
  // tw-exact-terminal
  /**
   * The handle of uploadFiles who start a pace algorithm with tw-exact 
@@ -49,10 +49,10 @@
  
      console.log("req.file ", req.file);
      console.log("req.path ", req.files.uploaded_input.path);
+     let file = req.files.uploaded_input.path;
  
      try {
          console.log("in post for tw_exact_terminal");
-         let file = req.files.uploaded_input.path;
          tw.tw_exact_terminal(file).then(response => {
                  console.log("Response from tw recieved. Continue with sending.");
                  res.send(response);
@@ -68,6 +68,12 @@
                  console.log("End tw_exact_terminal.");
              })
      } catch (err) {
+        fs.unlink(file, (err) => {
+            if (err) {
+                console.error(err);
+                return;
+            }
+        });
          res.send(400);
      }
  });
@@ -76,10 +82,10 @@
  
      console.log("req.file ", req.file);
      console.log("req.path ", req.files.uploaded_input.path);
+     let file = req.files.uploaded_input.path;
  
      try {
          console.log("in post for tw_heursitic_terminal");
-         let file = req.files.uploaded_input.path;
          tw.tw_heuristic_terminal(file).then(response => {
                  console.log("Response from tw recieved. Continue with sending.");
                  res.send(response);
@@ -95,13 +101,22 @@
                  console.log("End tw_heuristic_terminal.");
              })
      } catch (err) {
+        fs.unlink(file, (err) => {
+            if (err) {
+                console.error(err);
+                return;
+            }
+        });
          res.send(400);
      }
  
  });
  
- //AN EXAMPLE How to use the action on actions with the ending file.
- //this is not in use yet.
+ //////////////////////////////////////////////////////////// 
+ // EXAMPLE / TEST 
+ ///////////////////////////////////////////////////
+ //AN EXAMPLE / TEST How to use the action on actions with the ending file.
+ //this is not in use.
  /**
   * The handle of uploadFiles who start a pace algorithm with tw-exact 
   *  and then creates a .td file with the same name prefix.
@@ -110,12 +125,10 @@
  
      console.log("req.file ", req.file);
      console.log("req.path ", req.files.uploaded_input.path);
- 
+     let file = req.files.uploaded_input.path;
+     let newFile = file.substring(0, file.lastIndexOf('.')) + '.td';
      try {
          console.log("in post for tw_exact_file ");
-         let file = req.files.uploaded_input.path;
-         let newFile = file.substring(0, file.lastIndexOf('.')) + '.td';
- 
          tw.tw_exact_file(file).then(response => {
                  console.log("Response frm tw recieved. Continue with file generating.");
                  return res.sendFile(newFile);
@@ -138,6 +151,19 @@
                  console.log("End tw_exact_file.");
              })
      } catch (err) {
+        fs.unlink(file, (err) => {
+            if (err) {
+                console.error(err);
+                return;
+            }
+        });
+
+        fs.unlink(newFile, (err) => {
+            if (err) {
+                console.error(err);
+                return;
+            }
+        });
          res.send(400);
      }
  

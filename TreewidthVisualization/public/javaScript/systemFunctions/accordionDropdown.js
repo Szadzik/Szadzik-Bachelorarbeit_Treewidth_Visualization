@@ -9,13 +9,18 @@
  * are displayed in the sidebar.
  */
  function setSidebarProperties() {
+    console.log("bbegin")
     emptyDynamicSidebar();
     setGraphProperties();
     setGraphLegend();
-
+    console.log("after gg")
     setBagTable();
+    createTableTree('branch', 'List of Branches');
+    console.log("after bt")
     setTreeProperties();
+    console.log("after tp")
     setTreeLegend();
+    console.log("after pp")
 }
 
 /**
@@ -81,10 +86,10 @@ function setTreeProperties() {
         return ele.neighborhood('node').length === 0; //return all nodes that have no neighboor
     });
   
-    rows[4].cells[0].innerHTML =  colorNodeIcon('red') + "  " + 'Biggest Bag';
-    rows[5].cells[0].innerHTML =  colorNodeIcon('orange') + "  " + 'Smallest Bag';
-    rows[6].cells[0].innerHTML =  colorNodeIcon('blue') + "  " + 'Max Degree Bag';
-    rows[7].cells[0].innerHTML =  colorNodeIcon('yellow') + "  " + 'Min Degree Bag';
+    rows[5].cells[0].innerHTML =  colorNodeIcon('red') + "  " + 'Largest Bag';
+    rows[6].cells[0].innerHTML =  colorNodeIcon('orange') + "  " + 'Smallest Bag';
+    rows[7].cells[0].innerHTML =  colorNodeIcon('blue') + "  " + 'Max Degree Bag';
+    rows[8].cells[0].innerHTML =  colorNodeIcon('yellow') + "  " + 'Min Degree Bag';
 
     rows[1].cells[1].innerHTML = treeDecompostion;
     rows[2].cells[1].innerHTML = treewidth;
@@ -166,8 +171,8 @@ function setLayoutTimeGraph(){
  * Creates dynamically the legend of nodes and egdes from the tree.
  */
 function setTreeLegend() {
-    createTableTree(true, 'List of Nodes');
-    createTableTree(false, 'List of Edges');
+    createTableTree('node', 'List of Nodes');
+    createTableTree('edge', 'List of Edges');
 }
 
 /**
@@ -274,26 +279,34 @@ function createTableBody(isTree){
 
 /**
  * Build the node or edge table from the tree sidebar. 
- * @param {Boolean} isNode true = node table should be created, else edge table
+ * @param {String} content should be node, branch or edge
  * @param {String} message title of table
  */
-function createTableTree(isNode, message) {
-    let section = $('#T-accordion1')[0];
+function createTableTree(content, message) {
+    let section = content === "branch" ? $('#T-accordion0')[0] : $('#T-accordion1')[0];
     let title = document.createElement('p');
     title.innerHTML =  message;
     section.appendChild(title);
 
     let table; 
+    console.log("in set tree properties");
 
-    if (isNode) {
+    if (content === 'node') {
         table = createTableBody(true);
         let list = cr.nodes('.tree').map(n => [n.data('id'), n.data('displayedText')]);
         sortTupleByNumber(list).forEach(tuple => {
             createInnerNodeTreeTable(table, tuple[0], tuple[1]); 
         });
-    } else { //isEdge
+    } else if(content === 'edge') { //isEdge
         table = createTableBody(false);
+        console.log("menge edte tree ", cr.edges())
         let list = cr.edges('.tree').map(n => n.data('id')); //maybe source and target??
+        sortByNumbers(list).forEach(edge => {
+            createInnerTable(table, edge, false); 
+        });
+    } else if(content === 'branch'){
+        table = createTableBody(false);
+        let list = cr.edges('.construct').map(n => n.data('id')); //maybe source and target??
         sortByNumbers(list).forEach(edge => {
             createInnerTable(table, edge, false); 
         });
@@ -433,6 +446,7 @@ function setBagTable(){
         row.classList.add('fit');
         
         table.appendChild(row);
+        
     });
     section.appendChild(table);
 }

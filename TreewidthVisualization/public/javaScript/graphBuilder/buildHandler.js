@@ -52,7 +52,9 @@ function handleTreeCreation(lines, isFromServer) {
  */
 function onSetCheck(){
     onSet++;
+    console.log("was ist oset", onSet)
     if(onSet % 2 === 0){
+        console.log("in ===")
         cr.animate('queue', false);
         onSet = 0;
         //take bag and tree degrees to handleTreeLayout() and 
@@ -62,8 +64,9 @@ function onSetCheck(){
         bagDegrees = calculateConstructDegress();
         treeDegrees = calculateTreeDegress();
         graphDegrees = calculateGraphDegrees();
-        
+        console.log("vor pp")
         setSidebarProperties();
+        console.log("after pp in i")
         CytoscapeButtons.setTreeBagProperties();
         spinner.close();
     }

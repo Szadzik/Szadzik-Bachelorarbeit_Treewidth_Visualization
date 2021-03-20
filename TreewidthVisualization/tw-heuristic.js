@@ -36,9 +36,7 @@
      } catch (err) {
  
          getStdout(err);
-         // console.log("Close all remaining processes");
-         // exec('pgrep -f java | xargs kill -SIGTERM'); //or tw-heursitic
-         //return err.stdout;
+
      }
  }
  exports.tw_heuristic_terminal = tw_heursitic_terminal;
@@ -88,6 +86,8 @@
      try {
          return err.stdout;
      } catch (err) {
+        exec('pgrep -f tw-heuristic | xargs kill -SIGTERM'); 
+        exec('cd paceAlgorithm/PACE2017-TrackA/ && sudo rm *.log ');
          return -1;
      }
  }

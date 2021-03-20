@@ -91,7 +91,7 @@ class Search{
             return;
         }
         this.removeTreeSearch();
-        let nodeId = cr.nodes('.tree').filter(`[id = "${input}"]`);
+        let nodeId = cr.elements('.tree').filter(`[id = "${input}"]`);
         let nodeDisplayedText = cr.nodes('.tree').filter(`[displayedText = "${input}"]`);
         let bag =cr.nodes('.construct').filter(`[id = "${input}"]`);
 
@@ -105,12 +105,14 @@ class Search{
             this.createTitle(bag, 'Bag', div);
             let table = this.createBagTable(bag);
             div.appendChild(table);
-        }if(nodeId.length > 0){
+        }if(nodeId.length > 0){ //if id of node from bag
             this.createTitle(nodeId, 'Node', div);
             let table = this.createNodeTableTree(nodeId);
             div.appendChild(table);
-        }if(nodeDisplayedText.length > 0){
-            this.createTitle(nodeDisplayedText, 'Node', div);
+        }if(nodeDisplayedText.length > 0){//displayed node text
+            if(nodeDisplayedText.length === 1)
+                this.createTitleDisplayedText(nodeDisplayedText, 'Nodes with Value', div);
+            else this.createTitleDisplayedText(nodeDisplayedText[0], 'Nodes with Value', div);
             let table = this.createNodeTableTree(nodeDisplayedText);
             div.appendChild(table);
 
@@ -143,6 +145,20 @@ class Search{
     static createTitle(node, message, div){
         let title = document.createElement('p');
         title.innerHTML = 'Information about '+ message + ' ' + node.id()+':';
+        title.style.cssText = ' margin-top: 1.2em';
+        
+        div.appendChild(title);
+    }
+
+    /**
+     * Create the title of a table
+     * @param {Node} node Node
+     * @param {String} message a String: "Vertice", "Node" or "Bag". 
+     * @param {Div} div a div html, which is going to be extended
+     */
+    static createTitleDisplayedText(node, message, div){
+        let title = document.createElement('p');
+        title.innerHTML = 'Information about '+ message + ' ' + node.data('displayedText')+':';
         title.style.cssText = ' margin-top: 1.2em';
         
         div.appendChild(title);
