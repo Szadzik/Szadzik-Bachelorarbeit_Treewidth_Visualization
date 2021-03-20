@@ -2,7 +2,7 @@
  * @author Jeanette-Francine Szadzik <szadzik@uni-bremen.de>
  * Contains layouts for the tree.
  */
-class TreeLayouts{
+ class TreeLayouts{
     constructor(){
         this.eulerSpace = 0;
 
@@ -173,7 +173,8 @@ class TreeLayouts{
             preset: {
                 name: 'preset',
                 positions: function(node) { //or make collection?
-                    if (node.hasClass('bag')) { //fastet if check with class
+                    if (node.hasClass('bagContent')) { //fastet if check with class
+                        //console.log("node size height ", node.height(), " and width ", node.width());
                         return calucatePostionCircle(node.data('bag'))
                     }
                 }
@@ -211,8 +212,6 @@ class TreeLayouts{
             if(id !== node.id()){
                 console.log("id ",  node.id())
                 let remove = node.remove()
-                //let remove = n.remove()
-                console.log("was ist removed ", remove)
                 collection.push( remove );
             }
             
@@ -237,9 +236,9 @@ class TreeLayouts{
     }
 
     /**
-     * Returns the Breathfirst layout with the biggestBag as root
+     * Returns the Breathfirst layout with the largestBag as root
      */
-    breadthfirstBiggestBag(){
+    breadthfirstLargestBag(){
         let options = {
             name: 'breadthfirst',
             roots: '#'+ CytoscapeButtons.treePropertiesNode.bigBag.id()

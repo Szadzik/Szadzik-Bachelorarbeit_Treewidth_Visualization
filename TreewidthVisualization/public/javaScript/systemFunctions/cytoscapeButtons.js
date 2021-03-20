@@ -1,375 +1,438 @@
 /**
  * @author Jeanette-Francine Szadzik <szadzik@uni-bremen.de>
- * Creates buttons functions for the html buttons to interact with cytoscape.
+ * Creates and manages the sidebar with the dynamic contents
+ * of the graph and tree information as well as properties.
  */
 
-class CytoscapeButtons{ 
-    constructor() {          
-        this.treePropertiesNode;//contains nodes of maxDegree/minDegree/biggestBag
-    }
+/**
+ * Set all properties from graph and tree which
+ * are displayed in the sidebar.
+ */
+ function setSidebarProperties() {
+    emptyDynamicSidebar();
+    setGraphProperties();
+    setGraphLegend();
 
-    /**
-     * Set the properties maxDegree, minDegree and biggestbag 
-     * of the tree.
-     */
-    static setTreeBagProperties(){
-        this.treePropertiesNode = {maxDegree: '', minDegree: '', bigBag: '', minBag: ''};
-        //bigbag
-        let id = sortedTotalBagSize[sortedTotalBagSize.length-1].id;
-        cr.startBatch();
-            let bag = cr.nodes('.construct').filter(`[id = "${id}"]`);
-        cr.endBatch();
-        this.treePropertiesNode.bigBag = bag;
+    setBagTable();
+    setTreeProperties();
+    setTreeLegend();
+}
 
-        //minBag
-        id = sortedTotalBagSize[0].id;
-        cr.startBatch();
-            bag = cr.nodes('.construct').filter(`[id = "${id}"]`);
-        cr.endBatch();
-        this.treePropertiesNode.minBag = bag;
+/**
+ * Remove all dynamically created children / content from the sidebar.
+ */
+function emptyDynamicSidebar(){
+    $('#G-accordion1').empty();
+    $('#T-accordion0').empty();
+    $('#T-accordion1').empty();
+    Search.removeGraphSearch();
+    Search.removeTreeSearch();
+}
 
-        //maxDegree
-        id = bagDegrees[bagDegrees.length-1].id;
-        cr.startBatch();
-            let mD = cr.nodes('.construct').filter(`[id = "${id}"]`);
-        cr.endBatch();
-        this.treePropertiesNode.maxDegree = mD;
+/**
+ * Disable and Enable the contents from
+ * an accordion action by his id.
+ * @param {Id} id id of html element
+ */
+function accordionDropdown(id) {
 
-        //minDegree
-        id = bagDegrees[0].id;
-        cr.startBatch();
-            mD = cr.nodes('.construct').filter(`[id = "${id}"]`);
-        cr.endBatch();
-        this.treePropertiesNode.minDegree = mD;
-    }
+    let dropDown = $('#' + id);
 
-    /**
-     * Change style of biggest Bag by his id.
-     */
-    static selectBiggestBag(){
-        let id = this.treePropertiesNode.bigBag.id();
-        let bag = this.treePropertiesNode.bigBag;
-
-        // avoid non-coloring if bags are the same
-        if(id === this.treePropertiesNode.minDegree.id())
-            bag.toggleClass('smallestDegree', false)
-        else if( id === this.treePropertiesNode.maxDegree.id())
-            bag.toggleClass('highestDegree', false);
-        else 
-            bag.toggleClass('smallestBag', false);
-
-        bag.toggleClass('biggestBag',true);
-    }
-
-    /**
-     * Change style of smallest Bag by his id.
-     */
-    static selectSmallestBag(){
-        let id = this.treePropertiesNode.minBag.id();
-        let bag = this.treePropertiesNode.minBag;
-
-         // avoid non-coloring if bags are the same
-        if(id === this.treePropertiesNode.minDegree.id())
-            bag.toggleClass('smallestDegree', false)
-        else if(id === this.treePropertiesNode.maxDegree.id())
-            bag.toggleClass('biggestBag',false);
-        else 
-            bag.toggleClass('highestDegree',false);
-
-        bag.toggleClass('smallestBag',true);
-    }
-
-    /**
-     * Change style of bag with max degree by his id.
-     */
-    static selectMaxDegreeConstruct(){
-        let id = this.treePropertiesNode.maxDegree.id();
-        let mD = this.treePropertiesNode.maxDegree;
-
-       // avoid non-coloring if bags are the same
-        if(id === this.treePropertiesNode.bigBag.id())
-            mD.toggleClass('biggestBag', false);
-        else if(id === this.treePropertiesNode.minDegree.id())
-            mD.toggleClass('smallestDegree', false);
-        else 
-            mD.toggleClass('smallestBag', false);
-        
-        mD.toggleClass('highestDegree', true);
-    }
-
-    /**
-     * Change style of bag with min degree by his id.
-     */
-    static selectMinDegreeConstruct(){
-        let id = this.treePropertiesNode.minDegree.id();
-        let mD = this.treePropertiesNode.minDegree;
-
-       // avoid non-coloring if bags are the same
-        if(id === this.treePropertiesNode.maxDegree.id())
-            mD.toggleClass('highestDegree', false);
-        else if(id === this.treePropertiesNode.bigBag.id())
-            mD.toggleClass('biggestBag', false);
-        else 
-            mD.toggleClass('smallestBag', false);
-
-        mD.toggleClass('smallestDegree', true);
-    }
+    if (!dropDown.hasClass("w3-show")) { //on open
+        dropDown.addClass('w3-show');
     
-    /////////////////////////////////////////////////////////
-    
-    /**
-     * Disable hide on the Tree(cr) or Graph(cy) window.
-     * Remove the fullscreen of the previous only window and set to half.
-     * @param {cr:String, cy:String} window cr = tree window, cy = graph window
-     */
-    static showWindow(window){
-        if(window !== 'cy' && window !== 'cr'){
-            console.error("showWindow was not cr or  cy ", window);
-            return;
-        }
-            
-        if(window === 'cy'){
-            $('#cy-eye-show').attr('hidden', true);
-            $('#cy').show();
-            $('#cr').removeClass('cytoscape-maxHeight');
-            $('#cr').addClass('cytoscape-minHeight');
-        }else{
-            $('#cr-eye-show').attr('hidden', true);
-            $('#cr').show();
-            $('#cy').removeClass('cytoscape-maxHeight');
-            $('#cy').addClass('cytoscape-minHeight');
-        }
-    }
- 
-    /**
-     * Hide the Tree(cr) or Graph(cy) window based on the input.
-     * If a window is already hidden, then a second hidden window is not allowed.
-     * If a window is hidden, the other window will take the place for his window.
-     * @param {cr:String, cy:String} window cr = tree window, cy = graph window
-     */
-    static hideWindow(window) {
-        //if cy is selected and cr is not already hidden then hide cy
-        if(window === 'cy' && $('#cr-eye-show').attr('hidden') ){
-            $('#cy-eye-show').attr('hidden', false);
-            $('#cy').hide();
-            $('#cr').removeClass('cytoscape-minHeight');
-            $('#cr').addClass('cytoscape-maxHeight');
-    
-        //if cr is selected and cy is not already hidden then hide cr
-        }else if(window === 'cr' && $('#cy-eye-show').attr('hidden') ){
-            $('#cr-eye-show').attr('hidden' ,false);
-            $('#cr').hide();
-            $('#cy').removeClass('cytoscape-minHeight');
-            $('#cy').addClass('cytoscape-maxHeight');
+        dropDown.prev().css('text-decoration', 'underline white');
+        dropDown.prev().css('background-color', '#6d7c8a');
+        dropDown.css('padding-bottom', '30px');
 
-        }
-    
-        console.log("was ist cy ", $('#cy-eye-show'))
-        console.log("was ist cr ", $('#cr-eye-show'))
-    }
- 
-     /////////////////////////////////////////////////////////
-
-    /**
-     * Set the Url of the attribute 'action' from the upload button
-     * which definies, which method is going to be addressed on the server,
-     * on upload.
-     */
-    static setAlgorithmType() {
-        let exactToggle = $("#exact-toggle");
-        let heuristicToggle = $('#heuristic-toggle');
-    
-        if (exactToggle.hasClass('active') && heuristicToggle.hasClass('inactive')) {
-    
-            exactToggle[0].classList.replace("active", "inactive");
-            heuristicToggle[0].classList.replace('inactive', 'active');
-    
-            exactToggle[0].firstElementChild.checked = false;
-            heuristicToggle[0].firstElementChild.checked = true;
-    
-            $('#exact-text')[0].style.color = "gray";
-            $('#heuristic-text')[0].style.color = "white";
-    
-        } else {
-    
-            exactToggle[0].classList.replace("inactive", "active");
-            heuristicToggle[0].classList.replace('active', 'inactive');
-    
-            exactToggle[0].firstElementChild.checked = true;
-            heuristicToggle[0].firstElementChild.checked = false;
-    
-            $('#exact-text')[0].style.color = "white";
-            $('#heuristic-text')[0].style.color = "gray";
-        }
-    }
-
-     /////////////////////////////////////////////////////////
-     
-    /**
-     * Reset the view of the cytoscape window cy or cr
-     * @param {cr:String, cy:String} cytoscape cr = tree window, cy = graph window
-     */
-    static resetView(cytoscape) {
-        if(cytoscape !== 'cr' && cytoscape !==  'cy'){
-            console.error("resetView was not cr or  cy ", cytoscape);
-            return;
-        }
-           
-        if(cytoscape === 'cr'){
-            cr.fit();
-        }else{
-            cy.fit();
-        }
-    }
-
-    //////////////////////////////////////////////////// 
-    // Graph 
-    ///////////////////////////////////////////////////
-
-    /**
-     * Re-cast the last graph layout.
-     * This is for cytoscape window buttons
-     */
-    static resetGraphLayout() {
-        setGraphLayout(prevGraphLayoutName);
-        setLayoutTimeGraph();
-    }
-
-    /**
-     * Change the layout of the graph by the value of 
-     * the selected layout section.
-     */
-    static changeGraphLayout(){
-        let layout =  $('#layout-cy').val();
-        if(layout === prevGraphLayoutName)
-            return;
-    
-        console.log("change layout of graph");
-        setGraphLayout(layout);
-        setLayoutTimeGraph();
-    }
-
-    ////////////////////////////////////////////////////
-    // Tree
-    ///////////////////////////////////////////////////
-
-    /**
-     * Changes the visibility on click to none or visible
-     * of the span with id #recastOptions
-     */
-    static recastButtonOptions(){
-        if($('#recastOptions')[0].style.display === 'none')
-            $('#recastOptions')[0].style.display = 'inline-block'
-        else 
-            $('#recastOptions')[0].style.display = 'none';
-    }
-
-   /**
-     * Set the pre-standard contruct postion  by
-     * calling the @mapBagInformation to set construct nodes 
-     * follwed by re-casting the preset layout 
-     */
-    static simpleNodeResetTreeLayout() {
-       removeBubble();
-       mapAngles() ;
-       handleTreeLayout('preset', true);
-    }
-
-    /**
-     * Re-cast the last tree layout that was set.
-     * This is for cytoscape window buttons.
-     */
-    static fullResetTreeLayout() {
-        removeBubble();
-        handleTreeLayout(prevTreeLayoutName, false);
-        setlayoutTimeTree();
-    }
-
-    
-     /**
-     * Change the layout of the tree by the value of 
-     * the selected layout section.
-     * Don´t recast if the layout is the same as before.
-     */
-    static changeTreeLayout(){
-        
-        let layout =  $('#layout-cr').val();
-        if(layout === prevTreeLayoutName)
-            return;
-    
-        removeBubble();
-        handleTreeLayout(layout, false);
-        //sidebar update layout clock
-        setlayoutTimeTree();
-    }
-
-    /**
-     * Changes the visibility on click to none or visible
-     * of the span with id #bubbleOptions
-     */
-    static bubbleButtonOptions(){
-        if($('#bubbleOptions')[0].style.display === 'none')
-            $('#bubbleOptions')[0].style.display = 'inline-block'   
-        else 
-            $('#bubbleOptions')[0].style.display = 'none';
-    }
-
-
-    /**
-     * Set the bubble layout from the tree to none.
-     */
-    static noneBubble(){
-        if(this.switchBubble(0))
-            removeBubble();
-    }
-
-    /**
-     * Set the bubble layout from the tree only 
-     * on the construct/bags.
-     */
-    static simpleBubble(){
-        if(this.switchBubble(1)){
-            removeBubble();
-            drawConstructBubble();
-        }
-    }
-
-    /**
-     * Set the bubble layout from the tree 
-     * on all elements.
-     */
-    static highBubble(){
-   
-        if(this.switchBubble(2)){
-            removeBubble();
-            drawFullBubble();
-        }      
-        
-    }
+        dropDown.addClass('shadow-dark-gray')
+      
+    } else {
+        dropDown.removeClass('w3-show')
+        dropDown.css('background-color', 'none');
        
-    /**
-     * Check if the selected button is already active. If yes then return false,
-     * else change the button value to active and the rest inactive.
-     * The style is changed via css.
-     * @param {Number} index Which index is selected
-     */
-    static switchBubble(index){
+        dropDown.prev().css('text-decoration', 'none');
+        dropDown.prev().css('background-color', '');
+        dropDown.css('background-color', '');
 
-        if($('#bubbleOptions')[0].children[index].value === 'active'){
-            console.log("is already active")
-            return false;
-        }
-           
-
-        for(var i = 0; i <  $('#bubbleOptions')[0].children.length; i++){
-            if(index === i){
-                $('#bubbleOptions')[0].children[i].setAttribute('value', 'active')
-                console.log("set index ",index, " and i ", i)
-            } 
-            else {
-                $('#bubbleOptions')[0].children[i].setAttribute('value', 'inactive')
-            }      
-        }
-        return true;
     }
+}
+
+/**
+ * Set the information [treewidth, number of nodes, 
+ * number of edges, max degree node, min degree node, 
+ * build time, algorithm time] from the graph.
+ */
+function setTreeProperties() {
+    
+    let minDeg = treeDegrees[0];
+    let maxDeg = treeDegrees[treeDegrees.length-1];
+    let rows = $('#treeProperties')[0].rows;
+    let bigBagId = sortedTotalBagSize[sortedTotalBagSize.length -1].id;
+    let minBagId = sortedTotalBagSize[0].id;
+    cr.startBatch();
+        let bigBag = cr.nodes('.tree').filter(`[bag = "${bigBagId}"]`).map(n => n.data('displayedText'));
+        let minBag = cr.nodes('.tree').filter(`[bag = "${minBagId}"]`).map(n => n.data('displayedText'));
+    cr.endBatch();
+    let treewidth = minBag.length;
+    bigBag = 'Id: '+ bigBagId + '</br> Nodes: ' + bigBag;
+    minBag = 'Id: '+ minBagId + '</br> Nodes:' + minBag;
+    let singleNodes = cr.nodes('.tree').filter(function(ele, i, eles){
+        return ele.neighborhood('node').length === 0; //return all nodes that have no neighboor
+    });
+  
+    rows[4].cells[0].innerHTML =  colorNodeIcon('red') + "  " + 'Biggest Bag';
+    rows[5].cells[0].innerHTML =  colorNodeIcon('orange') + "  " + 'Smallest Bag';
+    rows[6].cells[0].innerHTML =  colorNodeIcon('blue') + "  " + 'Max Degree Bag';
+    rows[7].cells[0].innerHTML =  colorNodeIcon('yellow') + "  " + 'Min Degree Bag';
+
+    rows[1].cells[1].innerHTML = treeDecompostion;
+    rows[2].cells[1].innerHTML = treewidth;
+    rows[3].cells[1].innerHTML = numberOfBags;
+    rows[4].cells[1].innerHTML = nrVertices; //number vertice
+    rows[5].cells[1].innerHTML = bigBag;
+    rows[6].cells[1].innerHTML = minBag;
+    rows[7].cells[1].innerHTML = 'Degree: '+ maxDeg.degree + ' </br> Node: '+maxDeg.text +'</br> Id: '+ maxDeg.id;
+    rows[8].cells[1].innerHTML = 'Degree: '+ minDeg.degree + ' </br> Node: '+minDeg.text +'</br> Id: '+ minDeg.id;
+    rows[9].cells[1].innerHTML ='';
+    rows[10].cells[1].innerHTML = treeClock;
+    rows[11].cells[1].innerHTML = treeLayoutClock;
+    if(treeAlgoClock === undefined)
+        rows[12].setAttribute('hidden', true)
+    else 
+        rows[12].setAttribute('hidden', false)
+    pTreeHTMLCell(rows[9].cells[1], singleNodes);
+}
+
+/**
+ * Set the layout time new in the tree properties.
+ * This should be used, if a layout is going to recast.
+ */
+function setlayoutTimeTree(){
+    let rows = $('#treeProperties')[0].rows;
+    rows[11].cells[1].innerHTML = treeLayoutClock;
+}
+
+/**
+ * Create p Elements that are clickable interactions
+ * to fit their element.
+ * @param {Cell} cell A html table cell.
+ * @param {Nodes} nodes List of nodes.
+ */
+function pTreeHTMLCell(cell, nodes){
+        let index = 0;
+        nodes.forEach(b => {
+            let displayText = b.data('displayedText');
+            ++index;
+            let p = document.createElement('p');
+            Search.pFitStyle(p);
+  
+            p.innerHTML = index === nodes.length ? displayText :displayText+ ", ";
+            p.addEventListener('click', function(){
+                Search.fit(b, true);
+            });
+            cell.appendChild(p);      
+        });
+}
+
+/**
+ * Set the information [number of vertice, 
+ * number of edges, max degree Vertice, min degree vertice, 
+ * build time, algorithm time] from the graph.
+ */
+function setGraphProperties() {
+    let minDeg = graphDegrees[0];
+    let maxDeg = graphDegrees[graphDegrees.length-1];
+ 
+    let rows = $('#graphProperties')[0].rows;
+    rows[1].cells[1].innerHTML = cy.nodes().length; //number vertice
+    rows[2].cells[1].innerHTML = cy.edges().length; //number edges
+    rows[3].cells[1].innerHTML = 'Degree: '+ maxDeg.degree + ' </br> Node: '+maxDeg.text +'</br> Id: '+ maxDeg.id;
+    rows[4].cells[1].innerHTML = 'Degree: '+ minDeg.degree + ' </br> Node: '+minDeg.text +'</br> Id: '+ minDeg.id;
+    rows[5].cells[1].innerHTML = graphClock;
+    rows[6].cells[1].innerHTML = graphLayoutClock;
+}
+
+/**
+ * Set the layout time new in the graph properties.
+ * This should be used, if a layout is going to recast.
+ */
+function setLayoutTimeGraph(){
+    let rows = $('#graphProperties')[0].rows;
+    rows[6].cells[1].innerHTML = graphLayoutClock;
+}
+
+/**
+ * Creates dynamically the legend of nodes and egdes from the tree.
+ */
+function setTreeLegend() {
+    createTableTree(true, 'List of Nodes');
+    createTableTree(false, 'List of Edges');
+}
+
+/**
+ * Creates dynamically the legend of vertices and egdes from the graph.
+ */
+function setGraphLegend() {
+    createTableGraph(true, 'List of Vertices');
+    createTableGraph(false, 'List of Edges');
+}
+
+/**
+ * Creates an html icon (fa-paint-brush) with the input color
+ * @param {Color} color a color (hex, rgb ...)
+ * @returns icon with color
+ */
+var colorNodeIcon =  function(color){
+    return  '<i class="fa  fa-paint-brush " aria-hidden="true" ' +
+            'style=";color:' + color + ';font-size:15px;"></i>'
+}
+
+/**
+ * Sort a array of numbers. Small = 0, High = last
+ * @param {Number[]} list list of numbers
+ * @returns sorted array
+ */
+function sortByNumbers(list){
+    return list.sort(function(a, b) {
+        return a - b;
+      });
+}
+
+/**
+ * Sort an Array that contains array tuple by the second index.
+ * Small = 0, High = last
+ * @param {[[]]} list 
+ * @returns sorted Array
+ */
+function sortTupleByNumber(list) {
+    return list.sort(function(a, b) {
+        return a[1] - b[1];
+    });
+}
+
+/**
+ * Create the property table of the sidebar for the graph.
+ * @param {Boolean} isNode true = node table, false = edge table
+ * @param {String} message title of table
+ */
+function createTableGraph(isNode, message) {
+    let section = $('#G-accordion1')[0];
+    let title = document.createElement('p');
+    title.innerHTML = message;
+    section.appendChild(title);
+
+    let table = createTableBody(false);
+    if (isNode) {
+        let list = cy.nodes().map(n => n.data('id'));
+        sortByNumbers(list).forEach(node => {
+            createInnerTable(table, node, true); 
+        });
+    } else { //isEdge
+        let list = cy.edges().map(n => n.data('id'));
+        sortByNumbers(list).forEach(edge => {
+            createInnerTable(table, edge, false); 
+        });
+    }
+    section.appendChild(table);
+}
+
+/**
+ * Create the construct table for the sidebar.
+ * If the input @isTree is true, then 3 coloumns with[icon, nr., id] are created,
+ * else 2 coloumns with [icon, id] are created.
+ * @param {Boolean} isTree 
+ * @returns html table
+ */
+function createTableBody(isTree){
+    let table = document.createElement('table');
+    let row = document.createElement('tr');
+    let icon = document.createElement('th');
+    let id = document.createElement('th');
+
+    table.classList.add('w3-table');
+    table.style.marginBottom = "25px";
+    table.style.tableLayout ="fixed";
+
+    icon.innerHTML = 'Color';
+    id.innerHTML = 'Id';
+    row.style.borderBottom = '1px solid white';
+
+    row.appendChild(icon);
+    
+    if(isTree){
+        let nr = document.createElement('th');
+        nr.innerHTML = 'Nr.'
+        row.appendChild(nr);
+    }
+    
+    row.appendChild(id);
+    table.appendChild(row);
+
+    return table;
+}
+
+/**
+ * Build the node or edge table from the tree sidebar. 
+ * @param {Boolean} isNode true = node table should be created, else edge table
+ * @param {String} message title of table
+ */
+function createTableTree(isNode, message) {
+    let section = $('#T-accordion1')[0];
+    let title = document.createElement('p');
+    title.innerHTML =  message;
+    section.appendChild(title);
+
+    let table; 
+
+    if (isNode) {
+        table = createTableBody(true);
+        let list = cr.nodes('.tree').map(n => [n.data('id'), n.data('displayedText')]);
+        sortTupleByNumber(list).forEach(tuple => {
+            createInnerNodeTreeTable(table, tuple[0], tuple[1]); 
+        });
+    } else { //isEdge
+        table = createTableBody(false);
+        let list = cr.edges('.tree').map(n => n.data('id')); //maybe source and target??
+        sortByNumbers(list).forEach(edge => {
+            createInnerTable(table, edge, false); 
+        });
+    }
+    
+ 
+    section.appendChild(table);
+}
+
+/**
+ * Gets a table to fill which will be extended by node or edge information.
+ * @param {Table} table a html table element to fill up.
+ * @param {Node/Edge} element one node or one edge
+ * @param {Boolean} needColor color of node/edge
+ */
+function createInnerTable(table, element, needColor) {
+    let row = document.createElement('tr');
+    let icon = document.createElement('td');
+    let id = document.createElement('td');
+
+    let color = needColor ? getColor(element) : 'gray';
+    icon.innerHTML = colorNodeIcon(color);
+    
+    let text = document.createTextNode(element);
+    id.appendChild(text);
+    row.appendChild(icon);
+    row.appendChild(id);
+    
+    if(needColor){ //add fit option with clickable
+        let ele = cy.$('#'+element);
+        row.addEventListener('click', function(){
+            Search.fit(ele, false);
+        });
+        row.classList.add('fit');
+    }
+
+    table.appendChild(row);
+}
+
+/**
+ * The inner body of the node table from the tree
+ * @param {Table} table html table, which is going to be extended
+ * @param {String} iD id of a node 
+ * @param {Number} displayedText displayedText of a node
+ */
+function createInnerNodeTreeTable(table, iD, displayedText) {
+    let row = document.createElement('tr');
+    let icon = document.createElement('td');
+    let id = document.createElement('td');
+    let displayT = document.createElement('td');
+
+    icon.innerHTML = colorNodeIcon(getColor(displayedText));
+   
+    row.appendChild(icon);
+    let text = document.createTextNode(displayedText);
+    displayT.appendChild(text);
+    text = document.createTextNode(iD);
+
+    //add fit option with clickable
+    row.addEventListener('click', function(){
+        let n = cr.nodes(`[id= "${iD}"]`);
+        Search.fit(n, true);
+    });
+    row.classList.add("fit");
+
+    id.appendChild(text);
+    row.appendChild(displayT);
+    row.appendChild(id);
+
+    table.appendChild(row);
+}
+
+/**
+ * Creates dynamically the bag content as table.
+ * The columns are [bag, size, nodes inside]
+ */
+function setBagTable(){
+    let section = $('#T-accordion0')[0] ;
+    let title = document.createElement('p');
+    let table = document.createElement('table');
+    let row = document.createElement('tr');
+    let bag = document.createElement('td');
+    let size = document.createElement('td');
+    let nodeElements = document.createElement('td');
+
+    table.classList.add('w3-table');
+    table.style.marginBottom = "25px";
+    table.style.tableLayout ="fixed";
+
+    title.innerHTML = 'List of Bags';
+    section.appendChild(title);
+
+    let headTable = document.createElement('th');
+    headTable.innerHTML = 'Id';
+    headTable.style.maxWidth = "30px";
+    row.appendChild(headTable);
+    headTable = document.createElement('th');
+    headTable.innerHTML = 'Size';
+    row.appendChild(headTable);
+    headTable = document.createElement('th');
+    headTable.innerHTML = 'Nodes Inside';
+    row.appendChild(headTable);
+
+    table.appendChild(row);
+
+    let bagIdsSorted = sortByNumbers(bagIds);
+
+    bagIdsSorted.forEach(id =>{ //innerTable
+        row = document.createElement('tr');
+        bag = document.createElement('td');
+        size = document.createElement('td');
+        nodeElements = document.createElement('td');
+
+        let text = document.createTextNode(id);
+        bag.appendChild(text);
+
+        cr.startBatch();
+        let nodes = cr.nodes('.tree').filter(`[bag = "${id}"]`);
+        cr.endBatch();
+        text = document.createTextNode(nodes.length);  
+        size.appendChild(text);
+
+
+        let result = nodes.map(n=> n.data('displayedText') )
+        text = document.createTextNode(result);
+        nodeElements.appendChild(text);
+
+        row.appendChild(bag);
+        row.appendChild(size);
+        row.appendChild(nodeElements);
+
+         //add fit option with clickable
+        
+        row.addEventListener('click', function(){
+            Search.fit(cr.$('#'+id), true);
+        });
+        row.classList.add('fit');
+        
+        table.appendChild(row);
+    });
+    section.appendChild(table);
 }

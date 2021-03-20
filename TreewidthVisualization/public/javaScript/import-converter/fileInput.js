@@ -2,7 +2,7 @@
  * @author Jeanette-Francine Szadzik <szadzik@uni-bremen.de>
  * This file handles the files input on upload and the server communication.
  */
-class FileInput {
+ class FileInput {
     constructor() {}
 
     /**
@@ -90,23 +90,33 @@ class FileInput {
 
     /**
      * Check if two files are selected and 
-     * one of them has the extension .td as well as .gr.
+     * one of them has the extension .td and the other one .gr or .dgf.
+     * But firstly, check if both files have the sama name to ensure
+     * that they are a pair of  context.
      * 
      * @param {File[]} files Some files
      */
     checkTwoFiles(files) {
-        console.log("in check the two files")
-        let boolGr = this.getFileExtension(files[0]) === 'gr' || this.getFileExtension(files[1]) === 'gr';
-        let boolTd = this.getFileExtension(files[0]) === 'td' || this.getFileExtension(files[1]) === 'td';
-
-        if (boolGr != boolTd) {
-            throw new Error('When you select two files, make sure that the file extensions are: .gr and .td');
-        }
-
+        const valid1STExtension = ['gr', 'dgf'];
+        const valid2NDExtensions = 'td';
+        
         let boolName = this.getFileName(files[0]) === this.getFileName(files[1]);
         if (!boolName) {
-            throw new Error('Please select a .gr and .td file with the same name, to ensure that they have the same context')
+            throw new Error('Please select a .gr or .dgf and .td file with the same name, to ensure that they have the same context');
         }
+
+        let boolFirst = valid1STExtension.includes(this.getFileExtension(files[0]));
+        let boolSecond =  this.getFileExtension(files[1]) === valid2NDExtensions;
+        if(boolFirst && boolSecond)
+            return;
+        else{
+            boolFirst = valid1STExtension.includes(this.getFileExtension(files[1]));
+            boolSecond =  this.getFileExtension(files[0]) === valid2NDExtensions;
+
+            if(boolFirst && boolSecond)
+                return;
+        }
+        throw new Error('When you select two files, make sure that the file extensions are: .gr or .dgf and .td');
     }
 
     /**
@@ -117,7 +127,7 @@ class FileInput {
     checkOneFile(file) {
         const validExtensions = ['gr', 'dgf'];
         let boolValid = validExtensions.includes(this.getFileExtension(file));
-        console.log("file extension is ", this.getFileExtension(file))
+      
         if (!boolValid) {
             let message = 'When you select one file, make sure that it is a ' +
                 '<span style=color:red> ' + '.dgf or .gr. ' + '</span>' + 'file';

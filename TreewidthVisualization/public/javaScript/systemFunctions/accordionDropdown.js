@@ -8,7 +8,7 @@
  * Set all properties from graph and tree which
  * are displayed in the sidebar.
  */
-function setSidebarProperties() {
+ function setSidebarProperties() {
     emptyDynamicSidebar();
     setGraphProperties();
     setGraphLegend();
@@ -64,6 +64,7 @@ function accordionDropdown(id) {
  * build time, algorithm time] from the graph.
  */
 function setTreeProperties() {
+    
     let minDeg = treeDegrees[0];
     let maxDeg = treeDegrees[treeDegrees.length-1];
     let rows = $('#treeProperties')[0].rows;
@@ -73,6 +74,7 @@ function setTreeProperties() {
         let bigBag = cr.nodes('.tree').filter(`[bag = "${bigBagId}"]`).map(n => n.data('displayedText'));
         let minBag = cr.nodes('.tree').filter(`[bag = "${minBagId}"]`).map(n => n.data('displayedText'));
     cr.endBatch();
+    let treewidth = minBag.length;
     bigBag = 'Id: '+ bigBagId + '</br> Nodes: ' + bigBag;
     minBag = 'Id: '+ minBagId + '</br> Nodes:' + minBag;
     let singleNodes = cr.nodes('.tree').filter(function(ele, i, eles){
@@ -84,21 +86,22 @@ function setTreeProperties() {
     rows[6].cells[0].innerHTML =  colorNodeIcon('blue') + "  " + 'Max Degree Bag';
     rows[7].cells[0].innerHTML =  colorNodeIcon('yellow') + "  " + 'Min Degree Bag';
 
-    rows[1].cells[1].innerHTML = treewidth;
-    rows[2].cells[1].innerHTML = numberOfBags;
-    rows[3].cells[1].innerHTML = nrVertices; //number vertice
-    rows[4].cells[1].innerHTML = bigBag;
-    rows[5].cells[1].innerHTML = minBag;
-    rows[6].cells[1].innerHTML = 'Degree: '+ maxDeg.degree + ' </br> Node: '+maxDeg.text +'</br> Id: '+ maxDeg.id;
-    rows[7].cells[1].innerHTML = 'Degree: '+ minDeg.degree + ' </br> Node: '+minDeg.text +'</br> Id: '+ minDeg.id;
-    rows[8].cells[1].innerHTML ='';
-    rows[9].cells[1].innerHTML = treeClock;
-    rows[10].cells[1].innerHTML = treeLayoutClock;
+    rows[1].cells[1].innerHTML = treeDecompostion;
+    rows[2].cells[1].innerHTML = treewidth;
+    rows[3].cells[1].innerHTML = numberOfBags;
+    rows[4].cells[1].innerHTML = nrVertices; //number vertice
+    rows[5].cells[1].innerHTML = bigBag;
+    rows[6].cells[1].innerHTML = minBag;
+    rows[7].cells[1].innerHTML = 'Degree: '+ maxDeg.degree + ' </br> Node: '+maxDeg.text +'</br> Id: '+ maxDeg.id;
+    rows[8].cells[1].innerHTML = 'Degree: '+ minDeg.degree + ' </br> Node: '+minDeg.text +'</br> Id: '+ minDeg.id;
+    rows[9].cells[1].innerHTML ='';
+    rows[10].cells[1].innerHTML = treeClock;
+    rows[11].cells[1].innerHTML = treeLayoutClock;
     if(treeAlgoClock === undefined)
-        rows[11].setAttribute('hidden', true)
+        rows[12].setAttribute('hidden', true)
     else 
-        rows[11].setAttribute('hidden', false)
-    pTreeHTMLCell(rows[8].cells[1], singleNodes);
+        rows[12].setAttribute('hidden', false)
+    pTreeHTMLCell(rows[9].cells[1], singleNodes);
 }
 
 /**
@@ -107,7 +110,7 @@ function setTreeProperties() {
  */
 function setlayoutTimeTree(){
     let rows = $('#treeProperties')[0].rows;
-    rows[10].cells[1].innerHTML = treeLayoutClock;
+    rows[11].cells[1].innerHTML = treeLayoutClock;
 }
 
 /**
