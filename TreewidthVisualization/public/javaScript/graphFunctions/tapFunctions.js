@@ -26,10 +26,13 @@
          falseShifts();
          cy.startBatch();
              cy.nodes().toggleClass('notTarget', true);
+             cy.elements().unselect();
          cy.endBatch();
  
          cr.startBatch(); //all gray
              cr.elements().toggleClass('notTarget', true);
+             cr.nodes().unselect();
+             cr.edges('.tree').unselect();
          cr.endBatch();
  }
  
@@ -44,6 +47,7 @@
  cy.on('tap', 'node', function(evt) {
      if(checkArea(evt))
              return
+     $('#select').html("Selected Vertice: ");
      let text = evt.target.data('displayedText');
      $('#badge-node').html(text);
      $('#badge-id').html(evt.target.id());
@@ -99,9 +103,25 @@
              cr.nodes('.construct').toggleClass('largestBag', false);
              cr.nodes('.construct').toggleClass('smallestDegree', false);
              cr.nodes('.construct').toggleClass('smallestBag', false);
+             cr.edges('.tree').unselect();
+             cr.nodes().unselect();
          cr.endBatch();
  
      }
+ });
+
+  /**
+  * Change the displayed text and id of the badge
+  * for edges.
+  */
+   cy.on('tap', 'edge', function(evt){
+    if(checkArea(evt))
+        return;
+    $('#select').html("Selected Edge: ");
+    let text = evt.target.data('displayedText');
+    $('#badge-node').html(text);
+    $('#badge-id').html(evt.target.id());
+
  });
  
  /////////////////////////////////////////////////////////////// 
@@ -115,6 +135,7 @@
  cr.on('tap', 'node.construct', function(evt) {
      if(checkArea(evt))
              return
+     $('#select').html("Selected Bag: ");
      $('#badge-node').html(evt.target.data('displayedText'));
      $('#badge-id').html(evt.target.id());
      let id = evt.target.id();
@@ -152,6 +173,7 @@
          
          cy.startBatch(); //show the nodes of tree in graph in color
              cy.elements().toggleClass('notTarget', true);
+             cy.elements().unselect();
              bagNodes = bagNodes.map(m=> m.data('displayedText'));
              bagNodes.forEach(node =>{
                  cy.nodes(`[id = "${node}"]`).toggleClass('notTarget', false);
@@ -163,12 +185,28 @@
              cr.elements().toggleClass('notTarget', true);
              cr.nodes('.construct').filter(`[id = "${text}"]`).toggleClass('notTarget', false);
              cr.nodes('.tree').filter(`[bag = "${text}"]`).toggleClass('notTarget', false);
+             cr.nodes().unselect();
+             cr.edges('.tree').unselect();
          cr.endBatch();
          
      }   
          //cr.animate('queue', false); //cast animate to push element on top view by render
          
  });
+
+
+ /**
+  * Change the displayed text and id of the badge
+  * for edges.
+  */
+ cr.on('tap', 'edge.tree', function(evt){
+    let text = evt.target.data('displayedText');
+     $('#select').html("Selected Edge:");
+     $('#badge-node').html(text);
+     $('#badge-id').html(evt.target.id());
+});
+
+
  
  /**
   * Visual selected node and all the nodes with the same displayedText in group.
@@ -176,8 +214,9 @@
   */
  cr.on('tap', 'node.tree', function(evt) {
      if(checkArea(evt))
-         return
+         return;
      let text = evt.target.data('displayedText');
+     $('#select').html("Selected Node: ");
      $('#badge-node').html(text);
      $('#badge-id').html(evt.target.id());
  
@@ -204,9 +243,12 @@
          cy.startBatch();
              cy.nodes().toggleClass('notTarget', true);
              cy.nodes(`[id = "${text}"]`).toggleClass('notTarget', false);
+             cy.elements().unselect();
          cy.endBatch();
  
          cr.startBatch();
+             cr.nodes().unselect();
+             cr.edges('.tree').unselect();
              cr.elements('.tree').toggleClass('notTarget', true);
              cr.nodes('.construct').toggleClass('notTarget', false);
  
@@ -217,6 +259,7 @@
      
  })
  
+
  /**
   * Reset the click functions from tree and graph. Set standard by clicking on the empty field.
   */
@@ -235,6 +278,7 @@
  
          cy.startBatch();
              cy.elements().toggleClass('notTarget', false);
+             cy.elements().unselect();
          cy.endBatch();
  
          disableExtendingButtons(evt);

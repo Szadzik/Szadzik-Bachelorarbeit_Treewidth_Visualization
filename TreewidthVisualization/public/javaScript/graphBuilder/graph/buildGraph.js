@@ -2,6 +2,8 @@
  * @author Jeanette-Francine Szadzik <szadzik@uni-bremen.de>
  * Build a graph with all his vertices, edges and the selected layout
  * by lines/Strings.
+ * In cytoscape exist only the elements nodes and edges.
+ * So inside the code, vertices and nodes are more or less similiar.
  */
 
 var nrVertices; //number of vertices in graph
@@ -17,41 +19,47 @@ var setNodes; //contains the vertices by their displayed text
 function setGraph(lines) {
     for (var lineNumber = 0; lineNumber < lines.length; lineNumber++) {
         let line = lines[lineNumber].split(/\s+/);
-        let offset = fileType === 'dgf' ? 1 : 0;
+
+        line= line.filter(function (el) { //remove empty strings
+            return el != null && el != "";
+          });
+       if(!line || line.length === 0)
+           continue
+
+        if(line[0] === 'e'){
+            line.shift(); //remove first char e
+        }
+        
         try {
             switch (line[0]) {
                 case 'n':
-                case '': 
                     break;
                 case 'c': 
                     break;
                 case 'p':
-                    if(fileType !== 'txt'){
                         nrVertices = line[2];
                         nrEdges = line[3];
-                    }
                     break;
                 default: //make nodes and edges
-                    
-                    let source = (Number(line[0]) + offset).toString(); //needs to be string for equal with tree
-                    let target = (Number(line[1]) + offset).toString();
+            
+                    let source = line[0];  
+                    let target = line[1];
                     setNode(source);
                     setNode(target);
                     setEdge(source, target);
             }
        
-        } catch (err) {
-            removeGraph(); //TODO remove all created elements that got created before the error //maybe too much for big graphs?
+        } catch (err) {//maybe add remove graph on error?
             alertErr(err.message);
             return -1;
         }
     }
-        if(nrVertices != cy.nodes().length && fileType !== 'txt'){ //cant be checked on txt
+        if(nrVertices != cy.nodes().length){ //cant be checked on txt
             cy.nodes().forEach(e => console.log("node in cy is ", e))
-            alertErr("File is defect. Number of vertices is not right.");
+            alertErr("File is defective. Number of vertices is maybe not right in header.");
             return -1;
         }else if(nrEdges != cy.edges().length){
-            alertErr("File is defect. Number of edges is not right.");
+            alertErr("File is defective. Number of edges is maybe not right in header.");
             return -1;
         }
 }
@@ -100,6 +108,7 @@ function setEdge(node1, node2) { //TODO check sourc target and back with td too
                 id: "e: " + node1 + " " + node2,
                 source: node1,
                 target: node2,
+                displayedText: node1 + " - " + node2
             },
             classes: ['graph'],
         });

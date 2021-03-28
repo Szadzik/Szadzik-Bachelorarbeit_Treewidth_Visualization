@@ -34,30 +34,13 @@ function alertErr(message) {
         });
 }
 
-/**
- * Remove all created elements of cr that got created before the error occured
- * @param {string} message 
- */
-function alertErrBr(message) {
-    new $.Zebra_Dialog(
-        message, {
-            type: "error",
-            title: "Error",
-            width: alertWidth,
-            onClose: function(caption, error) {
-                console.log("caption ", caption);
-                console.log("error ", error);
-                removeTree();
-            }
-        });
-}
 
 /**
  * Alert box for warnings.
  * @param {string} message 
  */
 function alertWarning(message) {
-    console.err("ALERT ERROR ",message);
+    console.log("Warning ",message);
     new $.Zebra_Dialog(
         message, {
             type: "warning",

@@ -33,11 +33,10 @@
   * about the source and target of 2 bags on which
   * an edge is drawn.
   * With this, it will search all
-  * @param {String} line Source bag and target bag.
+  * @param {String} source Source bag
+  * @param {String} target Target bag
   */
- function searchEdgeConnections(line) {
-     let source = line[0];
-     let target = line[1];
+ function searchEdgeConnections(source, target) {
      let collectSource = cr.nodes().filter(function(ele) { //all nodes of group source
          return ele.data('bag') === source; //ele.bag?
      });
@@ -70,7 +69,8 @@
              source: source,
              target: target,
              color: getColor(displayedText),
-             nodeGroup: displayedText
+             nodeGroup: displayedText,
+             displayedText: source.split(".")[1] + " - " + source.split(".")[1]
          }
      });
  }
@@ -87,38 +87,42 @@
          lines = lines.split(/\r?\n/);
  
      for (var lineNumber = 0; lineNumber < lines.length; lineNumber++) {
-         let line = lines[lineNumber].split(/\s+/);
- 
-         try {
+   
+        let line = lines[lineNumber].split(/\s+/);
+
+        line= line.filter(function (el) { //remove empty strings
+             return el != null && el != "";
+           });
+        if(!line || line.length === 0)
+            continue
+
+        try {
             // console.log("line is ", line)
-             switch (line[0]) {
-                 case '':
-                 case 'c':
+            switch (line[0]) {
+                case 'c':
                      break;
-                 case 's':
+                case 's':
                      numberOfBags = line[2]; 
-                     treeDecompostion = line[3] -1;  
+                     treeDecompostion = line[3] -1;  //value -1
                      break;
-                 case 'b':
-                     if (line.length <= 2) { // <= because of empty last index
-                         let message = 'Tried to define a bag, but this is not a bag on textline: '
-                             + lineNumber + '.' + '</br>' + 'Be sure to follow the bag format: ' +
-                             '"<b><span style=color:blue> b </span> <span style=color:red> id </span> <span style=color:green> V_k" </span> </b>' +
-                             ', where id is <span style=color:red> the bag id </span> and <span style=color:green> V_k </span> ' +
-                             'a <span style=color:green> list of nodes</span> (can be empty) of the  <span style=color:blue> bag </span> b. '
+                case 'b':
+                     if (line.length <= 1) { 
+                         let message = 'Tried to define a bag, but this is not a valid bag on textline: '
+                             + lineNumber + '.';
                          throw new Error(message);
                      }
-                     let size = isFromServer ? line.length -2 : line.length-3;
-                     setConstructNode(line[1], size); //set bag with id and his number of nodes
+                     let size = line.length -2;
+                     setConstructNode(line[1], size); 
                      setColorNodes(line, lineNumber);
                      break;
-                 default: //make edges
-                     if (line.length < 2 ) { // <= because of empty last index
-                         let message = 'Build Tree: Cannot create a loop edge on a node in line:' + lineNumber+ '.  line code is '+line;
+                default: //make edges
+                     if (line.length < 2 ) {
+                         let message = 'Build Tree: Cannot create a loop edge inside a tree. Line number:' 
+                                        + lineNumber+ '.  line code is '+line;
                          throw new Error(message);
                      }
                      setConstructEdges(line[0], line[1]);
-                     searchEdgeConnections(line);
+                     searchEdgeConnections(line[0], line[1]);
              }
          } catch (err) {
              alertErr(err.message);
@@ -196,7 +200,7 @@
          newLayout = cr.nodes('.construct').makeLayout(treeLayout.layouts[layoutName]);
      }
  
-     console.log("new llayout ", treeLayout.layouts[layoutName]);
+     console.log("new layout ", treeLayout.layouts[layoutName]);
      
      prevLayout = newLayout; //HERE
      

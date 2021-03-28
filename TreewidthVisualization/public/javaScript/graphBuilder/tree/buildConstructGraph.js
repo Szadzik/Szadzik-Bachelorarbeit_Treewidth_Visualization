@@ -32,7 +32,6 @@
   * @param {Number} totalNumber the total number of elements in a bag
   */
  function setConstructNode(bagId, totalNumber) {
- 
      cr.add({
          data: { id: bagId, size: sumDivisibilityRadius(totalNumber), displayedText: bagId },
          classes: 'construct'
@@ -81,7 +80,6 @@
   * that is set in the node datas.
   */
  function resizeConstructNodes() {
-     console.log("startRadius ", startRadius)
      cr.nodes('.construct').forEach(n => {
          console.log("width before: ", n.width(), " and height ", n.height())
          n.style('width', n.data('size'));

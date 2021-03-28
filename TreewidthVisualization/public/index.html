@@ -270,7 +270,7 @@
                             <td>undefined</td>
                           </tr>
                         <tr>
-                            <td>Number of Nodes</td>
+                            <td>Number of different Nodes</td>
                             <td>undefined</td>
                           </tr>
                         <tr>
@@ -325,7 +325,7 @@
         <table class="" style= "display: table; border:none !important; border-collapse: none !important; width:300px">
             <tr>
                 <td style="width:150px; font-size: 11px; display: flex; float:left; border:none !important">
-                    Selected Node: <span id ="badge-node" class ="w3-badge" style="max-width:70px">null</span>
+                    <span id = "select">Selected Element: </span><span id ="badge-node" class ="w3-badge" style="max-width:70px">null</span>
                 </td>
 
                 <td style="width:140px; font-size: 11px; display: flex; float:right; border:none !important ">
@@ -341,7 +341,10 @@
         -->
         <div style="display:block; height: 100%; overflow: hidden; " >
 
-            <div id="cy" class="cytoscape-window cytoscape-minHeight" style="border:2px solid white;  background-color:blueviolet;">
+            <div id="cy" class="cytoscape-window cytoscape-minHeight" style="
+            border:2px solid blueviolet; background-color:  lightgray;
+             /* border:2px solid white; background-color:blueviolet;*/
+            ">
 
                 <span>
                  <i id="cy-eye" class="fa fa-eye button-ico w3-text-black eye" data-wenk="Hide Window" 

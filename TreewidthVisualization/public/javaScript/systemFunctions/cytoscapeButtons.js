@@ -124,7 +124,7 @@
      */
     static showWindow(window){
         if(window !== 'cy' && window !== 'cr'){
-            console.error("showWindow was not cr or  cy ", window);
+            console.log("showWindow was not cr or  cy ", window);
             return;
         }
             
@@ -163,9 +163,6 @@
             $('#cy').addClass('cytoscape-maxHeight');
 
         }
-    
-        console.log("was ist cy ", $('#cy-eye-show'))
-        console.log("was ist cr ", $('#cr-eye-show'))
     }
  
      /////////////////////////////////////////////////////////
@@ -211,7 +208,7 @@
      */
     static resetView(cytoscape) {
         if(cytoscape !== 'cr' && cytoscape !==  'cy'){
-            console.error("resetView was not cr or  cy ", cytoscape);
+            console.log("resetView was not cr or  cy ", cytoscape);
             return;
         }
            

@@ -14,27 +14,24 @@
      */
     handleFileInput(evt) {
         
-        console.log("in file input ", evt)
+        console.log("in file input ", evt);
+       
         let files = evt[0].files; 
+        
         if (files.length === 0)
             return;
         let file = files[0];
-
-        fileType = this.getFileExtension(file);
         
         try {
             if (files.length > 2)
-                throw new Error('Please don´t select more then two  files.'); 
+                throw new Error('Please don´t select more then two files.'); 
             spinner = loadSpin();
-            console.log("after load dialog");
 
             if (files.length === 1) {
                 console.log("in one files")
 
                 //let file = files[0];
                 $('#output')[0].value = file.name;
-                console.log("===", this.getFileExtension(file) === 'gr', " == ", console.log("extensionis ", this.getFileExtension(file)) == "gr")
-               
                 this.checkOneFile(file);
                 this.handleServerCommunication( this.setAlgorithmChoice(), evt);
                 
@@ -75,6 +72,13 @@
             })
             .then(response => response.text()) //json = files, text=string
             .then(body => {
+                //on error no body is created
+                if(body === null || body.length === 0 || body === ""){
+                    alertErr("Server could not create data");
+                    onSet = 0; 
+                    spin.close();
+                    return;
+                }
                 console.log(body);
                 this.loadGraphsFromFiles(evt);
                 handleTreeCreation(body, true);
@@ -83,7 +87,7 @@
 
         .catch(error => {
             spinner.close();
-            console.error(error)
+            console.log(error)
         })
         console.log("after fetched");
     }
@@ -100,21 +104,24 @@
         const valid1STExtension = ['gr', 'dgf'];
         const valid2NDExtensions = 'td';
         
-        let boolName = this.getFileName(files[0]) === this.getFileName(files[1]);
-        if (!boolName) {
-            throw new Error('Please select a .gr or .dgf and .td file with the same name, to ensure that they have the same context');
-        }
+        // let boolName = this.getFileName(files[0]) === this.getFileName(files[1]);
+        // if (!boolName) {
+        //     throw new Error('Please select a .gr or .dgf and .td file with the same name, to ensure that they have the same context.');
+        // }
 
         let boolFirst = valid1STExtension.includes(this.getFileExtension(files[0]));
         let boolSecond =  this.getFileExtension(files[1]) === valid2NDExtensions;
         if(boolFirst && boolSecond)
             return;
+        
+            
         else{
             boolFirst = valid1STExtension.includes(this.getFileExtension(files[1]));
             boolSecond =  this.getFileExtension(files[0]) === valid2NDExtensions;
 
             if(boolFirst && boolSecond)
                 return;
+               
         }
         throw new Error('When you select two files, make sure that the file extensions are: .gr or .dgf and .td');
     }
@@ -142,7 +149,7 @@
     loadGraphsFromFiles(evt) {
         let files = evt[0].files;
         for (let i = 0; i < files.length; i++) {
-
+      
             let reader = new FileReader();
         
             reader.onerror = function(event) {
@@ -150,16 +157,19 @@
                 reader.abort();
                 return;
             };
+           
             let extension =  this.getFileExtension(files[i])
 
             reader.onload = function(event) {
                 //text lines of the file
                 let textLines = event.target.result.split('\n');
                
-                if(extension !== 'gr'){
+                if(extension !== 'gr' && extension !== 'dgf'){
+                    console.log("tree call")
                     handleTreeCreation(textLines);
                     
-                }else{ //.td
+                }else{ 
+                    console.log("graph call")
                     handleGraphCreation(textLines); 
                 }
             };

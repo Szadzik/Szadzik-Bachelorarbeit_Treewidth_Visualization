@@ -11,7 +11,7 @@
   * After a specific time, a second shell will be created to stop the heursitic-process 
   * and itself after this.
   * The heuristic process returns a tree-graph in the shell.
-  * @param {string} filePath the filepath with extension of a file
+  * @param {String} filePath the filepath with extension of a file
   * @returns the output from PACE2017-TrackA, a tree graph
   */
  async function tw_heursitic_terminal(filePath) {
@@ -47,7 +47,7 @@
   * After a specific time, a second shell will be created to stop the heursitic-process 
   * and itself after this.
   * The result will be saved in a .td file.
-  * @param {string} filePath the filepath with extension of a file
+  * @param {String} filePath the filepath with extension of a file
   * @returns On succesd 0 will be returned, else -1.
   */
  async function tw_heursitic_file(filePath) {
@@ -79,7 +79,7 @@
  
  /**
   * Returns the output of the pace algorithm as string.
-  * @param {error} err 
+  * @param {Error} err 
   * @returns On success, the generated pace .td file will be returned as string, else -1.
   */
  function getStdout(err) {
@@ -110,7 +110,7 @@
   * This function gets as input the error that contains the stdout content.
   * From stdout, a .td file be created with the same name as the .gr file.
   * On success 0 will be returned, else -1.
-  * @param {error} err process results of the function tw_heuristic_file 
+  * @param {Error} err process results of the function tw_heuristic_file 
   * @returns returns 0 if the file was created successfully , -1 on error
   */
  async function createTdFile(err, resultPath) {
@@ -124,7 +124,7 @@
          console.log("file finished");
          return 0;
      } catch (err) {
-         console.error("No .td file generated.");
+         console.log("No .td file generated.");
          return -1;
      }
  }

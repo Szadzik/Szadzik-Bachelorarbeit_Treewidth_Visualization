@@ -9,18 +9,13 @@
  * are displayed in the sidebar.
  */
  function setSidebarProperties() {
-    console.log("bbegin")
     emptyDynamicSidebar();
     setGraphProperties();
     setGraphLegend();
-    console.log("after gg")
     setBagTable();
     createTableTree('branch', 'List of Branches');
-    console.log("after bt")
     setTreeProperties();
-    console.log("after tp")
     setTreeLegend();
-    console.log("after pp")
 }
 
 /**
@@ -75,10 +70,12 @@ function setTreeProperties() {
     let rows = $('#treeProperties')[0].rows;
     let bigBagId = sortedTotalBagSize[sortedTotalBagSize.length -1].id;
     let minBagId = sortedTotalBagSize[0].id;
+
     cr.startBatch();
         let bigBag = cr.nodes('.tree').filter(`[bag = "${bigBagId}"]`).map(n => n.data('displayedText'));
         let minBag = cr.nodes('.tree').filter(`[bag = "${minBagId}"]`).map(n => n.data('displayedText'));
     cr.endBatch();
+
     let treewidth = minBag.length;
     bigBag = 'Id: '+ bigBagId + '</br> Nodes: ' + bigBag;
     minBag = 'Id: '+ minBagId + '</br> Nodes:' + minBag;
@@ -289,7 +286,6 @@ function createTableTree(content, message) {
     section.appendChild(title);
 
     let table; 
-    console.log("in set tree properties");
 
     if (content === 'node') {
         table = createTableBody(true);
@@ -299,7 +295,6 @@ function createTableTree(content, message) {
         });
     } else if(content === 'edge') { //isEdge
         table = createTableBody(false);
-        console.log("menge edte tree ", cr.edges())
         let list = cr.edges('.tree').map(n => n.data('id')); //maybe source and target??
         sortByNumbers(list).forEach(edge => {
             createInnerTable(table, edge, false); 

@@ -13,6 +13,7 @@
  const path = require('path');
  const fs = require('fs');
  const tw = require('./tw-exact');
+const { exec } = require('child_process');
  
  //create the server application
  const app = express();
@@ -46,11 +47,11 @@
   *  and send the result to shell.
   */
  app.post('/tw_exact_terminal', (req, res) => {
- 
-     console.log("req.file ", req.file);
+     //console.log("req.file ", req.files);
      console.log("req.path ", req.files.uploaded_input.path);
      let file = req.files.uploaded_input.path;
- 
+     let fileName = file.substring(file.lastIndexOf('/')+1, file.length);
+     console.log("new filename ", fileName);
      try {
          console.log("in post for tw_exact_terminal");
          tw.tw_exact_terminal(file).then(response => {
@@ -61,19 +62,26 @@
                  console.log("Finished sending, start file deleting.");
                  fs.unlink(file, (err) => {
                      if (err) {
-                         console.error(err);
+                         console.log(err);
                          return;
                      }
                  });
                  console.log("End tw_exact_terminal.");
              })
      } catch (err) {
-        fs.unlink(file, (err) => {
-            if (err) {
-                console.error(err);
-                return;
-            }
-        });
+         try{
+            fs.unlink(file, (err) => {
+                if (err) {
+                    console.log(err);
+                    return;
+                }
+            });
+         }catch(err){
+            const util = require("util");
+            const { exec } = require('child_process');
+            exec('cd uploads && sudo rm '+fileName);
+         }
+        
          res.send(400);
      }
  });
@@ -94,19 +102,25 @@
                  console.log("Finished sending, start file deleting.");
                  fs.unlink(file, (err) => {
                      if (err) {
-                         console.error(err);
+                         console.log(err);
                          return;
                      }
                  });
                  console.log("End tw_heuristic_terminal.");
              })
      } catch (err) {
-        fs.unlink(file, (err) => {
-            if (err) {
-                console.error(err);
-                return;
-            }
-        });
+        try{
+            fs.unlink(file, (err) => {
+                if (err) {
+                    console.log(err);
+                    return;
+                }
+            });
+         }catch(err){
+            const util = require("util");
+            const { exec } = require('child_process');
+            exec('cd uploads && sudo rm '+fileName);
+         }
          res.send(400);
      }
  
@@ -137,14 +151,14 @@
                  console.log("Finished sending, start file deleting.");
                  fs.unlink(file, (err) => {
                      if (err) {
-                         console.error(err);
+                         console.log(err);
                          return;
                      }
                  });
  
                  fs.unlink(newFile, (err) => {
                      if (err) {
-                         console.error(err);
+                         console.log(err);
                          return;
                      }
                  });
@@ -153,14 +167,14 @@
      } catch (err) {
         fs.unlink(file, (err) => {
             if (err) {
-                console.error(err);
+                console.log(err);
                 return;
             }
         });
 
         fs.unlink(newFile, (err) => {
             if (err) {
-                console.error(err);
+                console.log(err);
                 return;
             }
         });
