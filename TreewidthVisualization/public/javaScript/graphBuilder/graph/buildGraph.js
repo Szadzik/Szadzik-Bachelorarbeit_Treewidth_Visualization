@@ -54,14 +54,6 @@ function setGraph(lines) {
             return -1;
         }
     }
-        if(nrVertices != cy.nodes().length){ //cant be checked on txt
-            cy.nodes().forEach(e => console.log("node in cy is ", e))
-            alertErr("File is defective. Number of vertices is maybe not right in header.");
-            return -1;
-        }else if(nrEdges != cy.edges().length){
-            alertErr("File is defective. Number of edges is maybe not right in header.");
-            return -1;
-        }
 }
 
 

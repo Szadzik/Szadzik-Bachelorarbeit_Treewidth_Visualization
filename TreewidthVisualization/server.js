@@ -13,7 +13,8 @@
  const path = require('path');
  const fs = require('fs');
  const tw = require('./tw-exact');
-const { exec } = require('child_process');
+ const tw2 = require('./tw-heuristic');
+ 
  
  //create the server application
  const app = express();
@@ -85,16 +86,57 @@ const { exec } = require('child_process');
          res.send(400);
      }
  });
- 
+
+ app.post('/tw_heuristic_terminal', (req, res) => {
+    //console.log("req.file ", req.files);
+    console.log("req.path ", req.files.uploaded_input.path);
+    let file = req.files.uploaded_input.path;
+    let fileName = file.substring(file.lastIndexOf('/')+1, file.length);
+    console.log("new filename ", fileName);
+    try {
+        console.log("in post for tw_exact_terminal");
+  
+        tw2.tw_heuristic_terminal(file).then(response => {
+                console.log("Response from tw recieved. Continue with sending.");
+                res.send(response);
+            })
+            .then(() => {
+                console.log("Finished sending, start file deleting.");
+                fs.unlink(file, (err) => {
+                    if (err) {
+                        console.log(err);
+                        return;
+                    }
+                });
+                console.log("End tw_exact_terminal.");
+            })
+    } catch (err) {
+        try{
+           fs.unlink(file, (err) => {
+               if (err) {
+                   console.log(err);
+                   return;
+               }
+           });
+        }catch(err){
+           const util = require("util");
+           const { exec } = require('child_process');
+           exec('cd uploads && sudo rm '+fileName);
+        }
+       
+        res.send(400);
+    }
+});
+ /*
  app.post('/tw_heuristic_terminal', (req, res) => {
  
-     console.log("req.file ", req.file);
-     console.log("req.path ", req.files.uploaded_input.path);
-     let file = req.files.uploaded_input.path;
- 
+    console.log("req.path ", req.files.uploaded_input.path);
+    let file = req.files.uploaded_input.path;
+    let fileName = file.substring(file.lastIndexOf('/')+1, file.length);
+    console.log("new filename ", fileName);
      try {
          console.log("in post for tw_heursitic_terminal");
-         tw.tw_heuristic_terminal(file).then(response => {
+         tw.tw_heursitic_terminal(file).then(response => {
                  console.log("Response from tw recieved. Continue with sending.");
                  res.send(response);
              })
@@ -124,7 +166,7 @@ const { exec } = require('child_process');
          res.send(400);
      }
  
- });
+ });*/
  
  //////////////////////////////////////////////////////////// 
  // EXAMPLE / TEST 

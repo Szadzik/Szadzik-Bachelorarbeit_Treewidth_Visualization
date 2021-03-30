@@ -126,7 +126,7 @@
      let indexTotal = mapBagInformation.get(bag).numberEle;
  
      if (totalNumber == 1 || totalNumber == 0) {
-         console.log("a node has position ", pos)
+         //console.log("a node has position ", pos)
          return pos;
  
      } else {

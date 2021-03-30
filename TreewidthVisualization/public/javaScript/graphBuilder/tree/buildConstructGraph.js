@@ -81,7 +81,6 @@
   */
  function resizeConstructNodes() {
      cr.nodes('.construct').forEach(n => {
-         console.log("width before: ", n.width(), " and height ", n.height())
          n.style('width', n.data('size'));
          n.style('height', n.data('size'));
      });

@@ -99,10 +99,13 @@ function setTreeProperties() {
     rows[9].cells[1].innerHTML ='';
     rows[10].cells[1].innerHTML = treeClock;
     rows[11].cells[1].innerHTML = treeLayoutClock;
+    console.log("was ist treeclock ",treeClock);
     if(treeAlgoClock === undefined)
-        rows[12].setAttribute('hidden', true)
-    else 
-        rows[12].setAttribute('hidden', false)
+        rows[12].cells[1].innerHTML = "undefined";
+    else {
+        rows[12].cells[1].innerHTML = treeAlgoClock;
+    }
+
     pTreeHTMLCell(rows[9].cells[1], singleNodes);
 }
 

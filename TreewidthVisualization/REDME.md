@@ -12,13 +12,13 @@ The folder paceAlgorithm is empty.
 You need to add a pace algorithm by yourself or use my second repository that 
 contains a fork of the PACE2017-TrackA with specific changes for a linux interface
 and little changes on head spaces.    
-``` https://github.com/Szadzik/PACE2017-TrackA   ```  
-or use: ``` git clone https://github.com/Szadzik/PACE2017-TrackA.git  ``` 
+``` https://github.com/Szadzik/Jdrasil  ```  
+or use: ``` git clone https://github.com/Szadzik/Jdrasil.git  ``` 
 
-So following folder structure follows: paceAlgorithm/PACE2017-TrackA/tw-exact   
+So following folder structure follows: paceAlgorithm/Jdrasil/tw-exact   
 
 This changes were for a middle class computer and can also work for you.
-Maybe or maybe not, you need to change the head space in the " tw-exact or tw-heuristic file in the PACE2017-TrackA ".
+
 
 In contrast, if you want to use a different paceAlgorithm, you need to change the algorithm names in the files:
 " tw-exact.js and tw-heuristic.js ", in the TreewidthVisualization folder.
@@ -37,7 +37,7 @@ Go in directory "/TreewidthVisualization/public" and start index.html in a web-b
 This variant support only the upload of 2 files. One .gr and one .td are required, that the user created self with the PACE algorithm.
 
 #### Integrated PACE algorithm:
-Pace2017-TrackA   
+Jdrasil 
 
 #### Modules:
 Node.js  

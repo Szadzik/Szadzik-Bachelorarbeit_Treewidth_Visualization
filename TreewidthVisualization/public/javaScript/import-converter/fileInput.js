@@ -43,7 +43,6 @@
             } 
         } catch (err) {
            
-            console.log("zebra dialog to dleete, ", $('.Zebra_Dialog'))
             spinner.close();
             alertErr(err.message);
         }
@@ -90,6 +89,7 @@
             console.log(error)
         })
         console.log("after fetched");
+        treeAlgoClock = treeAlgoClock.getTime;
     }
 
     /**
