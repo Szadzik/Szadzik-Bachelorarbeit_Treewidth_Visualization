@@ -77,57 +77,23 @@
                     return;
                 }
             });
+            const util = require("util");
+            const { exec } = require('child_process');
+            exec('cd uploads && sudo find -name "upload*" -type f mtime +1 | xargs rm');s
+
          }catch(err){
             const util = require("util");
             const { exec } = require('child_process');
             exec('cd uploads && sudo rm '+fileName);
+            //remove all files that are older than 1 days
+            exec('cd uploads && sudo find -name "upload*" -type f mtime +1 | xargs rm');
          }
         
          res.send(400);
      }
  });
 
- app.post('/tw_heuristic_terminal', (req, res) => {
-    //console.log("req.file ", req.files);
-    console.log("req.path ", req.files.uploaded_input.path);
-    let file = req.files.uploaded_input.path;
-    let fileName = file.substring(file.lastIndexOf('/')+1, file.length);
-    console.log("new filename ", fileName);
-    try {
-        console.log("in post for tw_exact_terminal");
-  
-        tw2.tw_heuristic_terminal(file).then(response => {
-                console.log("Response from tw recieved. Continue with sending.");
-                res.send(response);
-            })
-            .then(() => {
-                console.log("Finished sending, start file deleting.");
-                fs.unlink(file, (err) => {
-                    if (err) {
-                        console.log(err);
-                        return;
-                    }
-                });
-                console.log("End tw_exact_terminal.");
-            })
-    } catch (err) {
-        try{
-           fs.unlink(file, (err) => {
-               if (err) {
-                   console.log(err);
-                   return;
-               }
-           });
-        }catch(err){
-           const util = require("util");
-           const { exec } = require('child_process');
-           exec('cd uploads && sudo rm '+fileName);
-        }
-       
-        res.send(400);
-    }
-});
- /*
+
  app.post('/tw_heuristic_terminal', (req, res) => {
  
     console.log("req.path ", req.files.uploaded_input.path);
@@ -136,7 +102,7 @@
     console.log("new filename ", fileName);
      try {
          console.log("in post for tw_heursitic_terminal");
-         tw.tw_heursitic_terminal(file).then(response => {
+         tw2.tw_heuristic_terminal(file).then(response => {
                  console.log("Response from tw recieved. Continue with sending.");
                  res.send(response);
              })
@@ -158,15 +124,22 @@
                     return;
                 }
             });
+            const util = require("util");
+            const { exec } = require('child_process');
+            exec('cd uploads && sudo find -name "upload*" -type f mtime +1 | xargs rm');
          }catch(err){
+             console.log("in catch2");
             const util = require("util");
             const { exec } = require('child_process');
             exec('cd uploads && sudo rm '+fileName);
+            //remove all files that are older than 1 days
+            exec('cd uploads && sudo find -name "upload*" -type f mtime +1 | xargs rm');
+            
          }
          res.send(400);
      }
  
- });*/
+ });
  
  //////////////////////////////////////////////////////////// 
  // EXAMPLE / TEST 
@@ -178,7 +151,7 @@
   *  and then creates a .td file with the same name prefix.
   */
  app.post('/tw_exact_file', (req, res) => {
- 
+     console.log("HEURSITIC");
      console.log("req.file ", req.file);
      console.log("req.path ", req.files.uploaded_input.path);
      let file = req.files.uploaded_input.path;

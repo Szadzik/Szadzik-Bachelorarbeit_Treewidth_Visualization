@@ -2,7 +2,7 @@
  * @author Jeanette-Francine Szadzik <szadzik@uni-bremen.de>
  * This file must bee in the main folder (/var/www/html)
  * or the path of the functions needs to be changed.
- * It will start the heuristic algorithm from Jdrasil
+ * It will start the heuristic algorithm from Pace2017-TrackA
  */
  const time = 4000; //waiting time
 
@@ -15,26 +15,27 @@
   * @returns the output from paceAlgo
   */
  async function tw_heuristic_terminal(filePath) {
-     console.log("in heursitic1");
+     console.log("in heursitic");
      const util = require("util");
      const { exec } = require('child_process');
      const execProm = util.promisify(exec);
-     console.log("in heursitic");
  
      try {
-         let command = 'cd paceAlgorithm/Jdrasil/ && ./tw-heuristic < ' + filePath,
+        let childKiller = new Promise((promise, resolve) => {
+            setTimeout(function() { //after waiting, kill the child from above
+               console.log("in time");
+                killShell();
+            }, time);
+            console.log("in timeout");
+        });
+
+         let command = 'cd paceAlgorithm/PACE2017-TrackA && ./tw-heuristic < ' + filePath,
              options = { encoding: 'utf8' },
              child = await execProm(command, options);
-             child.stdout.on('data', function(data) {
-                console.log("OUTDATA ",data.toString()); 
-            });
-         let childKiller = new Promise((promise, resolve) => {
-             setTimeout(function() { //after waiting, kill the child from above
-                 killShell();
-             }, time);
-             console.log("in timeout");
-         });
-         console.log("aus timeout")
+             console.log("vor child");
+
+         
+         console.log("aus timeout");
  
          //start parallel the child and childKiller => avoids blocking 
          await Promise.all([child, childKiller]); //or 'race' wait for first promise
@@ -42,7 +43,7 @@
          
      } catch (err) {
  
-         getStdout(err);
+         return getStdout(err);
 
      }
  }
@@ -66,7 +67,7 @@
  
      try {
  
-         let command = 'cd paceAlgorithm/Jdrasil && ./tw-heuristic < ' + filePath,
+         let command = 'cd paceAlgorithm/PACE2017-TrackA/ && ./tw-heuristic < ' + filePath,
              options = { encoding: 'utf8' },
              child = await execProm(command, options);
  
@@ -97,8 +98,8 @@
      try {
          return err.stdout;
      } catch (err) {
-        exec('pgrep -f tw-heuristic | xargs kill -SIGTERM'); 
-        exec('cd paceAlgorithm/Jdrasil/ && sudo rm *.log ');
+        exec('pgrep -f tw-heuristic | xargs kill -SIGTERM');  //or java for tw-heuristic
+        exec('cd paceAlgorithm/PACE2017-TrackA/ && sudo rm *.log ');
          return -1;
      }
  }
@@ -112,7 +113,7 @@
      console.log("in kill");
      const util = require("util");
      const { exec } = require('child_process');
-     let command = 'pgrep -f java | xargs kill -SIGTERM',
+     let command = 'pgrep -f tw-heuristic | xargs kill -SIGTERM', //or java for tw-heuristic
          option = { killSignal: 'SIGTERM' },
          child2 = exec(command, option);
     console.log("outkill")
