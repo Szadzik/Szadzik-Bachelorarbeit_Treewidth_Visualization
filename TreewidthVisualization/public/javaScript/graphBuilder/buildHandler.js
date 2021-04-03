@@ -22,6 +22,8 @@ var treeDegrees;            //degrees of nodes in tree
 var graphDegrees;           //degrees of nodes in graph
 var bagDegrees;             //degrees of bags in tree
 
+var graphText;              //text of graph file
+var treeText;               //text of tree file
 
 /**
  * Calls all functions that are needed to create the Tree.
@@ -65,8 +67,8 @@ function onSetCheck(){
         treeLayout.setEulerSpace(); //option for euler layout
         spinner.close();
     }
-}
 
+}
 
 /**
  * Calls are functions that are needed to create the Graph.

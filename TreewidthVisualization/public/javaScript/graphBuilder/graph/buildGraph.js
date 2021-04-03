@@ -17,6 +17,7 @@ var setNodes; //contains the vertices by their displayed text
  * @returns -1 on error
  */
 function setGraph(lines) {
+    graphText = lines;
     for (var lineNumber = 0; lineNumber < lines.length; lineNumber++) {
         let line = lines[lineNumber].split(/\s+/);
 

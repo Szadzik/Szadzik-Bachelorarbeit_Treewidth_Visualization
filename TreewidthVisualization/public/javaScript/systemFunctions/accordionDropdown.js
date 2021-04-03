@@ -29,6 +29,56 @@ function emptyDynamicSidebar(){
     Search.removeTreeSearch();
 }
 
+function newSiteHTML(title, text){
+    
+    return '<!DOCTYPE html>'
+    +'<html lang="en-US">'
+    +'<meta charset="utf-8"/>'
+    +' <head>'
+    +    '<link type="image/png" rel="icon" type="image/png" href="assets/icons/png/icon29.png" sizes="32x32">'
+    +    '<link type="text/css" rel="stylesheet" href="styles/w3.css">'
+    +    '<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>'
+    +'</head>'
+    +'<body>'    
+    +    '<header class="w3-black w3-container w3-dark-gray ; w3-sans-serif; header-bar" >'
+    +        '<a href="#" class="w3-show-block nav-title" style="float: left">'+title+'</a>'
+    +    '</header>'
+    +    '<div style="bottom:0;display: inline-block; width: 100%;  height:95%; overflow:unset; position: absolute; margin-left: 1em"'
+    +        'class="w3-text-black" id="graphContentHTML">'
+    +       text
+    +    '</div>'
+    +'</body>'
+    +'</html>'
+
+}
+/**
+ * Text of graph
+ */
+function graphInfromation(){
+
+    let text = "";
+    graphText.forEach(line => {
+        text += line + "</br>";
+    });
+
+    var opened = window.open("");
+    opened.document.write(newSiteHTML("Graph Information", text));
+}
+
+/**
+ * Text of tree
+ */
+function treeInformation(){
+
+    let text = "";
+    treeText.forEach(line => {
+        text += line + "</br>";
+    });
+
+    var opened = window.open("");
+    opened.document.write(newSiteHTML("Tree Information", text));
+}
+
 /**
  * Disable and Enable the contents from
  * an accordion action by his id.
@@ -99,7 +149,7 @@ function setTreeProperties() {
     rows[9].cells[1].innerHTML ='';
     rows[10].cells[1].innerHTML = treeClock;
     rows[11].cells[1].innerHTML = treeLayoutClock;
-    console.log("was ist treeclock ",treeClock);
+   
     if(treeAlgoClock === undefined)
         rows[12].cells[1].innerHTML = "undefined";
     else {

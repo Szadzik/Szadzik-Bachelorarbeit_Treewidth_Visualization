@@ -83,7 +83,7 @@
         <a href="#" class="w3-show-block nav-title" style="float: left">Treewidth Visualizer</a>
         <a href="www/license.html" target="_blank" class="w3-show-block w3-right nav-title" style="float:right;">Licenses</a>
 
-        <a href="www/tutorial.html" class=".w3-dark-gray w3-right" style="margin-top: 10px;">
+        <a href="www/tutorial.html" target="_blank" class=".w3-dark-gray w3-right" style="margin-top: 10px;">
             <i class=" fa fa-graduation-cap" style="font-size: 25px !important "></i>
         </a>
 
@@ -132,8 +132,12 @@
             <!-- GRAPH -->
 
             <div id="graph" class="shadow-dark-gray" style="margin-top: 6px;">
-                <h4 class="line "> Graph </h4>
-
+                <h4 class="line "> Graph 
+                        <i class="fa fa-list-alt button-ico" onclick="graphInfromation()" data-wenk="Display Graph Information" data-wenk-pos="left"
+                        style="float:right; margin-top:0.5em; font-size: 1em; ">
+                        </i>
+                </h4>
+                
                 <form class = "w3-dropdown-click">
                     Layout:
                     <select id="layout-cy" class="w3-round" onchange="CytoscapeButtons.changeGraphLayout()">
@@ -208,7 +212,13 @@
             </div>
 
             <div id="tree" style=" margin-top: 24px; ">
-                <h4 class="line "> Tree </h4>
+                <h4 class="line "> Tree 
+                   
+                        <i class="fa fa-list-alt button-ico" onclick="treeInformation()" data-wenk="Display Tree Information" data-wenk-pos="left"
+                        style="float:right; margin-top:0.5em; font-size: 1em; ">
+                        </i>
+                  
+                </h4>
 
                 <form class = "w3-dropdown-click">
                     Layout:

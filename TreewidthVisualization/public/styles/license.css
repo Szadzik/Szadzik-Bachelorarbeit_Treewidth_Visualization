@@ -9,6 +9,16 @@
     min-width: 300px;
 }
 
+.midC{
+    margin-top:2em;
+    border:1px solid black
+}
+
+.midC h4{
+    margin-left:2em;
+    margin-bottom:1em;
+}
+
 p {
     word-wrap: normal;
 }

@@ -1,27 +1,156 @@
-Requirements: Chrome or Firefox 8.0 +
 
-<div>
-    <h2>
-        General Information
-    </h2>
-    <li>
-        Prevent loops. It is not sure if the Pace Algorithmen can handle loops.
-    </li>
+<!DOCTYPE html>
+<html lang="en-US">
+<meta charset="utf-8" />
 
-    <li>
-        <h4> Upload one file:</h4>
-        Needs to be .txt, .gr or .dgf format. As well as the nodes need to be numbers. The Pace-Algorithmen can´t generate Code from alphabetics and similiar symbols.
-    </li>
-    <li>
-        <h4> Upload two file:</h4>
-        One file needs to be from the .gr format and the one needs to be the .td format. This option can be used if you already have used the pace algorithmen on your own computer and is independently from the server function. So this option can used evertyime,
-        even if connection problems with the server occured.
-    </li>
+<head>
+    <link type="image/png" rel="icon" type="image/png" href="assets/icons/png/icon29.png" sizes="32x32">
+    <link type="text/css" rel="stylesheet" href="../styles/w3.css">
+    <link type="text/css" rel="stylesheet" href="../styles/license.css">
+    <link type="text/css" rel="stylesheet" href="../styles/Zebra_Dialog-master/dist/css/classic/zebra_dialog.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js "></script>
+    <script src="https://cdn.jsdelivr.net/npm/zebra_dialog@3.0.5/dist/zebra_dialog.min.js "></script>
+    <script src="../javaScript/SystemFunctions/alerts.js"></script>
 
-</div>
+</head>
 
-<div>
-    <h4>TXT-Format</h4>
-    <p>This format only include the information of edges that are connected between nodes.</p>
-    <iframe src="exampleFiles/txt" class="frame"></iframe>
-</div>
+<body>
+    <header class="w3-black w3-container w3-dark-gray ; w3-sans-serif; header-bar" style="position: relative;">
+        <a href="../index.html" class="w3-show-block nav-title" style="float: left">Treewidth Visualizer</a>
+        <a href="www/license.html" target="_blank" class="w3-show-block w3-right nav-title" style="float:right;">Licenses</a>
+
+        <a href="#" class=".w3-dark-gray w3-right" style="margin-top: 10px;">
+            <i class=" fa fa-graduation-cap" style="font-size: 25px !important "></i>
+        </a>
+
+    </header>
+
+    <div >
+        <p style="text-align: center;">Recommended Requirements: Chrome 87+ or Firefox 8.0 +</p>
+    
+        <h2 class="license">Using Data Files:</h2>
+        <p style="text-align: center;"> It is possible to upload on or two files.</p>
+            
+        <div>
+            <div class="license">
+                <h3> Upload one file:</h3>
+                The file must be in the .gr or .dgf format. 
+    
+                <h4>Example .gr File</h4>
+                <textarea rows="4" cols="50">
+                    p tw 8 12 
+                    1 2 
+                    1 4 
+                    2 3 
+                    2 4
+                    2 5
+                    4 6
+                    4 7
+                    3 5
+                    5 7
+                    5 8
+                    6 7
+                    7 8
+                </textarea></br>
+                Inside this example, the line that start with p has some important information.
+                The first value 8 after tw, stands for the number of vertices in the graph
+                which is followed by the number of edges.
+                Edges are defined by 2 vertices in one line. 
+            </div>
+    
+            <div class="license">
+                <h4>Example .dgf File</h4>
+                <textarea rows="4" cols="50">
+                    p edge 8 12
+                    e 1 2
+                    e 1 4
+                    e 2 3
+                    e 2 4
+                    e 2 5
+                    e 4 6
+                    e 4 7
+                    e 3 5
+                    e 5 7
+                    e 5 8
+                    e 6 7
+                    e 7 8
+                </textarea>
+            </br>
+                This is the same graph also above in .gr. In this case, the line starts also with p which contains important information.
+                The first value 8 after edges, stands for the number of vertices in the graph
+                which is followed by the number of edges.
+                Each edge is defined by 2 vertices in one line which begins with the character e in the line.
+            </div>
+     
+        </div>
+        <div class="license">
+            <h4> Upload two file:</h4>
+            One file must be from the .gr or dgf format and the other one in the .td format. This option can be used if you already have used a pace algorithm on your own computer.
+        </div>
+
+        <div class="license " style=margin-top:3em>
+            <h2>Interactions and Functions</h2>
+    
+            <div class="midC">
+                <h4>Change Algorithm</h4>
+                <img src = "pictures/toggle.jpg" alt="picure change algoirthm" width="40%" height="40%">
+            </div class="license">
+    
+            <div class="midC ">
+                <h4>Hide Window</h4>
+                The tree or the graph can be hidden.
+                <img src = "pictures/auge2.jpg" alt="picure hide" width="20%" height="20%">
+            </div class="license">
+        
+            <div class="midC">
+                <h4>Reset Graph/Tree Layout</h4>
+                <img src = "pictures/extendedButtons.jpg" alt="picure reset layout" width="30%" height="30%">
+            </div>
+    
+            <div class="midC">
+                <h4>Reset Graph/Tree Origin-Position</h4>
+                <img src = "pictures/tooltip.jpg" alt="picure reset position" width="30%" height="30%">
+            </div>
+    
+            <div class="midC">
+                <h4>Select a lot of Elements</h4>
+                Press shift so select a specific amount of elements to move them.
+                <img src = "pictures/shift-select.png" alt="picure select elements" width="30%" height="30%">
+            </div>
+    
+            <div class="midC">
+                <h4>Select a Node for Value-Path in Tree</h4>
+                Select a node inside the tree to see the connected path.
+                <img src = "pictures/path.jpg" alt="picure select elements" width="40%" height="40%">
+            </div>
+
+            <div class="midC">
+                <h4>Select a Edge</h4>
+                The selected edge is highlighted.
+                <img src = "pictures/edge.jpg" alt="picure select elements" width="30%" height="30%">
+            </div>
+
+            <div class="midC">
+                <h4>Select a Bag-Information</h4>
+                Select a bag-information to zoom to the specific bag.
+                <img src = "pictures/zoom.jpg" alt="picure select elements" width="80%" height="80%">
+            </div>
+
+            <div class="midC">
+                <h4>Serch for Information</h4>
+                Search for information to recieve information.
+                <img src = "pictures/search.jpg" alt="picure select elements" width="30%" height="30%">
+            </div>
+            
+           
+        
+        </div>
+    
+    </div>
+    
+
+    
+       
+</body>
+
+</html>
