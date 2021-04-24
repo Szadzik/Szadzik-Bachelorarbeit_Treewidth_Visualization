@@ -79,7 +79,7 @@
             });
             const util = require("util");
             const { exec } = require('child_process');
-            exec('cd uploads && sudo find -name "upload*" -type f mtime +1 | xargs rm');s
+            exec('cd uploads && sudo find -name "upload*" -type f mtime +1 | xargs rm');
 
          }catch(err){
             const util = require("util");
