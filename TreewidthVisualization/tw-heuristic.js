@@ -79,7 +79,7 @@
  
          //start parallel the child and childKiller => avoids blocking 
          await Promise.all([child, childKiller]); //or 'race' wait for first promise
- 
+	return "Error in file"; 
      } catch (err) {
          let resultPath = file.substring(0, file.lastIndexOf('.')) + '.td';
          return createTdFile(err, resultPath);
@@ -96,10 +96,13 @@
  function getStdout(err) {
      console.log("in error ",err);
      try {
+	console.log("in retunr message");
          return err.stdout;
      } catch (err) {
+	console.log("in error return message");
         exec('pgrep -f tw-heuristic | xargs kill -SIGTERM');  //or java for tw-heuristic
         exec('cd paceAlgorithm/PACE2017-TrackA/ && sudo rm *.log ');
+	exec('cd uploads && sudo find -name "upload*" -type f mtime +1 | xargs rm');
          return -1;
      }
  }

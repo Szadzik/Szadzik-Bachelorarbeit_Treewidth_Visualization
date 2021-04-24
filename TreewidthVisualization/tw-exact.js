@@ -27,6 +27,7 @@ async function tw_exact_terminal(filePath) {
         console.log("Child process, catch error: ", err);
         //only works for pace algorithm that use tw-exact as command
         exec('pgrep -f tw-exact | xargs kill -SIGTERM');
+	exec('cd uploads && sudo find -name "upload*" -type f mtime +1 | xargs rm');
         exec('cd paceAlgorithm/PACE2017-TrackA/ && sudo rm *.log ');
     }
 
