@@ -86,7 +86,7 @@
             const { exec } = require('child_process');
             exec('cd uploads && sudo rm '+fileName);
             //remove all files that are older than 1 days
-            exec('find . -type f -mtime +1 -name "upload*" -print0 | xargs -r0 rm --');
+            exec('cd uploads && find . -type f -mtime +1 -name "upload*" -print0 | xargs -r0 rm --');
             //exec('cd uploads && sudo find -name "upload*" -type f mtime +1 | xargs rm');
          }
         
@@ -134,7 +134,7 @@
             const { exec } = require('child_process');
             exec('cd uploads && sudo rm '+fileName);
             //remove all files that are older than 1 days
-            exec('find . -type f -mtime +1 -name "upload*" -print0 | xargs -r0 rm --');
+            exec('cd uploads && find . -type f -mtime +1 -name "upload*" -print0 | xargs -r0 rm --');
             //exec('cd uploads && sudo find -name "upload*" -type f mtime +1 | xargs rm');
             
          }
