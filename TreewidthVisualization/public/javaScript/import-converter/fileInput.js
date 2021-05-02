@@ -73,7 +73,7 @@
             .then(body => {
                 //on error no body is created
                 if(body === null || body.length === 0 || body === ""){
-                    alertErr("Server could not create data");
+                    alertErr("Server could not create data.");
                     onSet = 0; 
                     spinner.close();
                     return;

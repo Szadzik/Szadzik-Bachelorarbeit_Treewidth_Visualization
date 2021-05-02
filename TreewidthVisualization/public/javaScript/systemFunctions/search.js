@@ -61,7 +61,7 @@ class Search{
     
         let node = cy.nodes(`[id = "${input}"]`);
         if(node.length  === 0){
-            alertErr("No vertice was found by the given input: " +input);
+            alertErr("No vertex was found by the given input: " +input);
             return;
         }
 
@@ -106,18 +106,18 @@ class Search{
             let table = this.createBagTable(bag);
             div.appendChild(table);
         }if(nodeId.length > 0){ //if id of node from bag
-            this.createTitle(nodeId, 'Node', div);
+            this.createTitle(nodeId, 'Vertex', div);
             let table = this.createNodeTableTree(nodeId);
             div.appendChild(table);
         }if(nodeDisplayedText.length > 0){//displayed node text
             if(nodeDisplayedText.length === 1)
-                this.createTitleDisplayedText(nodeDisplayedText, 'Nodes with Value', div);
-            else this.createTitleDisplayedText(nodeDisplayedText[0], 'Nodes with Value', div);
+                this.createTitleDisplayedText(nodeDisplayedText, 'Vertices with Value', div);
+            else this.createTitleDisplayedText(nodeDisplayedText[0], 'Vertices with Value', div);
             let table = this.createNodeTableTree(nodeDisplayedText);
             div.appendChild(table);
 
         }if(nodeDisplayedText.length === 0 && bag.length === 0 && nodeId.length === 0){ //nothing found
-            alertErr("No Bag or Node was found by the given input: " +input);
+            alertErr("No Bag or Vertex was found by the given input: " +input);
             return;
         }
         $('#tree')[0].appendChild(div);
@@ -221,15 +221,15 @@ class Search{
         cr.startBatch();
             let nodes = cr.nodes('.tree').filter(`[bag = "${node.id()}"]`);
         cr.endBatch();
-        console.log("nodes batch ", nodes, " in inner ")
+        //console.log("nodes batch ", nodes, " in inner ");
         this.createRow('Degree', degree+add, table);
 
         let td = document.createElement('td');
         td = document.createElement('td');
         pTreeHTMLCell(td, nodes);
-        this.createRowAppend('Nodes inside', td , table);
+        this.createRowAppend('Vertices inside', td , table);
 
-        this.createRow('Number of Nodes', mapBagInformation.get(node.id()).totalNumber, table);
+        this.createRow('Number of Vertices', mapBagInformation.get(node.id()).totalNumber, table);
         return table;
     }
     
@@ -276,7 +276,7 @@ class Search{
 
         td.innerHTML = first;
         row.appendChild(td);
-        console.log("vor cell", cell)
+        //console.log("vor cell", cell)
         row.appendChild(cell);
         table.appendChild(row);
         return table;

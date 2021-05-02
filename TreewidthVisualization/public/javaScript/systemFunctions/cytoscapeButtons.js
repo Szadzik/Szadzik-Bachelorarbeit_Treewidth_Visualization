@@ -16,13 +16,16 @@
         this.treePropertiesNode = {maxDegree: '', minDegree: '', bigBag: '', minBag: ''};
         //bigbag
         let id = sortedTotalBagSize[sortedTotalBagSize.length-1].id;
+        let bag;
+        let mD;
         cr.startBatch();
-            let bag = cr.nodes('.construct').filter(`[id = "${id}"]`);
+            bag = cr.nodes('.construct').filter(`[id = "${id}"]`);
         cr.endBatch();
         this.treePropertiesNode.bigBag = bag;
 
         //minBag
         id = sortedTotalBagSize[0].id;
+        console.log("was ist id for look "+id);
         cr.startBatch();
             bag = cr.nodes('.construct').filter(`[id = "${id}"]`);
         cr.endBatch();
@@ -31,7 +34,7 @@
         //maxDegree
         id = bagDegrees[bagDegrees.length-1].id;
         cr.startBatch();
-            let mD = cr.nodes('.construct').filter(`[id = "${id}"]`);
+            mD = cr.nodes('.construct').filter(`[id = "${id}"]`);
         cr.endBatch();
         this.treePropertiesNode.maxDegree = mD;
 
@@ -208,7 +211,7 @@
      */
     static resetView(cytoscape) {
         if(cytoscape !== 'cr' && cytoscape !==  'cy'){
-            console.log("resetView was not cr or  cy ", cytoscape);
+           // console.log("resetView was not cr or  cy ", cytoscape);
             return;
         }
            

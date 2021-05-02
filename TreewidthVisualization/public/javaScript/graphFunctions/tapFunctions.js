@@ -47,7 +47,7 @@
  cy.on('tap', 'node', function(evt) {
      if(checkArea(evt))
              return
-     $('#select').html("Selected Vertice: ");
+     $('#select').html("Selected Vertex: ");
      let text = evt.target.data('displayedText');
      $('#badge-node').html(text);
      $('#badge-id').html(evt.target.id());
@@ -216,7 +216,7 @@
      if(checkArea(evt))
          return;
      let text = evt.target.data('displayedText');
-     $('#select').html("Selected Node: ");
+     $('#select').html("Selected Vertex: ");
      $('#badge-node').html(text);
      $('#badge-id').html(evt.target.id());
  
