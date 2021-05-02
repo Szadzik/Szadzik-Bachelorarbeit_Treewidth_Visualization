@@ -40,7 +40,7 @@
          //start parallel the child and childKiller => avoids blocking 
          await Promise.all([child, childKiller]); //or 'race' wait for first promise
          console.log("after await");
-         
+         return "Error in file";
      } catch (err) {
  
          return getStdout(err);
