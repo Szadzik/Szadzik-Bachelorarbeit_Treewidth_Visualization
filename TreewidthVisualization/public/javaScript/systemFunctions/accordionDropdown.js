@@ -127,8 +127,8 @@ function setTreeProperties() {
     cr.endBatch();
 
     let treewidth = minBag.length;
-    bigBag = 'Id: '+ bigBagId + '</br> Nodes: ' + bigBag;
-    minBag = 'Id: '+ minBagId + '</br> Nodes:' + minBag;
+    bigBag = 'Id: '+ bigBagId + '</br> Vertices: ' + bigBag;
+    minBag = 'Id: '+ minBagId + '</br> Vertices:' + minBag;
     let singleNodes = cr.nodes('.tree').filter(function(ele, i, eles){
         return ele.neighborhood('node').length === 0; //return all nodes that have no neighboor
     });
@@ -144,8 +144,8 @@ function setTreeProperties() {
     rows[4].cells[1].innerHTML = nrVertices; //number vertice
     rows[5].cells[1].innerHTML = bigBag;
     rows[6].cells[1].innerHTML = minBag;
-    rows[7].cells[1].innerHTML = 'Degree: '+ maxDeg.degree + ' </br> Node: '+maxDeg.text +'</br> Id: '+ maxDeg.id;
-    rows[8].cells[1].innerHTML = 'Degree: '+ minDeg.degree + ' </br> Node: '+minDeg.text +'</br> Id: '+ minDeg.id;
+    rows[7].cells[1].innerHTML = 'Degree: '+ maxDeg.degree + ' </br> Vertices: '+maxDeg.text +'</br> Id: '+ maxDeg.id;//TODO
+    rows[8].cells[1].innerHTML = 'Degree: '+ minDeg.degree + ' </br> Vertices: '+minDeg.text +'</br> Id: '+ minDeg.id;//TODO
     rows[9].cells[1].innerHTML ='';
     rows[10].cells[1].innerHTML = treeClock;
     rows[11].cells[1].innerHTML = treeLayoutClock;
@@ -202,8 +202,8 @@ function setGraphProperties() {
     let rows = $('#graphProperties')[0].rows;
     rows[1].cells[1].innerHTML = cy.nodes().length; //number vertice
     rows[2].cells[1].innerHTML = cy.edges().length; //number edges
-    rows[3].cells[1].innerHTML = 'Degree: '+ maxDeg.degree + ' </br> Node: '+maxDeg.text +'</br> Id: '+ maxDeg.id;
-    rows[4].cells[1].innerHTML = 'Degree: '+ minDeg.degree + ' </br> Node: '+minDeg.text +'</br> Id: '+ minDeg.id;
+    rows[3].cells[1].innerHTML = 'Degree: '+ maxDeg.degree + ' </br> Vertex: '+maxDeg.text +'</br> Id: '+ maxDeg.id;
+    rows[4].cells[1].innerHTML = 'Degree: '+ minDeg.degree + ' </br> Vertex: '+minDeg.text +'</br> Id: '+ minDeg.id;
     rows[5].cells[1].innerHTML = graphClock;
     rows[6].cells[1].innerHTML = graphLayoutClock;
 }
@@ -221,7 +221,7 @@ function setLayoutTimeGraph(){
  * Creates dynamically the legend of nodes and egdes from the tree.
  */
 function setTreeLegend() {
-    createTableTree('node', 'List of Nodes');
+    createTableTree('node', 'List of Vertices');
     createTableTree('edge', 'List of Edges');
 }
 
@@ -455,7 +455,7 @@ function setBagTable(){
     headTable.innerHTML = 'Size';
     row.appendChild(headTable);
     headTable = document.createElement('th');
-    headTable.innerHTML = 'Nodes Inside';
+    headTable.innerHTML = 'Vertices Inside';
     row.appendChild(headTable);
 
     table.appendChild(row);

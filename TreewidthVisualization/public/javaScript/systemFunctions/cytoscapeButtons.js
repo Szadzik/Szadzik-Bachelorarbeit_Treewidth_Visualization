@@ -208,7 +208,7 @@
      */
     static resetView(cytoscape) {
         if(cytoscape !== 'cr' && cytoscape !==  'cy'){
-            console.log("resetView was not cr or  cy ", cytoscape);
+           // console.log("resetView was not cr or  cy ", cytoscape);
             return;
         }
            
