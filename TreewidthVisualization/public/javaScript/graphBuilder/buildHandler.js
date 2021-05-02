@@ -41,9 +41,8 @@ function handleTreeCreation(lines, isFromServer) {
 
 
     let selectedLayout = $('#layout-cr')[0].value;
-    handleTreeLayout(selectedLayout, false);
-   
-    sortedTotalBagSize = mapTotalNumberSize();
+    handleTreeLayout(selectedLayout, false); 
+    
     onSetCheck();
 }
 
@@ -59,6 +58,7 @@ function onSetCheck(){
         //add treeLayout.constructByDegree() to recieve a 
         //different build with maxDegree as first node in collection
         //with some layouts
+        sortedTotalBagSize = mapTotalNumberSize();
         bagDegrees = calculateConstructDegress();
         treeDegrees = calculateTreeDegress();
         graphDegrees = calculateGraphDegrees();

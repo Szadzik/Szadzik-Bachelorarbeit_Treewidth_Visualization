@@ -115,20 +115,22 @@ function accordionDropdown(id) {
  */
 function setTreeProperties() {
     
-    let minDeg = treeDegrees[0];
-    let maxDeg = treeDegrees[treeDegrees.length-1];
+    let minDeg = bagDegrees[0];
+    let maxDeg = bagDegrees[bagDegrees.length-1];
     let rows = $('#treeProperties')[0].rows;
     let bigBagId = sortedTotalBagSize[sortedTotalBagSize.length -1].id;
     let minBagId = sortedTotalBagSize[0].id;
 
-    cr.startBatch();
+    //cr.startBatch();
         let bigBag = cr.nodes('.tree').filter(`[bag = "${bigBagId}"]`).map(n => n.data('displayedText'));
         let minBag = cr.nodes('.tree').filter(`[bag = "${minBagId}"]`).map(n => n.data('displayedText'));
-    cr.endBatch();
+        let maxDegContent = cr.nodes('.tree').filter(`[bag = "${maxDeg.text}"]`).map(n => n.data('displayedText'));
+        let minDegContent = cr.nodes('.tree').filter(`[bag = "${minDeg.text}"]`).map(n => n.data('displayedText'));
+    //cr.endBatch();
 
     let treewidth = minBag.length;
     bigBag = 'Id: '+ bigBagId + '</br> Vertices: ' + bigBag;
-    minBag = 'Id: '+ minBagId + '</br> Vertices:' + minBag;
+    minBag = 'Id: '+ minBagId + '</br> Vertices: ' + minBag;
     let singleNodes = cr.nodes('.tree').filter(function(ele, i, eles){
         return ele.neighborhood('node').length === 0; //return all nodes that have no neighboor
     });
@@ -144,8 +146,8 @@ function setTreeProperties() {
     rows[4].cells[1].innerHTML = nrVertices; //number vertice
     rows[5].cells[1].innerHTML = bigBag;
     rows[6].cells[1].innerHTML = minBag;
-    rows[7].cells[1].innerHTML = 'Degree: '+ maxDeg.degree + ' </br> Vertices: '+maxDeg.text +'</br> Id: '+ maxDeg.id;//TODO
-    rows[8].cells[1].innerHTML = 'Degree: '+ minDeg.degree + ' </br> Vertices: '+minDeg.text +'</br> Id: '+ minDeg.id;//TODO
+    rows[7].cells[1].innerHTML = 'Id: '+ maxDeg.id + '</br> Degree: '+ maxDeg.degree + ' </br> Vertices: '+ maxDegContent;//TODO
+    rows[8].cells[1].innerHTML = 'Id: '+ minDeg.id + '</br> Degree: '+ minDeg.degree + ' </br> Vertices: '+ minDegContent;//TODO
     rows[9].cells[1].innerHTML ='';
     rows[10].cells[1].innerHTML = treeClock;
     rows[11].cells[1].innerHTML = treeLayoutClock;
