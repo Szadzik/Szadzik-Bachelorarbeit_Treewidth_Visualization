@@ -119,14 +119,19 @@ function setTreeProperties() {
     let maxDeg = bagDegrees[bagDegrees.length-1];
     let rows = $('#treeProperties')[0].rows;
     let bigBagId = sortedTotalBagSize[sortedTotalBagSize.length -1].id;
-    let minBagId = sortedTotalBagSize[0].id;
+    let minBagId;
+    let idx = 0;
+    while(sortedTotalBagSize[idx].size === 0){
+        idx += 1;
+    }
+    minBagId = sortedTotalBagSize[idx].id;
 
-    //cr.startBatch();
+    cr.startBatch();
         let bigBag = cr.nodes('.tree').filter(`[bag = "${bigBagId}"]`).map(n => n.data('displayedText'));
         let minBag = cr.nodes('.tree').filter(`[bag = "${minBagId}"]`).map(n => n.data('displayedText'));
         let maxDegContent = cr.nodes('.tree').filter(`[bag = "${maxDeg.text}"]`).map(n => n.data('displayedText'));
         let minDegContent = cr.nodes('.tree').filter(`[bag = "${minDeg.text}"]`).map(n => n.data('displayedText'));
-    //cr.endBatch();
+    cr.endBatch();
 
     let treewidth = minBag.length;
     bigBag = 'Id: '+ bigBagId + '</br> Vertices: ' + bigBag;
