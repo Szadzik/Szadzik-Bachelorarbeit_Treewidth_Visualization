@@ -9,5 +9,5 @@ This work is licensed under a
 [cc-by-image]: https://i.creativecommons.org/l/by/4.0/88x31.png
 [cc-by-shield]: https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg
 
-This repository was made for the bachleor thesis "Treewidth Visualization", 06.05.2021.     
+This repository was made for the Bachleor´s thesis "Treewidth Visualization", 06.05.2021.     
 Faculty 3 - Mathematics and Computer Science : University of Bremen
