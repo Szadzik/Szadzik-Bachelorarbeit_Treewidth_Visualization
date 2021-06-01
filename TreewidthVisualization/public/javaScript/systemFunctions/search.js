@@ -245,7 +245,7 @@ class Search{
         let bags = cr.nodes('.tree').filter(`[displayedText = "${node.data('displayedText')}"]`).map(b => b.data('bag'));
         cr.endBatch();
 
-        let pathSize = bags.length;
+        let pathSize = bags.length -1;
         let table = document.createElement('table');
         let color = colorNodeIcon(getColor( node.data('displayedText') ));
 
