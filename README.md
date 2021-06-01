@@ -11,3 +11,5 @@ This work is licensed under a
 
 This repository was made for the Bachleor´s thesis "Treewidth Visualization", 06.05.2021.     
 Faculty 3 - Mathematics and Computer Science : University of Bremen
+
+Please mention my name on use: Jeanette-Francine Szadzik
