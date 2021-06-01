@@ -146,7 +146,7 @@ function setTreeProperties() {
     rows[8].cells[0].innerHTML =  colorNodeIcon('yellow') + "  " + 'Min Degree Bag';
 
     rows[1].cells[1].innerHTML = treeDecompostion;
-    rows[2].cells[1].innerHTML = treewidth;
+    rows[2].cells[1].innerHTML = treeDecompostion;
     rows[3].cells[1].innerHTML = numberOfBags;
     rows[4].cells[1].innerHTML = nrVertices; //number vertice
     rows[5].cells[1].innerHTML = bigBag;
